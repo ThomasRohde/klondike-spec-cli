@@ -383,11 +383,15 @@
         "Supports updating priority"
       ],
       "estimatedEffort": "small",
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T13:37:38.010160",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "52 tests passing",
+        "notes/criteria update works",
+        "description immutable"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-07T13:35:37.865580",
       "notes": ""
@@ -817,8 +821,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T13:33:09.802648",
+    "lastUpdated": "2025-12-07T13:37:38.010168",
     "totalFeatures": 30,
-    "passingFeatures": 21
+    "passingFeatures": 22
   }
 }
