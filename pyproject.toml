@@ -1,6 +1,6 @@
 [project]
 name = "klondike-spec-cli"
-version = "0.2.0"
+version = "0.2.1"
 description = "CLI tool for managing Klondike Spec agent workflow artifacts"
 readme = "README.md"
 license = "MIT"
