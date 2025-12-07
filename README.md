@@ -62,14 +62,30 @@ AI agents can efficiently navigate the CLI surface, discovering exactly what the
 
 ## 🚀 Installation
 
+### Global Installation (Recommended)
+
+Install `klondike` as a globally available command using [uv](https://github.com/astral-sh/uv) or [pipx](https://pipx.pypa.io/):
+
 ```bash
-pip install klondike-spec-cli
+# Using uv (fastest)
+uv tool install klondike-spec-cli
+
+# Using pipx
+pipx install klondike-spec-cli
 ```
 
-Or with [uv](https://github.com/astral-sh/uv) (recommended):
+This makes the `klondike` command available system-wide, isolated from your project dependencies.
+
+### Project Dependency
+
+Add to your project's dependencies:
 
 ```bash
+# Using uv
 uv add klondike-spec-cli
+
+# Using pip
+pip install klondike-spec-cli
 ```
 
 ---
