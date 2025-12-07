@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F017 | Add rich terminal output with colors and formatting | 🔄 In progress |
 | F022 | Set up GitHub Actions CI/CD | ⏳ Not started |
 | F023 | Implement 'klondike feature import' command | ⏳ Not started |
+| F024 | Implement 'klondike feature export' command | ⏳ Not started |
 
 ---
 

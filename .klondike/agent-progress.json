@@ -89,11 +89,6 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F017",
-        "description": "Add rich terminal output with colors and formatting",
-        "status": "in-progress"
-      },
-      {
         "id": "F022",
         "description": "Set up GitHub Actions CI/CD",
         "status": "not-started"
@@ -101,6 +96,11 @@
       {
         "id": "F023",
         "description": "Implement 'klondike feature import' command",
+        "status": "not-started"
+      },
+      {
+        "id": "F024",
+        "description": "Implement 'klondike feature export' command",
         "status": "not-started"
       }
     ]
