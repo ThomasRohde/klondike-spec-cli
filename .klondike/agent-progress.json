@@ -69,11 +69,6 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F016",
-        "description": "Implement configuration management",
-        "status": "in-progress"
-      },
-      {
         "id": "F020",
         "description": "Integration tests for CLI commands",
         "status": "not-started"
@@ -81,6 +76,11 @@
       {
         "id": "F026",
         "description": "Implement 'klondike report' command for stakeholder reports",
+        "status": "not-started"
+      },
+      {
+        "id": "F014",
+        "description": "Implement 'klondike feature edit' command",
         "status": "not-started"
       }
     ]

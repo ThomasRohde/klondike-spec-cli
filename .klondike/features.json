@@ -434,11 +434,14 @@
         "Supports verifiedBy identifier for current user/agent"
       ],
       "estimatedEffort": "small",
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T13:26:07.043829",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "tests/test_models.py:TestConfig",
+        "manual-cli-test"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-07T13:13:54.405417",
       "notes": null
@@ -807,8 +810,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T13:13:40.174951",
+    "lastUpdated": "2025-12-07T13:26:07.043839",
     "totalFeatures": 30,
-    "passingFeatures": 18
+    "passingFeatures": 19
   }
 }
