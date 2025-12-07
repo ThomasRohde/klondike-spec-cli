@@ -55,11 +55,6 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F027",
-        "description": "Update repository prompts to use klondike CLI",
-        "status": "in-progress"
-      },
-      {
         "id": "F015",
         "description": "Bake templates into the executable",
         "status": "not-started"
@@ -67,6 +62,11 @@
       {
         "id": "F016",
         "description": "Implement configuration management",
+        "status": "not-started"
+      },
+      {
+        "id": "F020",
+        "description": "Integration tests for CLI commands",
         "status": "not-started"
       }
     ]

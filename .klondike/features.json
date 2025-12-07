@@ -717,11 +717,13 @@
         "All prompts reference .klondike directory structure"
       ],
       "estimatedEffort": "medium",
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T13:07:12.033473",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        ".github/copilot-instructions.md"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-07T13:00:20.368040",
       "notes": null
@@ -802,8 +804,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T12:58:45.801955",
+    "lastUpdated": "2025-12-07T13:07:12.033478",
     "totalFeatures": 30,
-    "passingFeatures": 16
+    "passingFeatures": 17
   }
 }
