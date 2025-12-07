@@ -2,7 +2,7 @@
 
 ## Project: klondike-spec-cli
 ## Started: 2025-12-07
-## Current Status: Session Ended
+## Current Status: In Progress
 
 ---
 
@@ -23,7 +23,7 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F027 | Update repository prompts to use klondike CLI | ⏳ Not started |
+| F027 | Update repository prompts to use klondike CLI | 🔄 In progress |
 | F015 | Bake templates into the executable | ⏳ Not started |
 | F016 | Implement configuration management | ⏳ Not started |
 
@@ -59,5 +59,27 @@ klondike feature list  # List all features
 - All klondike data lives in .klondike/ subdirectory
 - agent-progress.md is generated from agent-progress.json
 - Features designed to be implemented incrementally
+
+---
+
+### Session 2 - 2025-12-07
+**Agent**: Coding Agent
+**Duration**: (in progress)
+**Focus**: F027 - Update repository prompts to use klondike CLI
+
+#### Completed
+- None
+
+#### In Progress
+- Session started
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
+
+#### Technical Notes
+- None
 
 ---

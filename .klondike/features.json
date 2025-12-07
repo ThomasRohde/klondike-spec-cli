@@ -717,13 +717,13 @@
         "All prompts reference .klondike directory structure"
       ],
       "estimatedEffort": "medium",
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-07T13:00:20.368040",
       "notes": null
     },
     {

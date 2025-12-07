@@ -1,7 +1,7 @@
 {
   "projectName": "klondike-spec-cli",
   "startedAt": "2025-12-07T00:00:00Z",
-  "currentStatus": "Session Ended",
+  "currentStatus": "In Progress",
   "sessions": [
     {
       "sessionNumber": 1,
@@ -29,6 +29,20 @@
         "agent-progress.md is generated from agent-progress.json",
         "Features designed to be implemented incrementally"
       ]
+    },
+    {
+      "sessionNumber": 2,
+      "date": "2025-12-07",
+      "agent": "Coding Agent",
+      "duration": "(in progress)",
+      "focus": "F027 - Update repository prompts to use klondike CLI",
+      "completed": [],
+      "inProgress": [
+        "Session started"
+      ],
+      "blockers": [],
+      "nextSteps": [],
+      "technicalNotes": []
     }
   ],
   "quickReference": {
@@ -43,7 +57,7 @@
       {
         "id": "F027",
         "description": "Update repository prompts to use klondike CLI",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F015",

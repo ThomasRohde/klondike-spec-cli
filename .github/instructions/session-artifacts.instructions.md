@@ -1,33 +1,32 @@
 ---
 description: "Long-running agent session management and context bridging"
-applyTo: "**/agent-progress.md,**/features.json"
+applyTo: "**/agent-progress.md,**/.klondike/features.json,**/.klondike/agent-progress.json"
 ---
 
 # Session Artifact Instructions
 
 These files are critical infrastructure for multi-context-window agent workflows. Handle with care.
 
+> **Note**: The klondike CLI manages these artifacts. Use `klondike` commands instead of manual editing.
+
 ## agent-progress.md
 
 ### Purpose
 Bridge context between agent sessions. Each agent starts fresh and uses this file to understand what happened before.
 
-### Rules
+### Management
 
-**DO:**
-- Append new session entries at the end
-- Be specific about what was accomplished
-- List files that were changed
-- Include concrete next steps
-- Note any gotchas or surprises
+This file is **auto-generated** by the klondike CLI from `.klondike/agent-progress.json`. Use these commands:
 
-**DON'T:**
-- Delete or modify previous session entries
-- Be vague ("made progress")
-- Leave out important context
-- Forget to update before ending session
+```bash
+klondike session start --focus "F00X - description"  # Start session
+klondike session end --summary "..." --next "..."    # End session
+klondike progress                                     # Regenerate file
+```
 
-### Structure
+**Do not manually edit** - changes will be overwritten by the CLI.
+
+### What Gets Generated
 
 ```markdown
 ### Session N - <Date>
@@ -53,10 +52,25 @@ Bridge context between agent sessions. Each agent starts fresh and uses this fil
 - <gotchas for next session>
 ```
 
-## features.json
+## .klondike/features.json
 
 ### Purpose
 Prevent premature "victory declaration" by maintaining a structured checklist of all features, with explicit status tracking and verification evidence.
+
+### Management
+
+This file is managed by the klondike CLI. Use these commands:
+
+```bash
+klondike feature add "description" --category X --criteria "..."  # Add feature
+klondike feature start F00X                                        # Mark in-progress
+klondike feature verify F00X --evidence "..."                      # Mark verified
+klondike feature block F00X --reason "..."                         # Mark blocked
+klondike feature list                                              # List all
+klondike feature show F00X                                         # Show details
+```
+
+**Do not manually edit** - use CLI commands to ensure artifact integrity.
 
 ### Schema Fields
 
@@ -74,27 +88,25 @@ Prevent premature "victory declaration" by maintaining a structured checklist of
 | `lastWorkedOn` | string | - | ISO timestamp of last work |
 | `notes` | string | - | Context, gotchas, or additional info |
 
-### Rules
+### CLI Commands for State Changes
 
-**Allowed Changes:**
-- Set `status` (`not-started` → `in-progress` → `blocked` | `verified`)
-- Set `passes` from `false` to `true` (after verification)
-- Set `verifiedAt` to ISO timestamp
-- Set `verifiedBy` to session identifier
-- Set `evidenceLinks` with paths to evidence files
-- Set `blockedBy` when blocked
-- Set `lastWorkedOn` timestamp
-- Add/update `notes`
-- Update `metadata.lastUpdated`
-- Update `metadata.passingFeatures` count
+**Starting Work:**
+```bash
+klondike feature start F00X
+```
+Sets `status: "in-progress"` and `lastWorkedOn` timestamp.
 
-**Forbidden Changes:**
-- Deleting features
-- Editing `description` field
-- Editing `acceptanceCriteria`
-- Changing `id` or `priority`
-- Setting `passes: true` without end-to-end verification
-- Setting `status: verified` without `evidenceLinks`
+**Verifying (after E2E testing):**
+```bash
+klondike feature verify F00X --evidence "test-results/F00X.png" --notes "Tested on Chrome/Firefox"
+```
+Sets `status: "verified"`, `passes: true`, `verifiedAt`, and `evidenceLinks`.
+
+**Blocking:**
+```bash
+klondike feature block F00X --reason "Waiting for API integration"
+```
+Sets `status: "blocked"` and `blockedBy` reason.
 
 ### Verification Requirements
 

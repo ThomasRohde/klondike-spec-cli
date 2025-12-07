@@ -15,17 +15,25 @@ From Anthropic's research: "Claude's tendency to mark a feature as complete with
 
 ### 1. Load Feature Details
 
-Read `features.json` and find the specified feature:
-- Feature ID
-- Description
+Use the klondike CLI to load the feature details:
+
+```bash
+klondike feature show F00X
+```
+
+This displays:
+- Feature ID and description
 - Acceptance Criteria (ALL must pass)
-- Current status
+- Current status and notes
 
 ### 2. Ensure Environment is Running
 
 ```bash
+# Validate project artifacts are consistent
+klondike validate
+
+# Run init script if project has a dev server
 ./init.sh  # or .\init.ps1
-# Verify dev server / environment is active
 ```
 
 ### 3. Design Verification Plan
@@ -38,7 +46,7 @@ For each acceptance criterion, define:
 **Evidence requirements:**
 - Save screenshots/logs to `test-results/` directory
 - Use naming convention: `F00X-criterion-N-<description>.{png,log,txt}`
-- Link evidence in features.json `evidenceLinks` array
+- Evidence links are added via `klondike feature verify` command
 
 ### 4. Execute Verification
 
@@ -85,35 +93,30 @@ For each acceptance criterion:
 
 **Only if ALL criteria pass:**
 
-Update `features.json`:
-```json
-{
-  "id": "F00X",
-  "status": "verified",
-  "passes": true,
-  "verifiedAt": "2024-XX-XXTXX:XX:XXZ",
-  "verifiedBy": "agent-verification",
-  "evidenceLinks": [
-    "test-results/F00X-criterion-1-login.png",
-    "test-results/F00X-criterion-2-api.log"
-  ],
-  "notes": "Tested on Chrome 120, Firefox 121. Edge case: empty input handled."
-}
+Use the klondike CLI to mark the feature as verified:
+
+```bash
+klondike feature verify F00X \
+  --evidence "test-results/F00X-criterion-1-login.png" \
+  --evidence "test-results/F00X-criterion-2-api.log" \
+  --notes "Tested on Chrome 120, Firefox 121. Edge case: empty input handled."
 ```
 
-Update `agent-progress.md` with verification record:
-```markdown
-#### Verified Features
-- **F00X** verified at 2024-XX-XXTXX:XX:XXZ
-  - Evidence: `test-results/F00X-*`
-  - All 3 acceptance criteria passed
-```
+This automatically:
+- Sets `status: "verified"` and `passes: true`
+- Records `verifiedAt` timestamp
+- Adds evidence links to the feature
+- Regenerates `agent-progress.md` with updated status
 
 **If ANY criterion fails:**
-- Set `status: "in-progress"` (or `status: "blocked"` if external dependency)
-- Leave `passes: false`
-- Document what failed, why, and next steps in `notes`
-- Set `lastWorkedOn` timestamp
+
+Block the feature with a reason:
+
+```bash
+klondike feature block F00X --reason "Criterion 2 failed: API returns 500 on edge case"
+```
+
+Or leave it in-progress and add notes via `klondike feature start` with investigation focus.
 
 ### 7. Edge Case Testing
 

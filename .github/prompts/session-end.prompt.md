@@ -90,22 +90,24 @@ For any features you worked on:
 3. **Capture evidence** - logs, screenshots, command output
 4. **Only mark complete** if ALL acceptance criteria are met
 
-Update `features.json`:
-```json
-{
-  "status": "verified",
-  "passes": true,
-  "verifiedAt": "<ISO timestamp>",
-  "verifiedBy": "agent-session-<date>",
-  "evidenceLinks": [
-    "test-results/F00X-screenshot.png",
-    "test-results/F00X-console.log"
-  ],
-  "notes": "Tested in Chrome and Firefox, edge cases handled"
-}
+**Use klondike CLI to verify features:**
+
+```bash
+# Verify a feature with evidence
+klondike feature verify F00X --evidence "test-results/F00X-screenshot.png,test-results/F00X-console.log"
+
+# Or block a feature if incomplete
+klondike feature block F00X --reason "Waiting for API specification"
 ```
 
-**Important**: If feature is incomplete, set `status: "in-progress"` and leave `passes: false` - it's okay!
+The CLI automatically:
+- Sets `status` to `verified` and `passes` to `true`
+- Records `verifiedAt` timestamp and `verifiedBy` identifier
+- Links evidence files
+- Updates metadata counts
+- Regenerates agent-progress.md
+
+**Important**: If feature is incomplete, use `klondike feature block` - it's okay!
 
 ### 4. Complete or Park Session Plan
 
@@ -122,7 +124,21 @@ Update `features.json`:
 
 ### 5. Update Progress File
 
-Append a new session entry to `agent-progress.md`:
+**Use klondike CLI to end the session:**
+
+```bash
+klondike session end \
+  --summary "Completed login form implementation" \
+  --completed "Added login form,Added validation,Fixed edge cases" \
+  --next "Add password reset,Implement session management"
+```
+
+This automatically:
+- Updates the current session in agent-progress.json
+- Regenerates agent-progress.md with the session summary
+- Shows reminder to commit changes
+
+Alternatively, append manually to `agent-progress.md`:
 
 ```markdown
 ### Session X - <Date>

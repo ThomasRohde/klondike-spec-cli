@@ -5,7 +5,7 @@ description: "Initialize a new project with long-running agent harness infrastru
 
 # Goal
 
-Set up the **initializer agent infrastructure** for a new project, creating all artifacts needed for effective multi-context-window agent workflows.
+Set up the **Klondike Spec agent infrastructure** for a new project, using the `klondike` CLI to create all artifacts needed for effective multi-context-window agent workflows.
 
 ## Context
 
@@ -25,35 +25,27 @@ Based on [Anthropic's research on long-running agents](https://www.anthropic.com
   - Testing approach (unit, integration, e2e)
   - Deployment target (if known)
 
-### 2. Create Feature Registry (`features.json`)
-Based on user requirements, generate a comprehensive feature list:
+### 2. Create Feature Registry with Klondike CLI
 
-```json
-{
-  "projectName": "<name>",
-  "version": "0.1.0",
-  "features": [
-    {
-      "id": "F001",
-      "category": "core|ui|api|testing|infrastructure",
-      "priority": 1,
-      "description": "Short description of the feature",
-      "acceptanceCriteria": [
-        "Specific testable criterion 1",
-        "Specific testable criterion 2"
-      ],
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null
-    }
-  ],
-  "metadata": {
-    "createdAt": "<timestamp>",
-    "lastUpdated": "<timestamp>",
-    "totalFeatures": 0,
-    "passingFeatures": 0
-  }
-}
+Use the klondike CLI to initialize the project:
+
+```bash
+klondike init <project-name>
+```
+
+This creates the `.klondike/` directory with:
+- `features.json` - Feature registry
+- `agent-progress.json` - Session tracking data
+- `config.yaml` - Project configuration
+
+Then add features using the CLI:
+
+```bash
+klondike feature add "Short description" \
+  --category core \
+  --priority 1 \
+  --criteria "Specific testable criterion 1" \
+  --criteria "Specific testable criterion 2"
 ```
 
 Generate **at least 20 features** covering:
@@ -64,55 +56,27 @@ Generate **at least 20 features** covering:
 - Documentation
 - Deployment readiness
 
-### 3. Create Progress File (`agent-progress.md`)
+Verify the setup with:
 
-```markdown
-# Agent Progress Log
+```bash
+klondike status  # Shows project overview
+klondike feature list  # Lists all features
+```
 
-## Project: <name>
-## Started: <date>
-## Current Status: Initialization
+### 3. Progress File (Auto-Generated)
 
----
+The klondike CLI automatically generates `agent-progress.md` at project root from the data in `.klondike/agent-progress.json`. This markdown file is regenerated whenever you run klondike commands.
 
-## Session Log
+The progress file includes:
+- Project status overview
+- Session history
+- Quick reference for current priority features
+- Verification records
 
-### Session 1 - Initialization
-**Date**: <date>
-**Agent**: Initializer
+To manually regenerate the progress file:
 
-#### Completed
-- Created project structure
-- Generated features.json with X features
-- Set up init script
-- Created initial git commit
-
-#### In Progress
-- None
-
-#### Blockers
-- None
-
-#### Next Steps
-1. Begin implementing F001: <description>
-2. Set up development environment
-3. Run initial smoke tests
-
----
-
-## Quick Reference
-
-### Running the Project
-\`\`\`bash
-./init.sh  # or .\init.ps1 on Windows
-\`\`\`
-
-### Current Priority Features
-| ID | Description | Status |
-|----|-------------|--------|
-| F001 | ... | ⏳ |
-| F002 | ... | ⏳ |
-| F003 | ... | ⏳ |
+```bash
+klondike progress  # Displays and regenerates agent-progress.md
 ```
 
 ### 4. Create Init Script
@@ -215,10 +179,10 @@ exit 1
 ```bash
 git init
 git add .
-git commit -m "feat: initialize project with agent harness infrastructure
+git commit -m "feat: initialize project with Klondike Spec infrastructure
 
-- Created features.json with comprehensive feature list
-- Added agent-progress.md for session handoffs
+- Created .klondike/ with features.json and agent-progress.json
+- Generated agent-progress.md for session handoffs
 - Set up init scripts for reproducible environment
 - Configured for multi-context-window agent workflow"
 ```
@@ -236,20 +200,23 @@ Ensure `.vscode/settings.json` includes:
 ## Output Format
 
 Provide:
-1. **Summary** of created files
-2. **Feature count** breakdown by category
+1. **Summary** of created files (in `.klondike/` directory)
+2. **Feature count** breakdown by category (use `klondike feature list`)
 3. **Next steps** for the first coding agent session
-4. **Commands** to verify setup
+4. **Commands** to verify setup:
+   - `klondike status` - Project overview
+   - `klondike validate` - Artifact integrity check
+   - `klondike feature list` - All features
 
 ## IMPORTANT: Scope Boundary
 
 **STOP after completing the above steps.** This prompt is for scaffolding only.
 
-- ✅ Create `features.json`, `agent-progress.md`, init scripts, git commit
+- ✅ Run `klondike init`, add features, create init scripts, git commit
 - ✅ Set up basic project structure (package.json, tsconfig, etc.)
-- ❌ Do NOT start implementing features from `features.json`
+- ❌ Do NOT start implementing features from the feature registry
 - ❌ Do NOT write application code beyond minimal boilerplate
 
-The user should run `/session-start` to begin implementing features in a separate session.
+The user should run `klondike session start` via `/session-start` to begin implementing features in a separate session.
 
 > **Want to scaffold AND build in one go?** Use `/init-and-build` instead.

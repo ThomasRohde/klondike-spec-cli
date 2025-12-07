@@ -29,14 +29,27 @@ ls -la  # or Get-ChildItem
 
 ### 2. Read Progress Artifacts
 
-Read these files in order:
+**Use klondike CLI to check project status:**
+
+```bash
+# Get project status and feature summary
+klondike status
+
+# List all features with their status
+klondike feature list
+
+# Validate artifact integrity
+klondike validate
+```
+
+Alternatively, read files manually:
 
 1. **`agent-progress.md`** - Recent session summaries
    - What was the last session working on?
    - Are there any documented blockers?
    - What were the recommended next steps?
 
-2. **`features.json`** - Feature completion status
+2. **`.klondike/features.json`** - Feature completion status
    - How many features are passing vs pending?
    - What's the highest priority incomplete feature?
    - Are there any features marked as `in-progress` or `blocked`?
@@ -50,7 +63,15 @@ Read these files in order:
 
 ### 3. Artifact Integrity Checks (MANDATORY)
 
-Before proceeding, validate:
+**Use klondike CLI for validation:**
+
+```bash
+klondike validate
+```
+
+This automatically checks:
+
+This automatically checks:
 
 **features.json:**
 - [ ] File is valid JSON
@@ -59,7 +80,7 @@ Before proceeding, validate:
 - [ ] All features have required fields: `id`, `description`, `acceptanceCriteria`, `passes`
 - [ ] No features from previous session are missing (compare with `agent-progress.md` if noted)
 
-**agent-progress.md:**
+**agent-progress.json:**
 - [ ] Session numbers are sequential (no gaps or duplicates)
 - [ ] Previous session entries are intact (not deleted/modified)
 
@@ -68,31 +89,26 @@ Before proceeding, validate:
 2. Fix immediately before any coding work
 3. If unfixable, invoke `/recover-from-failure`
 
-### 4. Start the Environment
+### 4. Start the Session
 
-**IMPORTANT**: The init script starts the dev server **in the background** and performs health checks. If the health checks fail, do NOT proceed.
+**Use klondike CLI to formally start a session:**
 
 ```bash
-# Run the init script (it handles server startup and health checks)
-./init.sh  # or .\init.ps1 on Windows
+klondike session start --focus "F00X - Feature description"
 ```
 
-The init script will:
-1. Kill any stale dev servers on the target port
-2. Install dependencies if missing
-3. Run type check, lint, and tests
-4. **Start dev server in background** (won't block the agent)
-5. Wait for port to be ready (health check with timeout)
-6. Run a minimal smoke test
-7. Exit cleanly after health check passes
+This will:
+1. Validate artifact integrity automatically
+2. Create a new session entry in agent-progress.json
+3. Show current project status
+4. List priority features to work on
+5. Regenerate agent-progress.md
 
-**Note**: The dev server continues running in the background after the script exits. This is intentional—it allows the agent to proceed with coding work without being blocked by the server process.
+If your project has an init script for dev server:
 
-**If init script fails:**
-- **STOP** - Do not start new features
-- Document the failure
-- Invoke `/recover-from-failure` to diagnose and fix
-- Only continue after init passes completely
+```bash
+./init.sh  # or .\init.ps1 on Windows
+```
 
 ### 5. Smoke Test
 
@@ -131,11 +147,17 @@ Before starting work, create a plan with 3-6 concrete steps:
 
 ### 7. Select Next Task
 
+**Use klondike CLI to mark your selected feature:**
+
+```bash
+klondike feature start F00X
+```
+
 Based on your review:
 
 1. If environment is broken → Fix it first
 2. If there are incomplete in-progress features → Complete them
-3. Otherwise → Pick highest priority feature from `features.json`
+3. Otherwise → Pick highest priority feature from `klondike status`
 
 ### 8. Announce Your Plan and Begin
 

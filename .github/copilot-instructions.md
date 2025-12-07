@@ -1,6 +1,8 @@
-# Long-Running Agent Harness Instructions
+# Klondike Spec Agent Instructions
 
 > Inspired by [Anthropic's research on effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)
+> 
+> Managed by the `klondike` CLI tool - run `klondike` for available commands.
 
 ## Core Philosophy
 
@@ -10,16 +12,18 @@ This repository uses a **multi-context-window agent workflow** designed to maint
 
 ### 1. Progress File (`agent-progress.md`)
 - **Purpose**: Handoff document between agent sessions
-- **Location**: Project root
-- **Update frequency**: End of every meaningful work session
+- **Location**: Project root (auto-generated from `.klondike/agent-progress.json`)
+- **Update frequency**: Automatically updated by `klondike session end`
 - **Content**: What was done, what's next, any blockers
 
-### 2. Feature Registry (`features.json`)
+### 2. Feature Registry (`.klondike/features.json`)
 - **Purpose**: Prevent premature "victory declaration" and track completion
-- **Location**: Project root
+- **Location**: `.klondike/` directory
+- **Managed by**: `klondike feature` commands
 - **Rules**: 
-  - Only change `passes` field (never delete or edit test descriptions)
-  - Must be verified end-to-end before marking `passes: true`
+  - Use `klondike feature verify F00X` to mark as passing
+  - Use `klondike feature start F00X` to begin work
+  - Never manually edit - use CLI commands
 
 ### 3. Init Script (`init.sh` / `init.ps1`)
 - **Purpose**: Reproducible environment startup
@@ -33,38 +37,36 @@ This repository uses a **multi-context-window agent workflow** designed to maint
 
 ### Starting a Session
 1. Run `pwd` / `Get-Location` to confirm working directory
-2. Read `agent-progress.md` to understand recent work
-3. Check `git log --oneline -10` for recent commits
-4. Read `features.json` to identify next priority
-5. Run `init.sh`/`init.ps1` to start dev environment
-6. Run basic smoke test before new work
+2. Run `klondike status` to see project overview and recent work
+3. Run `klondike validate` to check artifact integrity
+4. Check `git log --oneline -10` for recent commits
+5. Run `klondike session start --focus "F00X - description"` to begin
+6. Run `init.sh`/`init.ps1` if project has dev server
+7. Run basic smoke test before new work
 
 ### During a Session
-- Work on **ONE feature at a time**
+- Work on **ONE feature at a time** - use `klondike feature start F00X` to track
 - Make atomic, reviewable commits with descriptive messages
 - Test incrementally - don't batch testing to the end
-- If you hit a blocker, document it and move to next task
+- If you hit a blocker, use `klondike feature block F00X --reason "..."` and move to next task
 
 ### Ending a Session
 1. Ensure code compiles/passes linting
 2. Commit all changes with clear messages
-3. Update `agent-progress.md` with:
-   - What was accomplished
-   - What was attempted but didn't work
-   - Recommended next steps
-4. Update `features.json` only for verified features
+3. For verified features, run `klondike feature verify F00X --evidence "..."`
+4. Run `klondike session end --summary "What was accomplished" --next "Recommended next steps"`
 5. Leave the environment in a **clean, mergeable state**
 
 ## Prohibited Behaviors
 
 - ❌ One-shotting complex features
-- ❌ Declaring project complete without checking `features.json`
-- ❌ Removing or editing feature descriptions in `features.json`
+- ❌ Declaring project complete without running `klondike status`
+- ❌ Manually editing `.klondike/features.json` (use CLI commands)
 - ❌ Leaving code in broken/half-implemented state
 - ❌ Making changes without committing and documenting
-- ❌ Marking features as passing without end-to-end verification
-- ❌ **Committing without running `npm run build` first**
-- ❌ **Committing without running `npm run test` first**
+- ❌ Using `klondike feature verify` without end-to-end verification
+- ❌ **Committing without running `npm run build` first** (or equivalent)
+- ❌ **Committing without running `npm run test` first** (or equivalent)
 - ❌ **Leaving the repository with failing builds or tests**
 
 ## Testing Standards
@@ -144,39 +146,37 @@ When working on this project, automatically follow these patterns:
 ### On First Interaction of a Session
 
 Before doing any coding work:
-1. Check if `agent-progress.md` exists - read it for context
-2. Check if `features.json` exists - identify current priorities
-3. **Run Artifact Integrity Checks** (see below)
-4. Review `git log --oneline -10` for recent changes
+1. Run `klondike status` to see project overview
+2. Run `klondike validate` to check artifact integrity
+3. Review `git log --oneline -10` for recent changes
+4. Run `klondike session start --focus "F00X - description"` to begin session
 5. If init script exists, run it and verify health checks pass
 6. Create a **Session Plan** (3-6 steps with status tracking)
-7. Announce which feature you'll work on
+7. Use `klondike feature start F00X` to mark which feature you'll work on
 
 ### Artifact Integrity Checks (MANDATORY)
 
-Before coding, validate artifacts are consistent:
+Run `klondike validate` which automatically checks:
 
 **features.json checks:**
-- File exists and is valid JSON
+- File exists and is valid JSON in `.klondike/` directory
 - `metadata.totalFeatures` matches actual feature count
 - `metadata.passingFeatures` matches count where `passes: true`
-- No features have been deleted (compare IDs to previous session if noted)
 - All required fields present: `id`, `description`, `acceptanceCriteria`, `passes`
 
-**agent-progress.md checks:**
-- File exists
-- Session numbers are monotonically increasing
-- No previous session entries have been deleted or modified
+**agent-progress.json checks:**
+- File exists in `.klondike/` directory
+- Valid JSON structure
 
 **If inconsistencies found:**
 1. **STOP** - do not proceed with coding
 2. Document the inconsistency
-3. Fix the artifact or invoke `/recover-from-failure`
-4. Only continue after integrity is restored
+3. Fix the artifact or investigate the issue
+4. Only continue after `klondike validate` passes
 
 ### While Working
 
-1. Focus on ONE feature from `features.json` at a time
+1. Focus on ONE feature at a time (tracked via `klondike feature start F00X`)
 2. Commit after each meaningful change
 3. Test as you go, not at the end
 4. If something breaks, fix it before continuing
@@ -185,49 +185,65 @@ Before coding, validate artifacts are consistent:
 
 When the user indicates they're done or switching tasks:
 1. Ensure all changes are committed
-2. Update `agent-progress.md` with session summary
-3. Update `features.json` only for verified-complete features
+2. Use `klondike feature verify F00X --evidence "..."` for verified features
+3. Run `klondike session end --summary "..." --next "..."`
 4. Summarize the handoff for the next session
 
 ---
 
 ## Quick Reference: Artifact Rules
 
-### features.json - STRICT RULES
+### .klondike/features.json - MANAGED BY CLI
 
-**Allowed:**
-- Change `status` field (`not-started` → `in-progress` → `blocked` | `verified`)
-- Change `passes` from `false` to `true` (after verification)
-- Set `verifiedAt` timestamp
-- Set `verifiedBy` identifier
-- Set `evidenceLinks` array with paths to verification evidence
-- Set `blockedBy` (feature IDs or reason string)
-- Set `lastWorkedOn` timestamp
-- Add `notes` for context
+**Use these commands:**
+- `klondike feature add "description" --category X --priority N --criteria "..."` - Add feature
+- `klondike feature start F00X` - Mark in-progress
+- `klondike feature verify F00X --evidence "..."` - Mark verified
+- `klondike feature block F00X --reason "..."` - Mark blocked
+- `klondike feature list` - List all features
+- `klondike feature show F00X` - Show feature details
 
 **Forbidden:**
-- Delete features
-- Edit `description` or `acceptanceCriteria`
-- Mark as passing without end-to-end testing
-- Change `status` to `verified` without evidence
+- Manually editing `.klondike/features.json`
+- Deleting features
+- Marking as passing without end-to-end testing
 
-### agent-progress.md - APPEND ONLY
+### agent-progress.md - AUTO-GENERATED
 
-**Allowed:**
-- Append new session entries
-- Update "Quick Reference" section
+This file is automatically generated by the klondike CLI from `.klondike/agent-progress.json`.
 
-**Forbidden:**
-- Delete previous session entries
-- Modify historical records
+**Use these commands:**
+- `klondike session start --focus "..."` - Start new session
+- `klondike session end --summary "..." --next "..."` - End session with summary
+- `klondike progress` - Regenerate and display progress file
+
+**Do not manually edit** - changes will be overwritten.
 
 ---
 
 ## Initialization Checklist
 
-For new projects using this workflow, ensure these exist:
-- [ ] `features.json` with comprehensive feature list (20+ features)
-- [ ] `agent-progress.md` with initial session entry
-- [ ] `init.sh` and/or `init.ps1` for environment setup
+For new projects using this workflow:
+
+```bash
+# Install klondike CLI
+pip install klondike-spec-cli
+
+# Initialize project
+klondike init <project-name>
+
+# Add features (20+ recommended)
+klondike feature add "Feature description" --category core --priority 1 --criteria "..."
+
+# Verify setup
+klondike status
+klondike validate
+```
+
+Ensures:
+- [ ] `.klondike/features.json` with comprehensive feature list (20+ features)
+- [ ] `.klondike/agent-progress.json` for session tracking
+- [ ] `agent-progress.md` auto-generated at project root
+- [ ] `init.sh` and/or `init.ps1` for environment setup (if dev server)
 - [ ] Initial git commit with clean state
 - [ ] `.vscode/settings.json` with Copilot configuration
