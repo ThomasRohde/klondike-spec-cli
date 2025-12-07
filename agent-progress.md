@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F022 | Set up GitHub Actions CI/CD | 🔄 In progress |
 | F023 | Implement 'klondike feature import' command | ⏳ Not started |
 | F024 | Implement 'klondike feature export' command | ⏳ Not started |
+| F029 | Implement git integration for session management | ⏳ Not started |
 
 ---
 
