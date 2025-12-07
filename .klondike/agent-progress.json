@@ -71,7 +71,7 @@
       {
         "id": "F020",
         "description": "Integration tests for CLI commands",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F026",
