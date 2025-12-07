@@ -409,7 +409,9 @@ def create_mcp_server() -> FastMCP | None:
                     "percent": progress_pct,
                 },
                 "by_status": by_status,
-                "current_session": current_session.to_dict() if current_session else None,
+                "current_session": (
+                    current_session.to_dict() if current_session else None
+                ),
                 "priority_features": [
                     {"id": f.id, "description": f.description, "priority": f.priority}
                     for f in priority_features
@@ -512,10 +514,14 @@ def create_mcp_server() -> FastMCP | None:
             current.focus = summary
 
             if completed:
-                current.completed = [c.strip() for c in completed.split(",") if c.strip()]
+                current.completed = [
+                    c.strip() for c in completed.split(",") if c.strip()
+                ]
 
             if next_steps:
-                current.next_steps = [n.strip() for n in next_steps.split(",") if n.strip()]
+                current.next_steps = [
+                    n.strip() for n in next_steps.split(",") if n.strip()
+                ]
             else:
                 priority = registry.get_priority_features(3)
                 current.next_steps = [
