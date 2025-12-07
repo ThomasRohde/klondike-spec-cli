@@ -29,7 +29,7 @@ ls -la  # or Get-ChildItem
 
 ### 2. Read Progress Artifacts
 
-**Use klondike CLI to check project status:**
+**Use klondike CLI to check project status (REQUIRED):**
 
 ```bash
 # Get project status and feature summary
@@ -38,28 +38,21 @@ klondike status
 # List all features with their status
 klondike feature list
 
+# Show details for a specific feature
+klondike feature show F00X
+
 # Validate artifact integrity
 klondike validate
 ```
 
-Alternatively, read files manually:
+> ⚠️ **IMPORTANT**: Do NOT read `.klondike/features.json`, `.klondike/agent-progress.json`, or `agent-progress.md` directly using file read tools. Always use klondike CLI commands to access this data. The CLI is the canonical interface.
 
-1. **`agent-progress.md`** - Recent session summaries
-   - What was the last session working on?
-   - Are there any documented blockers?
-   - What were the recommended next steps?
-
-2. **`.klondike/features.json`** - Feature completion status
-   - How many features are passing vs pending?
-   - What's the highest priority incomplete feature?
-   - Are there any features marked as `in-progress` or `blocked`?
-
-3. **Git history** - Recent changes
-   ```bash
-   git log --oneline -15
-   git status
-   git diff --stat HEAD~3  # What changed recently
-   ```
+**Git history** - Recent changes:
+```bash
+git log --oneline -15
+git status
+git diff --stat HEAD~3  # What changed recently
+```
 
 ### 3. Artifact Integrity Checks (MANDATORY)
 

@@ -7,7 +7,10 @@ applyTo: "**/agent-progress.md,**/.klondike/features.json,**/.klondike/agent-pro
 
 These files are critical infrastructure for multi-context-window agent workflows. Handle with care.
 
-> **Note**: The klondike CLI manages these artifacts. Use `klondike` commands instead of manual editing.
+> **⚠️ CRITICAL**: The klondike CLI is the **only** interface for these artifacts. 
+> - **Never read** `.klondike/features.json`, `.klondike/agent-progress.json`, or `agent-progress.md` directly
+> - **Always use** `klondike` commands to access project state
+> - The CLI output is the canonical source of truth
 
 ## agent-progress.md
 
@@ -59,18 +62,28 @@ Prevent premature "victory declaration" by maintaining a structured checklist of
 
 ### Management
 
-This file is managed by the klondike CLI. Use these commands:
+This file is managed **exclusively** by the klondike CLI. 
+
+**To access feature data, use these commands:**
+
+```bash
+klondike status                    # Project overview with feature counts
+klondike feature list              # List all features with status
+klondike feature list --json       # Full feature data as JSON
+klondike feature show F00X         # Detailed view of one feature
+```
+
+**To modify feature state, use these commands:**
 
 ```bash
 klondike feature add "description" --category X --criteria "..."  # Add feature
 klondike feature start F00X                                        # Mark in-progress
 klondike feature verify F00X --evidence "..."                      # Mark verified
 klondike feature block F00X --reason "..."                         # Mark blocked
-klondike feature list                                              # List all
-klondike feature show F00X                                         # Show details
 ```
 
-**Do not manually edit** - use CLI commands to ensure artifact integrity.
+> **⚠️ FORBIDDEN**: Do not read `.klondike/features.json` directly using file read tools.
+> Use `klondike feature list --json` if you need the raw JSON data.
 
 ### Schema Fields
 

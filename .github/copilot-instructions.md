@@ -62,6 +62,7 @@ This repository uses a **multi-context-window agent workflow** designed to maint
 - ❌ One-shotting complex features
 - ❌ Declaring project complete without running `klondike status`
 - ❌ Manually editing `.klondike/features.json` (use CLI commands)
+- ❌ **Reading `.klondike/*.json` or `agent-progress.md` directly** (use CLI commands)
 - ❌ Leaving code in broken/half-implemented state
 - ❌ Making changes without committing and documenting
 - ❌ Using `klondike feature verify` without end-to-end verification
@@ -205,6 +206,7 @@ When the user indicates they're done or switching tasks:
 
 **Forbidden:**
 - Manually editing `.klondike/features.json`
+- **Reading `.klondike/features.json` directly** (use `klondike feature list` or `klondike feature show`)
 - Deleting features
 - Marking as passing without end-to-end testing
 
