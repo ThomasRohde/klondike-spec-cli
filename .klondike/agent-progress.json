@@ -1,7 +1,7 @@
 {
   "projectName": "klondike-spec-cli",
   "startedAt": "2025-12-07T00:00:00Z",
-  "currentStatus": "Session Ended",
+  "currentStatus": "In Progress",
   "sessions": [
     {
       "sessionNumber": 1,
@@ -84,6 +84,20 @@
         "Add more integration tests"
       ],
       "technicalNotes": []
+    },
+    {
+      "sessionNumber": 5,
+      "date": "2025-12-07",
+      "agent": "Coding Agent",
+      "duration": "(in progress)",
+      "focus": "F031 - Copilot agent launcher with context-aware prompts",
+      "completed": [],
+      "inProgress": [
+        "Session started"
+      ],
+      "blockers": [],
+      "nextSteps": [],
+      "technicalNotes": []
     }
   ],
   "quickReference": {
@@ -94,6 +108,22 @@
       ".klondike/agent-progress.json",
       "agent-progress.md"
     ],
-    "priorityFeatures": []
+    "priorityFeatures": [
+      {
+        "id": "F032",
+        "description": "MCP server exposing klondike tools to copilot",
+        "status": "not-started"
+      },
+      {
+        "id": "F033",
+        "description": "Generate feature-specific prompts for copilot",
+        "status": "not-started"
+      },
+      {
+        "id": "F034",
+        "description": "Generate AGENTS.md from klondike configuration",
+        "status": "not-started"
+      }
+    ]
   }
 }

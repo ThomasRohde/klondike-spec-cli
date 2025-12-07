@@ -669,3 +669,237 @@ class TestImportExportFeatures:
                 assert "Exported 1 features" in result.output
             finally:
                 os.chdir(original_cwd)
+
+
+class TestCopilotCommand:
+    """Integration tests for 'klondike copilot' command."""
+
+    def test_copilot_start_dry_run(self) -> None:
+        """Test copilot start with --dry-run shows command without executing."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init", "--name", "test-project"])
+                runner.invoke(app, ["feature", "add", "--description", "Test feature"])
+
+                result = runner.invoke(app, ["copilot", "start", "--dry-run"])
+
+                assert result.exit_code == 0
+                assert "Dry run - would execute" in result.output
+                assert "copilot" in result.output
+                assert "Working on project: test-project" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_start_includes_in_progress_feature(self) -> None:
+        """Test copilot start includes in-progress feature in context."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(
+                    app,
+                    [
+                        "feature",
+                        "add",
+                        "--description",
+                        "Important feature",
+                        "--criteria",
+                        "Must work,Must be fast",
+                    ],
+                )
+                runner.invoke(app, ["feature", "start", "F001"])
+
+                result = runner.invoke(app, ["copilot", "start", "--dry-run"])
+
+                assert result.exit_code == 0
+                assert "F001" in result.output
+                assert "Important feature" in result.output
+                assert "Must work" in result.output
+                assert "Must be fast" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_start_with_model_flag(self) -> None:
+        """Test copilot start with --model flag."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(
+                    app, ["copilot", "start", "--dry-run", "--model", "claude-sonnet"]
+                )
+
+                assert result.exit_code == 0
+                assert "--model" in result.output
+                assert "claude-sonnet" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_start_with_resume_flag(self) -> None:
+        """Test copilot start with --resume flag."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(app, ["copilot", "start", "--dry-run", "--resume"])
+
+                assert result.exit_code == 0
+                assert "--resume" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_start_with_feature_flag(self) -> None:
+        """Test copilot start with --feature flag to focus on specific feature."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Feature One"])
+                runner.invoke(app, ["feature", "add", "--description", "Feature Two"])
+
+                result = runner.invoke(
+                    app, ["copilot", "start", "--dry-run", "--feature", "F002"]
+                )
+
+                assert result.exit_code == 0
+                assert "F002" in result.output
+                assert "Feature Two" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_start_with_additional_instructions(self) -> None:
+        """Test copilot start with --instructions flag."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(
+                    app,
+                    [
+                        "copilot",
+                        "start",
+                        "--dry-run",
+                        "--instructions",
+                        "Focus on performance",
+                    ],
+                )
+
+                assert result.exit_code == 0
+                assert "Focus on performance" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_start_with_custom_tools(self) -> None:
+        """Test copilot start with --allow-tools flag."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(
+                    app,
+                    [
+                        "copilot",
+                        "start",
+                        "--dry-run",
+                        "--allow-tools",
+                        "read_file,run_in_terminal",
+                    ],
+                )
+
+                assert result.exit_code == 0
+                assert "--allow-tool" in result.output
+                assert "read_file" in result.output
+                assert "run_in_terminal" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_start_includes_default_tools(self) -> None:
+        """Test copilot start includes default safe tools."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(app, ["copilot", "start", "--dry-run"])
+
+                assert result.exit_code == 0
+                # Should include default safe tools
+                assert "read_file" in result.output
+                assert "list_dir" in result.output
+                assert "grep_search" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_start_shows_workflow_reminders(self) -> None:
+        """Test copilot start includes klondike workflow reminders."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(app, ["copilot", "start", "--dry-run"])
+
+                assert result.exit_code == 0
+                assert "klondike feature start" in result.output
+                assert "klondike feature verify" in result.output
+                assert "klondike session end" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_invalid_feature_id(self) -> None:
+        """Test copilot start with invalid feature ID."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(
+                    app, ["copilot", "start", "--dry-run", "--feature", "F999"]
+                )
+
+                assert result.exit_code != 0
+                assert "Feature not found" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_copilot_unknown_action(self) -> None:
+        """Test copilot with unknown action."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(app, ["copilot", "unknown"])
+
+                assert result.exit_code != 0
+                assert "Unknown action" in result.output
+            finally:
+                os.chdir(original_cwd)
+

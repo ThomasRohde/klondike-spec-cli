@@ -848,12 +848,199 @@
       "blockedBy": null,
       "lastWorkedOn": "2025-12-07T14:00:10.574583",
       "notes": null
+    },
+    {
+      "id": "F031",
+      "category": "core",
+      "priority": 2,
+      "description": "Copilot agent launcher with context-aware prompts",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "klondike copilot start launches copilot with project context",
+        "Auto-includes current in-progress feature in prompt",
+        "Sets safe --allow-tool permissions",
+        "Supports --model flag for model selection",
+        "Passes --resume for session continuity"
+      ],
+      "estimatedEffort": null,
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T14:47:07.018864",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py",
+        "tests/test_cli.py (11 copilot tests passing)",
+        "dry-run shows context-aware prompt"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-07T14:44:13.995459",
+      "notes": null
+    },
+    {
+      "id": "F032",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "MCP server exposing klondike tools to copilot",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "klondike mcp serve starts MCP server",
+        "Exposes get_features/start_feature/verify_feature/get_status tools",
+        "Generates mcp-config.json for copilot",
+        "klondike mcp install registers with copilot config",
+        "Works with copilot --additional-mcp-config flag"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F033",
+      "category": "core",
+      "priority": 2,
+      "description": "Generate feature-specific prompts for copilot",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "klondike feature prompt F001 generates copilot-ready prompt",
+        "Includes description/criteria/dependencies in prompt",
+        "Outputs to stdout or file with --output",
+        "Supports --interactive to launch copilot -i with prompt",
+        "Includes pre-commit verification instructions"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F034",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Generate AGENTS.md from klondike configuration",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "klondike generate agents-md creates AGENTS.md",
+        "Includes project conventions from config.yaml",
+        "Includes pre-commit verification requirements",
+        "References features.json for context",
+        "Follows copilot AGENTS.md format specification"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F035",
+      "category": "core",
+      "priority": 3,
+      "description": "Auto-delegate feature PRs via copilot",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "klondike feature pr F001 launches copilot delegate mode",
+        "Auto-generates PR description from acceptance criteria",
+        "Includes verification evidence in PR body",
+        "Supports --draft flag for draft PRs",
+        "Shows link to created PR on completion"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F036",
+      "category": "infrastructure",
+      "priority": 3,
+      "description": "Copilot session resume integration",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "klondike session resume runs copilot --resume with context",
+        "Stores copilot session IDs in agent-progress.json",
+        "klondike session list-copilot shows available sessions",
+        "Auto-suggests resume when starting new klondike session"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F037",
+      "category": "infrastructure",
+      "priority": 3,
+      "description": "Export session progress as GitHub gist",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "klondike session share creates GitHub gist with summary",
+        "Includes feature progress and next steps",
+        "Returns gist URL for stakeholder sharing",
+        "Supports --private flag for private gists",
+        "Stores gist URL in session record"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F038",
+      "category": "core",
+      "priority": 3,
+      "description": "AI-powered feature suggestions from codebase analysis",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "klondike suggest analyzes codebase with copilot",
+        "Proposes new features based on TODOs/FIXMEs",
+        "Identifies missing test coverage as features",
+        "Outputs suggested features in import-compatible format",
+        "Supports --auto-add to directly add suggestions"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T14:02:11.592538",
-    "totalFeatures": 30,
-    "passingFeatures": 30
+    "lastUpdated": "2025-12-07T14:47:07.018875",
+    "totalFeatures": 38,
+    "passingFeatures": 31
   }
 }

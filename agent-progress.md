@@ -2,7 +2,7 @@
 
 ## Project: klondike-spec-cli
 ## Started: 2025-12-07
-## Current Status: Session Ended
+## Current Status: In Progress
 
 ---
 
@@ -23,6 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
+| F032 | MCP server exposing klondike tools to copilot | ⏳ Not started |
+| F033 | Generate feature-specific prompts for copilot | ⏳ Not started |
+| F034 | Generate AGENTS.md from klondike configuration | ⏳ Not started |
 
 ---
 
@@ -128,6 +131,28 @@ klondike feature list  # List all features
 1. Publish to PyPI
 2. Write documentation
 3. Add more integration tests
+
+#### Technical Notes
+- None
+
+---
+
+### Session 5 - 2025-12-07
+**Agent**: Coding Agent
+**Duration**: (in progress)
+**Focus**: F031 - Copilot agent launcher with context-aware prompts
+
+#### Completed
+- None
+
+#### In Progress
+- Session started
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
 
 #### Technical Notes
 - None

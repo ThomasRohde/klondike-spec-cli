@@ -1592,6 +1592,183 @@ def import_features(
             echo(f"      ... and {len(errors) - 5} more")
 
 
+@app.command(name="copilot", pith="Launch GitHub Copilot CLI with klondike context", priority=77)
+@app.intents(
+    "start copilot",
+    "launch copilot",
+    "run copilot",
+    "copilot agent",
+    "ai agent",
+)
+def copilot(
+    action: str = Argument(..., pith="Action: start"),
+    model: str | None = Option(None, "--model", "-m", pith="Model to use (e.g., claude-sonnet, gpt-4)"),
+    resume: bool = Option(False, "--resume", "-r", pith="Resume previous session"),
+    feature_id: str | None = Option(None, "--feature", "-f", pith="Focus on specific feature"),
+    instructions: str | None = Option(None, "--instructions", "-i", pith="Additional instructions"),
+    allow_tools: str | None = Option(None, "--allow-tools", pith="Comma-separated list of allowed tools"),
+    dry_run: bool = Option(False, "--dry-run", pith="Show command without executing"),
+) -> None:
+    """Launch GitHub Copilot CLI with klondike project context.
+
+    Automatically includes project status, in-progress features, and
+    klondike workflow instructions in the prompt context.
+
+    Actions:
+        start - Launch copilot with project context
+
+    Examples:
+        $ klondike copilot start
+        $ klondike copilot start --model claude-sonnet
+        $ klondike copilot start --feature F001
+        $ klondike copilot start --resume
+        $ klondike copilot start --dry-run
+
+    Related:
+        status - Check project status first
+        feature start - Mark a feature as in-progress
+    """
+    if action == "start":
+        _copilot_start(model, resume, feature_id, instructions, allow_tools, dry_run)
+    else:
+        raise PithException(f"Unknown action: {action}. Use: start")
+
+
+def _copilot_start(
+    model: str | None,
+    resume: bool,
+    feature_id: str | None,
+    instructions: str | None,
+    allow_tools: str | None,
+    dry_run: bool,
+) -> None:
+    """Launch GitHub Copilot CLI with project context."""
+    import shutil
+    import subprocess
+
+    # Check if copilot CLI is available
+    copilot_path = shutil.which("copilot")
+    if not copilot_path and not dry_run:
+        raise PithException(
+            "GitHub Copilot CLI not found. Install with: npm install -g @anthropic/copilot-cli\n"
+            "Or see: https://docs.github.com/en/copilot/github-copilot-in-the-cli"
+        )
+
+    # Load project context
+    registry = load_features()
+    progress = load_progress()
+
+    # Determine focus feature
+    focus_feature = None
+    if feature_id:
+        validated_id = validate_feature_id(feature_id)
+        focus_feature = registry.get_feature(validated_id)
+        if not focus_feature:
+            raise PithException(f"Feature not found: {validated_id}")
+    else:
+        # Auto-detect in-progress feature
+        in_progress = registry.get_features_by_status(FeatureStatus.IN_PROGRESS)
+        if in_progress:
+            focus_feature = in_progress[0]
+
+    # Build context-aware prompt
+    prompt_parts = []
+
+    # Project context
+    total = registry.metadata.total_features
+    passing = registry.metadata.passing_features
+    progress_pct = round(passing / total * 100, 1) if total > 0 else 0
+
+    prompt_parts.append(f"Working on project: {registry.project_name} v{registry.version}")
+    prompt_parts.append(f"Progress: {passing}/{total} features ({progress_pct}%)")
+
+    # Feature focus
+    if focus_feature:
+        prompt_parts.append("")
+        prompt_parts.append(f"Current focus: {focus_feature.id} - {focus_feature.description}")
+        if focus_feature.acceptance_criteria:
+            prompt_parts.append("Acceptance criteria:")
+            for ac in focus_feature.acceptance_criteria:
+                prompt_parts.append(f"  - {ac}")
+        if focus_feature.notes:
+            prompt_parts.append(f"Notes: {focus_feature.notes}")
+
+    # Workflow instructions
+    prompt_parts.append("")
+    prompt_parts.append("Klondike workflow reminders:")
+    prompt_parts.append("- Use 'klondike feature start <ID>' to mark a feature in-progress")
+    prompt_parts.append("- Use 'klondike feature verify <ID> --evidence <path>' when complete")
+    prompt_parts.append("- Run 'npm run build' and 'npm run test' before committing")
+    prompt_parts.append("- Use 'klondike session end --summary \"...\"' when done")
+
+    # Additional instructions
+    if instructions:
+        prompt_parts.append("")
+        prompt_parts.append(f"Additional instructions: {instructions}")
+
+    context_prompt = "\n".join(prompt_parts)
+
+    # Build copilot command
+    cmd = ["copilot"]
+
+    if resume:
+        cmd.append("--resume")
+
+    if model:
+        cmd.extend(["--model", model])
+
+    # Safe tool permissions - default to safe set
+    if allow_tools:
+        tools = allow_tools.split(",")
+        for tool in tools:
+            cmd.extend(["--allow-tool", tool.strip()])
+    else:
+        # Default safe tools
+        safe_tools = [
+            "read_file",
+            "list_dir",
+            "grep_search",
+            "file_search",
+            "run_in_terminal",
+            "create_file",
+            "replace_string_in_file",
+        ]
+        for tool in safe_tools:
+            cmd.extend(["--allow-tool", tool])
+
+    # Add the context prompt as initial message
+    cmd.extend(["--message", context_prompt])
+
+    if dry_run:
+        echo("🔍 Dry run - would execute:")
+        echo("")
+        echo(f"  {' '.join(cmd)}")
+        echo("")
+        echo("📋 Context prompt:")
+        echo("---")
+        echo(context_prompt)
+        echo("---")
+        return
+
+    # Show what we're doing
+    echo("🚀 Launching GitHub Copilot with klondike context...")
+    if focus_feature:
+        echo(f"   📋 Focus: {focus_feature.id} - {focus_feature.description}")
+    if model:
+        echo(f"   🤖 Model: {model}")
+    if resume:
+        echo("   🔄 Resuming previous session")
+    echo("")
+
+    # Launch copilot
+    try:
+        subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        raise PithException(f"Copilot exited with error code {e.returncode}") from e
+    except FileNotFoundError as e:
+        raise PithException("GitHub Copilot CLI not found in PATH") from e
+
+
 @app.command(name="export-features", pith="Export features to YAML or JSON file", priority=76)
 @app.intents(
     "export features",
