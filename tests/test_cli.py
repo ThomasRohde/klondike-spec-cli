@@ -770,9 +770,7 @@ class TestCopilotCommand:
                 runner.invoke(app, ["feature", "add", "--description", "Feature One"])
                 runner.invoke(app, ["feature", "add", "--description", "Feature Two"])
 
-                result = runner.invoke(
-                    app, ["copilot", "start", "--dry-run", "--feature", "F002"]
-                )
+                result = runner.invoke(app, ["copilot", "start", "--dry-run", "--feature", "F002"])
 
                 assert result.exit_code == 0
                 assert "F002" in result.output
@@ -878,9 +876,7 @@ class TestCopilotCommand:
                 os.chdir(tmpdir)
                 runner.invoke(app, ["init"])
 
-                result = runner.invoke(
-                    app, ["copilot", "start", "--dry-run", "--feature", "F999"]
-                )
+                result = runner.invoke(app, ["copilot", "start", "--dry-run", "--feature", "F999"])
 
                 assert result.exit_code != 0
                 assert "Feature not found" in result.output
@@ -902,4 +898,3 @@ class TestCopilotCommand:
                 assert "Unknown action" in result.output
             finally:
                 os.chdir(original_cwd)
-

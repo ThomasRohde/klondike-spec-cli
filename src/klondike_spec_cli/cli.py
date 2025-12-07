@@ -1602,11 +1602,15 @@ def import_features(
 )
 def copilot(
     action: str = Argument(..., pith="Action: start"),
-    model: str | None = Option(None, "--model", "-m", pith="Model to use (e.g., claude-sonnet, gpt-4)"),
+    model: str | None = Option(
+        None, "--model", "-m", pith="Model to use (e.g., claude-sonnet, gpt-4)"
+    ),
     resume: bool = Option(False, "--resume", "-r", pith="Resume previous session"),
     feature_id: str | None = Option(None, "--feature", "-f", pith="Focus on specific feature"),
     instructions: str | None = Option(None, "--instructions", "-i", pith="Additional instructions"),
-    allow_tools: str | None = Option(None, "--allow-tools", pith="Comma-separated list of allowed tools"),
+    allow_tools: str | None = Option(
+        None, "--allow-tools", pith="Comma-separated list of allowed tools"
+    ),
     dry_run: bool = Option(False, "--dry-run", pith="Show command without executing"),
 ) -> None:
     """Launch GitHub Copilot CLI with klondike project context.
