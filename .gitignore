@@ -75,6 +75,9 @@ dmypy.json
 # ruff
 .ruff_cache/
 
+# hatch-vcs generated version file
+src/klondike_spec_cli/_version.py
+
 # OS
 .DS_Store
 Thumbs.db

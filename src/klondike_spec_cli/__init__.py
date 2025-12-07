@@ -7,7 +7,10 @@ artifacts including features.json and agent-progress tracking.
 from .cli import app, main
 from .models import Feature, FeatureRegistry, ProgressLog, Session
 
-__version__ = "0.1.0"
+try:
+    from ._version import __version__
+except ImportError:
+    __version__ = "0.0.0+unknown"
 
 __all__ = [
     "Feature",
