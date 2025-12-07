@@ -1,0 +1,17 @@
+# Klondike CLI Configuration
+# Project: {{PROJECT_NAME}}
+
+# Default category for new features
+default_category: core
+
+# Default priority for new features (1-5, 1=critical)
+default_priority: 2
+
+# Identifier used for verifiedBy field
+verified_by: coding-agent
+
+# Path for generated agent-progress.md (relative to repo root)
+progress_output_path: agent-progress.md
+
+# Whether to auto-regenerate agent-progress.md on changes
+auto_regenerate_progress: true

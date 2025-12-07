@@ -1,0 +1,11 @@
+{
+  "projectName": "{{PROJECT_NAME}}",
+  "version": "0.1.0",
+  "features": [],
+  "metadata": {
+    "createdAt": "{{CREATED_AT}}",
+    "lastUpdated": "{{CREATED_AT}}",
+    "totalFeatures": 0,
+    "passingFeatures": 0
+  }
+}

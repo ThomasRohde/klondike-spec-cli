@@ -60,7 +60,9 @@ class Feature:
         """Convert to dictionary for JSON serialization."""
         return {
             "id": self.id,
-            "category": self.category.value if isinstance(self.category, FeatureCategory) else self.category,
+            "category": self.category.value
+            if isinstance(self.category, FeatureCategory)
+            else self.category,
             "priority": self.priority,
             "description": self.description,
             "dependencies": self.dependencies,
@@ -441,12 +443,14 @@ class ProgressLog:
         for key_file in self.quick_reference.key_files:
             lines.append(f"- `{key_file}`")
 
-        lines.extend([
-            "",
-            "### Current Priority Features",
-            "| ID | Description | Status |",
-            "|----|-------------|--------|",
-        ])
+        lines.extend(
+            [
+                "",
+                "### Current Priority Features",
+                "| ID | Description | Status |",
+                "|----|-------------|--------|",
+            ]
+        )
 
         status_icons = {
             "not-started": "⏳ Not started",
@@ -459,13 +463,15 @@ class ProgressLog:
             status_display = status_icons.get(pf.status, pf.status)
             lines.append(f"| {pf.id} | {pf.description} | {status_display} |")
 
-        lines.extend([
-            "",
-            "---",
-            "",
-            "## Session Log",
-            "",
-        ])
+        lines.extend(
+            [
+                "",
+                "---",
+                "",
+                "## Session Log",
+                "",
+            ]
+        )
 
         for session in self.sessions:
             lines.append(session.to_markdown())

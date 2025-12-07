@@ -14,13 +14,17 @@ from pith import Argument, Option, Pith, PithException, echo
 from .models import (
     Feature,
     FeatureCategory,
-    FeatureMetadata,
     FeatureRegistry,
     FeatureStatus,
     PriorityFeatureRef,
     ProgressLog,
-    QuickReference,
     Session,
+)
+from .templates import (
+    CONFIG_TEMPLATE,
+    FEATURES_TEMPLATE,
+    PROGRESS_TEMPLATE,
+    read_template,
 )
 
 # --- Constants ---
@@ -150,8 +154,7 @@ def init(
 
     if klondike_dir.exists() and not force:
         raise PithException(
-            f"Klondike directory already exists: {klondike_dir}\n"
-            "Use --force to reinitialize."
+            f"Klondike directory already exists: {klondike_dir}\nUse --force to reinitialize."
         )
 
     # Determine project name
@@ -161,86 +164,35 @@ def init(
     # Create directory
     klondike_dir.mkdir(parents=True, exist_ok=True)
 
-    # Create features.json
+    # Prepare template variables
     now = datetime.now().isoformat()
-    registry = FeatureRegistry(
-        project_name=project_name,
-        version="0.1.0",
-        features=[],
-        metadata=FeatureMetadata(
-            created_at=now,
-            last_updated=now,
-            total_features=0,
-            passing_features=0,
-        ),
-    )
-    registry.save(klondike_dir / FEATURES_FILE)
+    date = datetime.now().strftime("%Y-%m-%d")
+    template_vars = {
+        "{{PROJECT_NAME}}": project_name,
+        "{{CREATED_AT}}": now,
+        "{{DATE}}": date,
+    }
 
-    # Create agent-progress.json
-    progress = ProgressLog(
-        project_name=project_name,
-        started_at=now,
-        current_status="Initialized",
-        sessions=[
-            Session(
-                session_number=1,
-                date=datetime.now().strftime("%Y-%m-%d"),
-                agent="Initializer Agent",
-                duration="~5 minutes",
-                focus="Project initialization",
-                completed=[
-                    "Created .klondike directory structure",
-                    "Generated empty features.json",
-                    "Created agent-progress.json",
-                    "Generated agent-progress.md",
-                ],
-                in_progress=[],
-                blockers=[],
-                next_steps=[
-                    "Add features with 'klondike feature add'",
-                    "Start first coding session with 'klondike session start'",
-                ],
-                technical_notes=[
-                    "Use 'klondike feature add' to populate the feature registry",
-                    "Use 'klondike status' to check project status at any time",
-                ],
-            )
-        ],
-        quick_reference=QuickReference(
-            run_command="klondike",
-            dev_server_port=None,
-            key_files=[
-                ".klondike/features.json",
-                ".klondike/agent-progress.json",
-                "agent-progress.md",
-            ],
-            priority_features=[],
-        ),
-    )
-    progress.save(klondike_dir / PROGRESS_FILE)
+    # Load and substitute features.json template
+    features_content = read_template(FEATURES_TEMPLATE)
+    for var, value in template_vars.items():
+        features_content = features_content.replace(var, value)
+    (klondike_dir / FEATURES_FILE).write_text(features_content, encoding="utf-8")
 
-    # Create config.yaml
-    config_content = f"""# Klondike CLI Configuration
-# Project: {project_name}
+    # Load and substitute agent-progress.json template
+    progress_content = read_template(PROGRESS_TEMPLATE)
+    for var, value in template_vars.items():
+        progress_content = progress_content.replace(var, value)
+    (klondike_dir / PROGRESS_FILE).write_text(progress_content, encoding="utf-8")
 
-# Default category for new features
-default_category: core
-
-# Default priority for new features (1-5, 1=critical)
-default_priority: 2
-
-# Identifier used for verifiedBy field
-verified_by: coding-agent
-
-# Path for generated agent-progress.md (relative to repo root)
-progress_output_path: agent-progress.md
-
-# Whether to auto-regenerate agent-progress.md on changes
-auto_regenerate_progress: true
-"""
+    # Load and substitute config.yaml template
+    config_content = read_template(CONFIG_TEMPLATE)
+    for var, value in template_vars.items():
+        config_content = config_content.replace(var, value)
     (klondike_dir / CONFIG_FILE).write_text(config_content, encoding="utf-8")
 
-    # Generate agent-progress.md
+    # Generate agent-progress.md from the JSON we just created
+    progress = load_progress(root)
     progress.save_markdown(root / PROGRESS_MD_FILE)
 
     echo(f"✅ Initialized Klondike project: {project_name}")
@@ -291,7 +243,9 @@ def status(
             "totalFeatures": registry.metadata.total_features,
             "passingFeatures": registry.metadata.passing_features,
             "progressPercent": (
-                round(registry.metadata.passing_features / registry.metadata.total_features * 100, 1)
+                round(
+                    registry.metadata.passing_features / registry.metadata.total_features * 100, 1
+                )
                 if registry.metadata.total_features > 0
                 else 0
             ),
@@ -299,7 +253,9 @@ def status(
                 status.value: len(registry.get_features_by_status(status))
                 for status in FeatureStatus
             },
-            "currentSession": progress.get_current_session().to_dict() if progress.sessions else None,
+            "currentSession": progress.get_current_session().to_dict()
+            if progress.sessions
+            else None,
         }
         echo(json.dumps(status_data, indent=2))
         return
@@ -318,9 +274,12 @@ def status(
     for feat_status in FeatureStatus:
         count = len(registry.get_features_by_status(feat_status))
         if count > 0:
-            icon = {"not-started": "⏳", "in-progress": "🔄", "blocked": "🚫", "verified": "✅"}.get(
-                feat_status.value, "•"
-            )
+            icon = {
+                "not-started": "⏳",
+                "in-progress": "🔄",
+                "blocked": "🚫",
+                "verified": "✅",
+            }.get(feat_status.value, "•")
             echo(f"   {icon} {feat_status.value}: {count}")
 
     # Current session info
@@ -357,7 +316,9 @@ def feature(
     category: str | None = Option(None, "--category", "-c", pith="Feature category"),
     priority: int | None = Option(None, "--priority", "-p", pith="Priority (1-5)"),
     criteria: str | None = Option(None, "--criteria", pith="Acceptance criteria (comma-separated)"),
-    evidence: str | None = Option(None, "--evidence", "-e", pith="Evidence file paths (comma-separated)"),
+    evidence: str | None = Option(
+        None, "--evidence", "-e", pith="Evidence file paths (comma-separated)"
+    ),
     reason: str | None = Option(None, "--reason", "-r", pith="Block reason"),
     status_filter: str | None = Option(None, "--status", "-s", pith="Filter by status"),
     json_output: bool = Option(False, "--json", pith="Output as JSON"),
@@ -418,7 +379,9 @@ def _feature_add(
     feature_id = registry.next_feature_id()
     cat = FeatureCategory(category) if category else FeatureCategory.CORE
     prio = priority if priority else 2
-    acceptance = [c.strip() for c in criteria.split(",")] if criteria else ["Feature works as described"]
+    acceptance = (
+        [c.strip() for c in criteria.split(",")] if criteria else ["Feature works as described"]
+    )
 
     feature = Feature(
         id=feature_id,
@@ -621,7 +584,9 @@ def session(
     action: str = Argument(..., pith="Action: start, end"),
     focus: str | None = Option(None, "--focus", "-f", pith="Session focus/feature"),
     summary: str | None = Option(None, "--summary", "-s", pith="Session summary"),
-    completed: str | None = Option(None, "--completed", "-c", pith="Completed items (comma-separated)"),
+    completed: str | None = Option(
+        None, "--completed", "-c", pith="Completed items (comma-separated)"
+    ),
     blockers: str | None = Option(None, "--blockers", "-b", pith="Blockers encountered"),
     next_steps: str | None = Option(None, "--next", "-n", pith="Next steps (comma-separated)"),
 ) -> None:
@@ -660,11 +625,15 @@ def _session_start(focus: str | None) -> None:
     actual_passing = sum(1 for f in registry.features if f.passes)
 
     if registry.metadata.total_features != actual_total:
-        echo(f"⚠️  Warning: metadata.totalFeatures ({registry.metadata.total_features}) != actual ({actual_total})")
+        echo(
+            f"⚠️  Warning: metadata.totalFeatures ({registry.metadata.total_features}) != actual ({actual_total})"
+        )
         registry.metadata.total_features = actual_total
 
     if registry.metadata.passing_features != actual_passing:
-        echo(f"⚠️  Warning: metadata.passingFeatures ({registry.metadata.passing_features}) != actual ({actual_passing})")
+        echo(
+            f"⚠️  Warning: metadata.passingFeatures ({registry.metadata.passing_features}) != actual ({actual_passing})"
+        )
         registry.metadata.passing_features = actual_passing
 
     echo("✅ Artifacts validated")
@@ -826,6 +795,7 @@ def validate() -> None:
 
     # Check feature ID format
     import re
+
     for f in registry.features:
         if not re.match(r"^F\d{3}$", f.id):
             issues.append(f"Invalid feature ID format: {f.id}")

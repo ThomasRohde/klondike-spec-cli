@@ -43,6 +43,20 @@
       "blockers": [],
       "nextSteps": [],
       "technicalNotes": []
+    },
+    {
+      "sessionNumber": 3,
+      "date": "2025-12-07",
+      "agent": "Coding Agent",
+      "duration": "(in progress)",
+      "focus": "F015 - Bake templates into the executable",
+      "completed": [],
+      "inProgress": [
+        "Session started"
+      ],
+      "blockers": [],
+      "nextSteps": [],
+      "technicalNotes": []
     }
   ],
   "quickReference": {
@@ -57,7 +71,7 @@
       {
         "id": "F015",
         "description": "Bake templates into the executable",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F016",
