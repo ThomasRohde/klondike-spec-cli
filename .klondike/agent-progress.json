@@ -89,14 +89,9 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F025",
-        "description": "Add shell completion support",
-        "status": "in-progress"
-      },
-      {
         "id": "F030",
         "description": "Optimize for large feature registries",
-        "status": "not-started"
+        "status": "in-progress"
       }
     ]
   }

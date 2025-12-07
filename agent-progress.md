@@ -23,8 +23,7 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F025 | Add shell completion support | 🔄 In progress |
-| F030 | Optimize for large feature registries | ⏳ Not started |
+| F030 | Optimize for large feature registries | 🔄 In progress |
 
 ---
 

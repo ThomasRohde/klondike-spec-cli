@@ -462,3 +462,118 @@ class TestConfig:
         assert config.default_category == FeatureCategory.CORE
         assert config.default_priority == 2
         assert config.verified_by == "coding-agent"
+
+
+class TestFeatureRegistryPerformance:
+    """Tests for FeatureRegistry performance with large registries."""
+
+    def _create_large_registry(self, num_features: int) -> FeatureRegistry:
+        """Create a registry with many features for testing."""
+        features = [
+            Feature(
+                id=f"F{i:03d}",
+                description=f"Feature {i} - Test description for performance testing",
+                category=FeatureCategory.CORE,
+                priority=(i % 5) + 1,
+                acceptance_criteria=[f"Criterion {j}" for j in range(3)],
+                passes=(i % 3 == 0),
+                status=[
+                    FeatureStatus.NOT_STARTED,
+                    FeatureStatus.IN_PROGRESS,
+                    FeatureStatus.VERIFIED,
+                ][i % 3],
+            )
+            for i in range(1, num_features + 1)
+        ]
+        return FeatureRegistry(
+            project_name="large-project",
+            version="1.0.0",
+            features=features,
+            metadata=FeatureMetadata(
+                created_at="2025-01-01T00:00:00Z",
+                last_updated="2025-01-01T00:00:00Z",
+                total_features=num_features,
+                passing_features=num_features // 3,
+            ),
+        )
+
+    def test_handles_100_features(self) -> None:
+        """Test registry handles 100+ features efficiently."""
+        import time
+
+        registry = self._create_large_registry(150)
+
+        # Test get_feature with indexed lookup is fast
+        start = time.perf_counter()
+        for i in range(1, 151):
+            result = registry.get_feature(f"F{i:03d}")
+            assert result is not None
+        elapsed = time.perf_counter() - start
+
+        # Should complete 150 lookups in under 100ms
+        assert elapsed < 0.1, f"150 feature lookups took {elapsed:.3f}s"
+
+    def test_indexed_lookup_faster_than_linear(self) -> None:
+        """Test that indexed lookup is O(1) not O(n)."""
+        registry = self._create_large_registry(100)
+
+        # First access builds index
+        registry.get_feature("F050")
+
+        # Subsequent accesses should be instant
+        import time
+
+        start = time.perf_counter()
+        for _ in range(1000):
+            registry.get_feature("F050")
+        elapsed = time.perf_counter() - start
+
+        # 1000 lookups should be very fast
+        assert elapsed < 0.05, f"1000 indexed lookups took {elapsed:.3f}s"
+
+    def test_get_feature_ids_efficient(self) -> None:
+        """Test get_feature_ids uses index."""
+        registry = self._create_large_registry(100)
+
+        ids = registry.get_feature_ids()
+
+        assert len(ids) == 100
+        assert "F001" in ids
+        assert "F100" in ids
+
+    def test_next_feature_id_with_gaps(self) -> None:
+        """Test next_feature_id finds gaps in large registry."""
+        registry = self._create_large_registry(50)
+
+        # Remove F025 from the feature list (simulate gap)
+        registry.features = [f for f in registry.features if f.id != "F025"]
+        registry._invalidate_index()
+
+        next_id = registry.next_feature_id()
+        assert next_id == "F025"  # Should find the gap
+
+    def test_add_feature_invalidates_index(self) -> None:
+        """Test adding a feature invalidates and rebuilds index correctly."""
+        registry = self._create_large_registry(10)
+
+        # Trigger index build
+        registry.get_feature("F001")
+        assert registry._index_built is True
+
+        # Add a new feature
+        new_feature = Feature(
+            id="F011",
+            description="New feature",
+            category=FeatureCategory.CORE,
+            priority=1,
+            acceptance_criteria=["Test"],
+        )
+        registry.add_feature(new_feature)
+
+        # Index should be invalidated
+        assert registry._index_built is False
+
+        # Should still be able to find the new feature
+        found = registry.get_feature("F011")
+        assert found is not None
+        assert found.description == "New feature"

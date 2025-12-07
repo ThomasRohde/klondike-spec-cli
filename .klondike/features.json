@@ -692,11 +692,14 @@
         "Completes command names and feature IDs"
       ],
       "estimatedEffort": "medium",
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T13:59:51.609824",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "93 tests passing",
+        "'klondike completion bash/zsh/powershell' generates valid completion scripts"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-07T13:56:24.497057",
       "notes": null
@@ -834,20 +837,20 @@
         "Efficient JSON parsing"
       ],
       "estimatedEffort": "small",
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-07T14:00:10.574583",
       "notes": null
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T13:56:06.633247",
+    "lastUpdated": "2025-12-07T13:59:51.609835",
     "totalFeatures": 30,
-    "passingFeatures": 28
+    "passingFeatures": 29
   }
 }

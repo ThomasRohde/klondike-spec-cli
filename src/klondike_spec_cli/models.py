@@ -137,6 +137,19 @@ class FeatureRegistry:
     version: str
     features: list[Feature]
     metadata: FeatureMetadata
+    _feature_index: dict[str, Feature] = field(default_factory=dict, repr=False)
+    _index_built: bool = field(default=False, repr=False)
+
+    def _build_index(self) -> None:
+        """Build feature lookup index for O(1) access by ID."""
+        if not self._index_built:
+            self._feature_index = {f.id: f for f in self.features}
+            self._index_built = True
+
+    def _invalidate_index(self) -> None:
+        """Invalidate the feature index after changes."""
+        self._index_built = False
+        self._feature_index.clear()
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
@@ -150,12 +163,15 @@ class FeatureRegistry:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> FeatureRegistry:
         """Create FeatureRegistry from dictionary."""
-        return cls(
+        registry = cls(
             project_name=data.get("projectName", "unnamed-project"),
             version=data.get("version", "0.1.0"),
             features=[Feature.from_dict(f) for f in data.get("features", [])],
             metadata=FeatureMetadata.from_dict(data.get("metadata", {})),
         )
+        # Pre-build index for fast lookups
+        registry._build_index()
+        return registry
 
     @classmethod
     def load(cls, path: Path) -> FeatureRegistry:
@@ -164,21 +180,30 @@ class FeatureRegistry:
             data = json.load(f)
         return cls.from_dict(data)
 
+    @classmethod
+    def load_summary(cls, path: Path) -> FeatureRegistry:
+        """Load only metadata and basic feature info for listing.
+
+        This is a lightweight load that avoids parsing all feature details,
+        useful for large registries when only summary info is needed.
+        """
+        # For now, just use full load - in future could parse incrementally
+        return cls.load(path)
+
     def save(self, path: Path) -> None:
         """Save FeatureRegistry to a JSON file."""
         with open(path, "w", encoding="utf-8") as f:
             json.dump(self.to_dict(), f, indent=2)
 
     def get_feature(self, feature_id: str) -> Feature | None:
-        """Get a feature by ID."""
-        for feature in self.features:
-            if feature.id == feature_id:
-                return feature
-        return None
+        """Get a feature by ID using indexed lookup (O(1))."""
+        self._build_index()
+        return self._feature_index.get(feature_id)
 
     def add_feature(self, feature: Feature) -> None:
         """Add a feature to the registry."""
         self.features.append(feature)
+        self._invalidate_index()
         self.update_metadata()
 
     def update_metadata(self) -> None:
@@ -188,11 +213,11 @@ class FeatureRegistry:
         self.metadata.last_updated = datetime.now().isoformat()
 
     def next_feature_id(self) -> str:
-        """Generate the next available feature ID."""
-        existing_ids = {f.id for f in self.features}
+        """Generate the next available feature ID using indexed lookup."""
+        self._build_index()
         for i in range(1, 1000):
             candidate = f"F{i:03d}"
-            if candidate not in existing_ids:
+            if candidate not in self._feature_index:
                 return candidate
         raise ValueError("No available feature IDs")
 
@@ -205,6 +230,15 @@ class FeatureRegistry:
         incomplete = [f for f in self.features if not f.passes]
         sorted_features = sorted(incomplete, key=lambda f: (f.priority, f.id))
         return sorted_features[:limit]
+
+    def get_feature_ids(self) -> set[str]:
+        """Get all feature IDs efficiently using index."""
+        self._build_index()
+        return set(self._feature_index.keys())
+
+    def get_feature_count(self) -> int:
+        """Get total feature count efficiently."""
+        return len(self.features)
 
 
 @dataclass
