@@ -1,40 +1,40 @@
 {
-  "projectName": "{{PROJECT_NAME}}",
-  "startedAt": "{{CREATED_AT}}",
-  "currentStatus": "Initialized",
-  "sessions": [
-    {
-      "sessionNumber": 1,
-      "date": "{{DATE}}",
-      "agent": "Initializer Agent",
-      "duration": "~5 minutes",
-      "focus": "Project initialization",
-      "completed": [
-        "Created .klondike directory structure",
-        "Generated empty features.json",
-        "Created agent-progress.json",
-        "Generated agent-progress.md"
-      ],
-      "inProgress": [],
-      "blockers": [],
-      "nextSteps": [
-        "Add features with 'klondike feature add'",
-        "Start first coding session with 'klondike session start'"
-      ],
-      "technicalNotes": [
-        "Use 'klondike feature add' to populate the feature registry",
-        "Use 'klondike status' to check project status at any time"
-      ]
-    }
-  ],
-  "quickReference": {
-    "runCommand": "klondike",
-    "devServerPort": null,
-    "keyFiles": [
-      ".klondike/features.json",
-      ".klondike/agent-progress.json",
-      "agent-progress.md"
+    "projectName": "{{PROJECT_NAME}}",
+    "startedAt": "{{CREATED_AT}}",
+    "currentStatus": "Initialized",
+    "sessions": [
+        {
+            "sessionNumber": 1,
+            "date": "{{DATE}}",
+            "agent": "Initializer Agent",
+            "duration": "~5 minutes",
+            "focus": "Project initialization",
+            "completed": [
+                "Created .klondike directory structure",
+                "Generated empty features.json",
+                "Created agent-progress.json",
+                "Generated agent-progress.md"
+            ],
+            "inProgress": [],
+            "blockers": [],
+            "nextSteps": [
+                "Add features with 'klondike feature add'",
+                "Start first coding session with 'klondike session start'"
+            ],
+            "technicalNotes": [
+                "Use 'klondike feature add' to populate the feature registry",
+                "Use 'klondike status' to check project status at any time"
+            ]
+        }
     ],
-    "priorityFeatures": []
-  }
+    "quickReference": {
+        "runCommand": "klondike",
+        "devServerPort": null,
+        "keyFiles": [
+            ".klondike/features.json",
+            ".klondike/agent-progress.json",
+            "agent-progress.md"
+        ],
+        "priorityFeatures": []
+    }
 }

@@ -68,7 +68,7 @@ COMMANDS = {
     "help": {"options": []},
 }
 
-BASH_COMPLETION_TEMPLATE = '''# Bash completion for klondike
+BASH_COMPLETION_TEMPLATE = """# Bash completion for klondike
 # Add to ~/.bashrc or ~/.bash_completion
 
 _klondike_completion() {
@@ -175,9 +175,9 @@ _klondike_feature_ids() {
 }
 
 complete -F _klondike_completion klondike
-'''
+"""
 
-ZSH_COMPLETION_TEMPLATE = '''#compdef klondike
+ZSH_COMPLETION_TEMPLATE = """#compdef klondike
 
 # Zsh completion for klondike
 # Add to ~/.zsh/completions/_klondike and add directory to fpath
@@ -289,9 +289,9 @@ _klondike_feature_ids() {
 }
 
 _klondike "$@"
-'''
+"""
 
-POWERSHELL_COMPLETION_TEMPLATE = '''# PowerShell completion for klondike
+POWERSHELL_COMPLETION_TEMPLATE = """# PowerShell completion for klondike
 # Add to your PowerShell profile
 
 $script:KlondikeCommands = @(
@@ -368,7 +368,7 @@ Register-ArgumentCompleter -Native -CommandName klondike -ScriptBlock {
 }
 
 Write-Host "Klondike completions loaded. Type 'klondike <TAB>' to use."
-'''
+"""
 
 
 def generate_bash_completion() -> str:

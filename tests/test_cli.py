@@ -112,9 +112,7 @@ class TestFeatureAddCommand:
                 os.chdir(tmpdir)
                 runner.invoke(app, ["init"])
 
-                result = runner.invoke(
-                    app, ["feature", "add", "--description", "Test feature"]
-                )
+                result = runner.invoke(app, ["feature", "add", "--description", "Test feature"])
 
                 assert result.exit_code == 0
                 assert "✅ Added feature F001" in result.output
@@ -175,9 +173,7 @@ class TestFeatureAddCommand:
                 runner.invoke(app, ["init"])
 
                 runner.invoke(app, ["feature", "add", "--description", "First"])
-                result = runner.invoke(
-                    app, ["feature", "add", "--description", "Second"]
-                )
+                result = runner.invoke(app, ["feature", "add", "--description", "Second"])
 
                 assert "F002" in result.output
 
@@ -263,9 +259,7 @@ class TestFeatureListCommand:
                 runner.invoke(app, ["feature", "add", "--description", "Feature B"])
                 runner.invoke(app, ["feature", "start", "F001"])
 
-                result = runner.invoke(
-                    app, ["feature", "list", "--status", "in-progress"]
-                )
+                result = runner.invoke(app, ["feature", "list", "--status", "in-progress"])
 
                 assert result.exit_code == 0
                 assert "F001" in result.output
@@ -329,9 +323,7 @@ class TestReportCommand:
                 os.chdir(tmpdir)
                 runner.invoke(app, ["init", "--name", "test-project"])
                 runner.invoke(app, ["feature", "add", "--description", "Feature One"])
-                runner.invoke(
-                    app, ["feature", "verify", "F001", "--evidence", "test.txt"]
-                )
+                runner.invoke(app, ["feature", "verify", "F001", "--evidence", "test.txt"])
 
                 result = runner.invoke(app, ["report"])
 
