@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F026 | Implement 'klondike report' command for stakeholder reports | 🔄 In progress |
 | F014 | Implement 'klondike feature edit' command | ⏳ Not started |
 | F017 | Add rich terminal output with colors and formatting | ⏳ Not started |
+| F022 | Set up GitHub Actions CI/CD | ⏳ Not started |
 
 ---
 

@@ -89,11 +89,6 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F026",
-        "description": "Implement 'klondike report' command for stakeholder reports",
-        "status": "in-progress"
-      },
-      {
         "id": "F014",
         "description": "Implement 'klondike feature edit' command",
         "status": "not-started"
@@ -101,6 +96,11 @@
       {
         "id": "F017",
         "description": "Add rich terminal output with colors and formatting",
+        "status": "not-started"
+      },
+      {
+        "id": "F022",
+        "description": "Set up GitHub Actions CI/CD",
         "status": "not-started"
       }
     ]
