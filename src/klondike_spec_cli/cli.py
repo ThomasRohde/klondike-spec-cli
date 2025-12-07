@@ -6,11 +6,13 @@ This CLI is built with the Pith library for agent-native progressive discovery.
 from __future__ import annotations
 
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
 
 from pith import Argument, Option, Pith, PithException, echo
 
+from . import formatting
 from .models import (
     Config,
     Feature,
@@ -272,45 +274,27 @@ def status(
         echo(json.dumps(status_data, indent=2))
         return
 
-    # Text output
-    total = registry.metadata.total_features
-    passing = registry.metadata.passing_features
-    progress_pct = round(passing / total * 100, 1) if total > 0 else 0
+    # Text output with rich formatting
+    # Use rich console for colored output
+    console = formatting.get_console()
 
-    echo(f"📊 Project: {registry.project_name} v{registry.version}")
-    echo(f"   Status: {progress.current_status}")
-    echo("")
-    echo(f"📋 Features: {passing}/{total} ({progress_pct}%)")
-
-    # Status breakdown
-    for feat_status in FeatureStatus:
-        count = len(registry.get_features_by_status(feat_status))
-        if count > 0:
-            icon = {
-                "not-started": "⏳",
-                "in-progress": "🔄",
-                "blocked": "🚫",
-                "verified": "✅",
-            }.get(feat_status.value, "•")
-            echo(f"   {icon} {feat_status.value}: {count}")
+    # Print status summary with colors
+    formatting.print_status_summary(registry, f"{registry.project_name} v{registry.version}")
 
     # Current session info
     current = progress.get_current_session()
     if current:
-        echo("")
-        echo(f"📅 Last Session: #{current.session_number} ({current.date})")
-        echo(f"   Focus: {current.focus}")
+        console.print(f"[bold]📅 Last Session:[/bold] #{current.session_number} ({current.date})")
+        console.print(f"   [dim]Focus:[/dim] {current.focus}")
+        console.print()
 
     # Priority features
     priority = registry.get_priority_features(3)
     if priority:
-        echo("")
-        echo("🎯 Next Priority Features:")
+        console.print("[bold]🎯 Next Priority Features:[/bold]")
         for f in priority:
-            status_icon = {"not-started": "⏳", "in-progress": "🔄", "blocked": "🚫"}.get(
-                f.status.value if isinstance(f.status, FeatureStatus) else f.status, "•"
-            )
-            echo(f"   {status_icon} {f.id}: {f.description}")
+            status_text = formatting.colored_status(f.status)
+            console.print("   ", status_text, f" [cyan]{f.id}[/cyan]: {f.description}")
 
 
 @app.command(name="feature", pith="Manage features: add, list, start, verify, block", priority=30)
@@ -451,17 +435,11 @@ def _feature_list(status_filter: str | None, json_output: bool) -> None:
         echo("No features found.")
         return
 
-    echo(f"📋 Features ({len(features)} total):")
-    echo("")
-
-    for f in sorted(features, key=lambda x: (x.priority, x.id)):
-        status_icon = {
-            FeatureStatus.NOT_STARTED: "⏳",
-            FeatureStatus.IN_PROGRESS: "🔄",
-            FeatureStatus.BLOCKED: "🚫",
-            FeatureStatus.VERIFIED: "✅",
-        }.get(f.status, "•")
-        echo(f"  {status_icon} {f.id} [{f.category.value}] P{f.priority}: {f.description}")
+    # Use rich table for formatted output
+    title = f"Features ({len(features)} total)"
+    if status_filter:
+        title += f" - {status_filter}"
+    formatting.print_feature_table(list(features), title=title)
 
 
 def _feature_start(feature_id: str | None) -> None:
@@ -1310,6 +1288,11 @@ def _generate_progress_bar(percentage: float, width: int = 40) -> str:
 
 def main() -> None:
     """Entry point for klondike CLI."""
+    # Check for --no-color flag before running pith
+    if "--no-color" in sys.argv:
+        formatting.set_no_color(True)
+        sys.argv.remove("--no-color")
+
     app.run()
 
 

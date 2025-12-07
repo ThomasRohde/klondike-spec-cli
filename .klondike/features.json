@@ -466,13 +466,13 @@
         "Colors can be disabled with --no-color flag"
       ],
       "estimatedEffort": "small",
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-07T13:37:55.529484",
       "notes": null
     },
     {
