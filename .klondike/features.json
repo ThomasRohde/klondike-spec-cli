@@ -407,11 +407,14 @@
         "Includes config.yaml template"
       ],
       "estimatedEffort": "small",
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T13:13:40.174946",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "tests/test_templates.py",
+        "dist/klondike_spec_cli-0.1.0-py3-none-any.whl"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-07T13:09:04.637149",
       "notes": null
@@ -804,8 +807,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T13:07:12.033478",
+    "lastUpdated": "2025-12-07T13:13:40.174951",
     "totalFeatures": 30,
-    "passingFeatures": 17
+    "passingFeatures": 18
   }
 }

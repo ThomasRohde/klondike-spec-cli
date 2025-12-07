@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F015 | Bake templates into the executable | 🔄 In progress |
 | F016 | Implement configuration management | ⏳ Not started |
 | F020 | Integration tests for CLI commands | ⏳ Not started |
+| F026 | Implement 'klondike report' command for stakeholder reports | ⏳ Not started |
 
 ---
 

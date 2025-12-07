@@ -69,11 +69,6 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F015",
-        "description": "Bake templates into the executable",
-        "status": "in-progress"
-      },
-      {
         "id": "F016",
         "description": "Implement configuration management",
         "status": "not-started"
@@ -81,6 +76,11 @@
       {
         "id": "F020",
         "description": "Integration tests for CLI commands",
+        "status": "not-started"
+      },
+      {
+        "id": "F026",
+        "description": "Implement 'klondike report' command for stakeholder reports",
         "status": "not-started"
       }
     ]
