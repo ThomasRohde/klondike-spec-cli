@@ -1660,7 +1660,6 @@ def _copilot_start(
 
     # Load project context
     registry = load_features()
-    progress = load_progress()
 
     # Determine focus feature
     focus_feature = None
