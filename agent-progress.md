@@ -23,7 +23,7 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F016 | Implement configuration management | ⏳ Not started |
+| F016 | Implement configuration management | 🔄 In progress |
 | F020 | Integration tests for CLI commands | ⏳ Not started |
 | F026 | Implement 'klondike report' command for stakeholder reports | ⏳ Not started |
 

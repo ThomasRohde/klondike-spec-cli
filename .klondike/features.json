@@ -434,13 +434,13 @@
         "Supports verifiedBy identifier for current user/agent"
       ],
       "estimatedEffort": "small",
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-07T13:13:54.405417",
       "notes": null
     },
     {

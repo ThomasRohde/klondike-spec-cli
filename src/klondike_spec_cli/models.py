@@ -485,3 +485,84 @@ class ProgressLog:
         """Save as markdown file."""
         with open(path, "w", encoding="utf-8") as f:
             f.write(self.to_markdown())
+
+
+@dataclass
+class Config:
+    """Configuration for the Klondike CLI.
+
+    Loaded from .klondike/config.yaml.
+    """
+
+    default_category: FeatureCategory = FeatureCategory.CORE
+    default_priority: int = 2
+    verified_by: str = "coding-agent"
+    progress_output_path: str = "agent-progress.md"
+    auto_regenerate_progress: bool = True
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert to dictionary for YAML serialization."""
+        return {
+            "default_category": self.default_category.value
+            if isinstance(self.default_category, FeatureCategory)
+            else self.default_category,
+            "default_priority": self.default_priority,
+            "verified_by": self.verified_by,
+            "progress_output_path": self.progress_output_path,
+            "auto_regenerate_progress": self.auto_regenerate_progress,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Config:
+        """Create Config from dictionary."""
+        category = data.get("default_category", "core")
+        try:
+            default_category = FeatureCategory(category)
+        except ValueError:
+            default_category = FeatureCategory.CORE
+
+        return cls(
+            default_category=default_category,
+            default_priority=data.get("default_priority", 2),
+            verified_by=data.get("verified_by", "coding-agent"),
+            progress_output_path=data.get("progress_output_path", "agent-progress.md"),
+            auto_regenerate_progress=data.get("auto_regenerate_progress", True),
+        )
+
+    @classmethod
+    def load(cls, path: Path) -> Config:
+        """Load Config from a YAML file."""
+        import yaml
+
+        if not path.exists():
+            return cls()  # Return default config if file doesn't exist
+
+        with open(path, encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+        return cls.from_dict(data)
+
+    def save(self, path: Path) -> None:
+        """Save Config to a YAML file."""
+        # Create a nicely formatted YAML with comments
+        lines = [
+            "# Klondike CLI Configuration",
+            "",
+            "# Default category for new features",
+            f"default_category: {self.default_category.value if isinstance(self.default_category, FeatureCategory) else self.default_category}",
+            "",
+            "# Default priority for new features (1-5, 1=critical)",
+            f"default_priority: {self.default_priority}",
+            "",
+            "# Identifier used for verifiedBy field",
+            f"verified_by: {self.verified_by}",
+            "",
+            "# Path for generated agent-progress.md (relative to repo root)",
+            f"progress_output_path: {self.progress_output_path}",
+            "",
+            "# Whether to auto-regenerate agent-progress.md on changes",
+            f"auto_regenerate_progress: {str(self.auto_regenerate_progress).lower()}",
+            "",
+        ]
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("\n".join(lines))

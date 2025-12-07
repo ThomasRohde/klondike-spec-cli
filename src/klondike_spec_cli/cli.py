@@ -12,6 +12,7 @@ from pathlib import Path
 from pith import Argument, Option, Pith, PithException, echo
 
 from .models import (
+    Config,
     Feature,
     FeatureCategory,
     FeatureRegistry,
@@ -93,9 +94,20 @@ def regenerate_progress_md(root: Path | None = None) -> None:
     """Regenerate agent-progress.md from JSON."""
     if root is None:
         root = Path.cwd()
+    config = load_config(root)
     progress = load_progress(root)
-    md_path = root / PROGRESS_MD_FILE
+    md_path = root / config.progress_output_path
     progress.save_markdown(md_path)
+
+
+def load_config(root: Path | None = None) -> Config:
+    """Load the configuration file.
+
+    Returns default config if file doesn't exist.
+    """
+    klondike_dir = get_klondike_dir(root)
+    config_path = klondike_dir / CONFIG_FILE
+    return Config.load(config_path)
 
 
 def update_quick_reference(progress: ProgressLog, registry: FeatureRegistry) -> None:
@@ -375,10 +387,12 @@ def _feature_add(
 
     registry = load_features()
     progress = load_progress()
+    config = load_config()
 
     feature_id = registry.next_feature_id()
-    cat = FeatureCategory(category) if category else FeatureCategory.CORE
-    prio = priority if priority else 2
+    # Use config defaults if not specified
+    cat = FeatureCategory(category) if category else config.default_category
+    prio = priority if priority else config.default_priority
     acceptance = (
         [c.strip() for c in criteria.split(",")] if criteria else ["Feature works as described"]
     )
@@ -476,6 +490,7 @@ def _feature_verify(feature_id: str | None, evidence: str | None) -> None:
 
     registry = load_features()
     progress = load_progress()
+    config = load_config()
 
     feature = registry.get_feature(feature_id)
     if not feature:
@@ -486,7 +501,7 @@ def _feature_verify(feature_id: str | None, evidence: str | None) -> None:
     feature.status = FeatureStatus.VERIFIED
     feature.passes = True
     feature.verified_at = datetime.now().isoformat()
-    feature.verified_by = "coding-agent"  # TODO: Get from config
+    feature.verified_by = config.verified_by
     feature.evidence_links = evidence_paths
 
     registry.update_metadata()
@@ -851,12 +866,13 @@ def progress(
         session end - Auto-regenerates on session end
     """
     progress_log = load_progress()
+    config = load_config()
 
     root = Path.cwd()
     if output:
         output_path = Path(output)
     else:
-        output_path = root / PROGRESS_MD_FILE
+        output_path = root / config.progress_output_path
 
     progress_log.save_markdown(output_path)
     echo(f"✅ Generated {output_path}")

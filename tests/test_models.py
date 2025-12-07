@@ -6,6 +6,7 @@ import tempfile
 from pathlib import Path
 
 from klondike_spec_cli.models import (
+    Config,
     Feature,
     FeatureCategory,
     FeatureMetadata,
@@ -368,3 +369,96 @@ class TestProgressLog:
         assert "## Project: test-project" in md
         assert "| F001 | Test feature |" in md
         assert "### Session 1 - 2025-01-01" in md
+
+
+class TestConfig:
+    """Tests for Config model."""
+
+    def test_config_defaults(self) -> None:
+        """Test config default values."""
+        config = Config()
+
+        assert config.default_category == FeatureCategory.CORE
+        assert config.default_priority == 2
+        assert config.verified_by == "coding-agent"
+        assert config.progress_output_path == "agent-progress.md"
+        assert config.auto_regenerate_progress is True
+
+    def test_config_to_dict(self) -> None:
+        """Test config serialization."""
+        config = Config(
+            default_category=FeatureCategory.TESTING,
+            default_priority=3,
+            verified_by="test-agent",
+            progress_output_path="docs/progress.md",
+            auto_regenerate_progress=False,
+        )
+
+        data = config.to_dict()
+
+        assert data["default_category"] == "testing"
+        assert data["default_priority"] == 3
+        assert data["verified_by"] == "test-agent"
+        assert data["progress_output_path"] == "docs/progress.md"
+        assert data["auto_regenerate_progress"] is False
+
+    def test_config_from_dict(self) -> None:
+        """Test config deserialization."""
+        data = {
+            "default_category": "infrastructure",
+            "default_priority": 1,
+            "verified_by": "my-agent",
+            "progress_output_path": "PROGRESS.md",
+            "auto_regenerate_progress": True,
+        }
+
+        config = Config.from_dict(data)
+
+        assert config.default_category == FeatureCategory.INFRASTRUCTURE
+        assert config.default_priority == 1
+        assert config.verified_by == "my-agent"
+        assert config.progress_output_path == "PROGRESS.md"
+        assert config.auto_regenerate_progress is True
+
+    def test_config_from_dict_with_invalid_category(self) -> None:
+        """Test config with invalid category defaults to CORE."""
+        data = {
+            "default_category": "invalid-category",
+        }
+
+        config = Config.from_dict(data)
+
+        assert config.default_category == FeatureCategory.CORE
+
+    def test_config_save_and_load(self) -> None:
+        """Test saving and loading config."""
+        config = Config(
+            default_category=FeatureCategory.UI,
+            default_priority=4,
+            verified_by="save-test-agent",
+            progress_output_path="output/progress.md",
+            auto_regenerate_progress=False,
+        )
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
+            temp_path = Path(f.name)
+
+        try:
+            config.save(temp_path)
+            loaded = Config.load(temp_path)
+
+            assert loaded.default_category == FeatureCategory.UI
+            assert loaded.default_priority == 4
+            assert loaded.verified_by == "save-test-agent"
+            assert loaded.progress_output_path == "output/progress.md"
+            assert loaded.auto_regenerate_progress is False
+        finally:
+            temp_path.unlink()
+
+    def test_config_load_nonexistent_returns_defaults(self) -> None:
+        """Test loading nonexistent config returns defaults."""
+        config = Config.load(Path("/nonexistent/path/config.yaml"))
+
+        assert config.default_category == FeatureCategory.CORE
+        assert config.default_priority == 2
+        assert config.verified_by == "coding-agent"
