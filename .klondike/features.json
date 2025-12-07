@@ -607,13 +607,13 @@
         "Publishes to PyPI on release tag"
       ],
       "estimatedEffort": "medium",
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-07T13:41:59.546120",
       "notes": null
     },
     {
