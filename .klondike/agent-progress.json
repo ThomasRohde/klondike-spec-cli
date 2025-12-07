@@ -69,11 +69,6 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F020",
-        "description": "Integration tests for CLI commands",
-        "status": "in-progress"
-      },
-      {
         "id": "F026",
         "description": "Implement 'klondike report' command for stakeholder reports",
         "status": "not-started"
@@ -81,6 +76,11 @@
       {
         "id": "F014",
         "description": "Implement 'klondike feature edit' command",
+        "status": "not-started"
+      },
+      {
+        "id": "F017",
+        "description": "Add rich terminal output with colors and formatting",
         "status": "not-started"
       }
     ]

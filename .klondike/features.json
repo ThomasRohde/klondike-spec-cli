@@ -544,11 +544,13 @@
         "Tests verify file system changes"
       ],
       "estimatedEffort": "medium",
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T13:28:40.338007",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "tests/test_cli.py (13 tests)"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-07T13:26:38.246526",
       "notes": null
@@ -810,8 +812,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T13:26:07.043839",
+    "lastUpdated": "2025-12-07T13:28:40.338017",
     "totalFeatures": 30,
-    "passingFeatures": 19
+    "passingFeatures": 20
   }
 }
