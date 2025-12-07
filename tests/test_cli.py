@@ -401,3 +401,116 @@ class TestReportCommand:
                 assert "WIP Feature" in result.output
             finally:
                 os.chdir(original_cwd)
+
+
+class TestFeatureEditCommand:
+    """Tests for klondike feature edit command."""
+
+    def test_edit_updates_notes(self) -> None:
+        """Test edit command updates notes."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Test feature"])
+
+                result = runner.invoke(
+                    app, ["feature", "edit", "F001", "--notes", "Implementation note"]
+                )
+
+                assert result.exit_code == 0
+                assert "Updated" in result.output
+                assert "notes: Implementation note" in result.output
+
+                # Verify the note is saved
+                show_result = runner.invoke(app, ["feature", "show", "F001"])
+                assert "Notes: Implementation note" in show_result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_edit_adds_criteria(self) -> None:
+        """Test edit command adds acceptance criteria."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Test feature"])
+
+                result = runner.invoke(
+                    app, ["feature", "edit", "F001", "--add-criteria", "New criterion,Another one"]
+                )
+
+                assert result.exit_code == 0
+                assert "added criteria" in result.output
+
+                # Verify the criteria are saved
+                show_result = runner.invoke(app, ["feature", "show", "F001"])
+                assert "New criterion" in show_result.output
+                assert "Another one" in show_result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_edit_forbids_description_change(self) -> None:
+        """Test edit command forbids description modification."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Original desc"])
+
+                result = runner.invoke(
+                    app, ["feature", "edit", "F001", "--description", "Changed desc"]
+                )
+
+                assert result.exit_code == 1
+                assert "Cannot modify description" in result.output
+                assert "immutable" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_edit_updates_priority(self) -> None:
+        """Test edit command can update priority."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(
+                    app,
+                    ["feature", "add", "--description", "Test feature", "--priority", "3"],
+                )
+
+                result = runner.invoke(app, ["feature", "edit", "F001", "--priority", "1"])
+
+                assert result.exit_code == 0
+                assert "priority: 1" in result.output
+
+                # Verify the priority is saved
+                show_result = runner.invoke(app, ["feature", "show", "F001"])
+                assert "Priority: 1" in show_result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_edit_requires_changes(self) -> None:
+        """Test edit command requires at least one change."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Test feature"])
+
+                result = runner.invoke(app, ["feature", "edit", "F001"])
+
+                assert result.exit_code == 1
+                assert "No changes specified" in result.output
+            finally:
+                os.chdir(original_cwd)

@@ -320,14 +320,18 @@ def status(
     "add feature",
     "list features",
     "verify feature",
+    "edit feature",
 )
 def feature(
-    action: str = Argument(..., pith="Action: add, list, start, verify, block, show"),
+    action: str = Argument(..., pith="Action: add, list, start, verify, block, show, edit"),
     feature_id: str | None = Argument(None, pith="Feature ID (e.g., F001)"),
     description: str | None = Option(None, "--description", "-d", pith="Feature description"),
     category: str | None = Option(None, "--category", "-c", pith="Feature category"),
     priority: int | None = Option(None, "--priority", "-p", pith="Priority (1-5)"),
     criteria: str | None = Option(None, "--criteria", pith="Acceptance criteria (comma-separated)"),
+    add_criteria: str | None = Option(
+        None, "--add-criteria", pith="Add acceptance criteria (comma-separated)"
+    ),
     evidence: str | None = Option(
         None, "--evidence", "-e", pith="Evidence file paths (comma-separated)"
     ),
@@ -345,6 +349,7 @@ def feature(
         verify - Mark feature as verified (requires feature_id and --evidence)
         block  - Mark feature as blocked (requires feature_id and --reason)
         show   - Show feature details (requires feature_id)
+        edit   - Edit feature (requires feature_id, use --notes or --add-criteria)
 
     Examples:
         $ klondike feature add --description "User login" --category core
@@ -353,6 +358,8 @@ def feature(
         $ klondike feature verify F001 --evidence test-results/F001.png
         $ klondike feature block F002 --reason "Waiting for API"
         $ klondike feature show F001
+        $ klondike feature edit F001 --notes "Implementation notes"
+        $ klondike feature edit F001 --add-criteria "Must handle edge cases"
 
     Related:
         status - Project overview
@@ -370,8 +377,12 @@ def feature(
         _feature_block(feature_id, reason)
     elif action == "show":
         _feature_show(feature_id, json_output)
+    elif action == "edit":
+        _feature_edit(feature_id, description, category, priority, notes, add_criteria)
     else:
-        raise PithException(f"Unknown action: {action}. Use: add, list, start, verify, block, show")
+        raise PithException(
+            f"Unknown action: {action}. Use: add, list, start, verify, block, show, edit"
+        )
 
 
 def _feature_add(
@@ -585,6 +596,80 @@ def _feature_show(feature_id: str | None, json_output: bool) -> None:
 
     if feature.notes:
         echo(f"   Notes: {feature.notes}")
+
+
+def _feature_edit(
+    feature_id: str | None,
+    description: str | None,
+    category: str | None,
+    priority: int | None,
+    notes: str | None,
+    add_criteria: str | None,
+) -> None:
+    """Edit a feature's mutable properties.
+
+    Allows updating: notes, acceptance criteria (additive), priority, category.
+    Forbids changing: id, description (enforces immutability of core spec).
+    """
+    if not feature_id:
+        raise PithException("Feature ID is required for 'edit' action")
+
+    # Check for forbidden modifications
+    if description is not None:
+        raise PithException(
+            "Cannot modify description. Description is immutable once created. "
+            "Use --notes to add clarifications."
+        )
+
+    registry = load_features()
+    progress = load_progress()
+
+    feature = registry.get_feature(feature_id)
+    if not feature:
+        raise PithException(f"Feature not found: {feature_id}")
+
+    changes: list[str] = []
+
+    # Update mutable fields
+    if notes is not None:
+        feature.notes = notes
+        changes.append(f"notes: {notes}")
+
+    if add_criteria is not None:
+        new_criteria = [c.strip() for c in add_criteria.split(",")]
+        feature.acceptance_criteria.extend(new_criteria)
+        changes.append(f"added criteria: {', '.join(new_criteria)}")
+
+    if category is not None:
+        try:
+            new_category = FeatureCategory(category)
+            feature.category = new_category
+            changes.append(f"category: {new_category.value}")
+        except ValueError as e:
+            valid_cats = ", ".join(c.value for c in FeatureCategory)
+            raise PithException(f"Invalid category: {category}. Use: {valid_cats}") from e
+
+    if priority is not None:
+        if priority < 1 or priority > 5:
+            raise PithException("Priority must be between 1 and 5")
+        feature.priority = priority
+        changes.append(f"priority: {priority}")
+
+    if not changes:
+        raise PithException(
+            "No changes specified. Use --notes, --add-criteria, --category, or --priority"
+        )
+
+    feature.last_worked_on = datetime.now().isoformat()
+
+    save_features(registry)
+    update_quick_reference(progress, registry)
+    save_progress(progress)
+    regenerate_progress_md()
+
+    echo(f"✏️  Updated: {feature_id} - {feature.description}")
+    for change in changes:
+        echo(f"   • {change}")
 
 
 @app.command(name="session", pith="Manage coding sessions: start, end", priority=40)

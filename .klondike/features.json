@@ -379,17 +379,18 @@
         "Can update feature notes with --notes flag",
         "Can add acceptance criteria with --add-criteria flag",
         "Cannot modify description or id (enforces immutability)",
-        "Shows clear error for forbidden modifications"
+        "Shows clear error for forbidden modifications",
+        "Supports updating priority"
       ],
       "estimatedEffort": "small",
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
-      "notes": null
+      "lastWorkedOn": "2025-12-07T13:35:37.865580",
+      "notes": ""
     },
     {
       "id": "F015",
