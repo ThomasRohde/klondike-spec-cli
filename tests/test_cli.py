@@ -515,3 +515,165 @@ class TestFeatureEditCommand:
                 assert "No changes specified" in result.output
             finally:
                 os.chdir(original_cwd)
+
+
+class TestImportExportFeatures:
+    """Integration tests for import-features and export-features commands."""
+
+    def test_export_features_to_yaml(self) -> None:
+        """Test exporting features to YAML."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Feature 1"])
+                runner.invoke(app, ["feature", "add", "--description", "Feature 2"])
+
+                result = runner.invoke(app, ["export-features", "export.yaml"])
+
+                assert result.exit_code == 0
+                assert "Exported 2 features" in result.output
+                assert Path("export.yaml").exists()
+
+                content = Path("export.yaml").read_text()
+                assert "Feature 1" in content
+                assert "Feature 2" in content
+            finally:
+                os.chdir(original_cwd)
+
+    def test_export_features_to_json(self) -> None:
+        """Test exporting features to JSON."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Feature JSON"])
+
+                result = runner.invoke(app, ["export-features", "export.json"])
+
+                assert result.exit_code == 0
+                assert Path("export.json").exists()
+
+                import json
+
+                data = json.loads(Path("export.json").read_text())
+                assert "features" in data
+                assert len(data["features"]) == 1
+            finally:
+                os.chdir(original_cwd)
+
+    def test_import_features_from_yaml(self) -> None:
+        """Test importing features from YAML."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                # Create import file
+                import_content = """features:
+  - description: "Imported Feature 1"
+    category: core
+    priority: 2
+    acceptance_criteria:
+      - "Works correctly"
+  - description: "Imported Feature 2"
+    category: ui
+    priority: 3
+"""
+                Path("import.yaml").write_text(import_content)
+
+                result = runner.invoke(app, ["import-features", "import.yaml"])
+
+                assert result.exit_code == 0
+                assert "Imported: 2" in result.output
+
+                # Verify features exist
+                list_result = runner.invoke(app, ["feature", "list", "--json"])
+                assert "Imported Feature 1" in list_result.output
+                assert "Imported Feature 2" in list_result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_import_skips_duplicates(self) -> None:
+        """Test that import skips existing feature IDs."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Existing feature"])
+
+                # Create import file with same ID
+                import_content = """features:
+  - id: F001
+    description: "Duplicate feature"
+    category: core
+    priority: 1
+  - description: "New feature"
+    category: core
+    priority: 2
+"""
+                Path("import.yaml").write_text(import_content)
+
+                result = runner.invoke(app, ["import-features", "import.yaml"])
+
+                assert result.exit_code == 0
+                assert "Imported: 1" in result.output
+                assert "Skipped: 1" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_import_dry_run(self) -> None:
+        """Test import dry-run mode."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                import_content = """features:
+  - description: "Dry run feature"
+    category: core
+"""
+                Path("import.yaml").write_text(import_content)
+
+                result = runner.invoke(app, ["import-features", "import.yaml", "--dry-run"])
+
+                assert result.exit_code == 0
+                assert "Dry run complete" in result.output
+                assert "Would import" in result.output
+
+                # Verify feature was NOT actually created
+                list_result = runner.invoke(app, ["feature", "list", "--json"])
+                assert "Dry run feature" not in list_result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_export_with_status_filter(self) -> None:
+        """Test exporting features with status filter."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Feature 1"])
+                runner.invoke(app, ["feature", "add", "--description", "Feature 2"])
+                runner.invoke(app, ["feature", "start", "F001"])
+
+                result = runner.invoke(
+                    app, ["export-features", "in-progress.yaml", "--status", "in-progress"]
+                )
+
+                assert result.exit_code == 0
+                assert "Exported 1 features" in result.output
+            finally:
+                os.chdir(original_cwd)

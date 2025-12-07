@@ -23,7 +23,7 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F023 | Implement 'klondike feature import' command | ⏳ Not started |
+| F023 | Implement 'klondike feature import' command | 🔄 In progress |
 | F024 | Implement 'klondike feature export' command | ⏳ Not started |
 | F029 | Implement git integration for session management | ⏳ Not started |
 
