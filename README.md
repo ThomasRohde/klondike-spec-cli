@@ -30,6 +30,8 @@ The **Klondike Spec** framework provides:
 - ✅ **Verification evidence** requirements before features can be marked complete
 - 🔄 **Structured workflows** that guide agents through complex, multi-session projects
 
+> **🐍 Python-First**: Klondike Spec is currently optimized for Python development workflows, with built-in support for `uv`, `pytest`, `ruff`, and modern Python tooling. The instructions and CI/CD patterns assume a Python project structure. Contributions to support other ecosystems are welcome!
+
 ### The Meta-Journey
 
 This CLI tool was built by an AI agent **following the Klondike Spec methodology** — tracking its own features, managing its own sessions, and providing verification evidence for each completed feature. The dog ate its own dog food, and it was delicious.
