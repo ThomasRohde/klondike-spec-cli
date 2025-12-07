@@ -23,6 +23,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from .models import (
+    FeatureRegistry,
+    FeatureStatus,
+    PriorityFeatureRef,
+    ProgressLog,
+    Session,
+)
+
 # Configure logging to stderr for MCP compliance
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -35,14 +43,6 @@ try:
 except ImportError:
     MCP_AVAILABLE = False
     FastMCP = None  # type: ignore
-
-from .models import (
-    FeatureRegistry,
-    FeatureStatus,
-    PriorityFeatureRef,
-    ProgressLog,
-    Session,
-)
 
 # Constants
 KLONDIKE_DIR = ".klondike"
