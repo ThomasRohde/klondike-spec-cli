@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F032 | MCP server exposing klondike tools to copilot | 🔄 In progress |
 | F033 | Generate feature-specific prompts for copilot | ⏳ Not started |
 | F034 | Generate AGENTS.md from klondike configuration | ⏳ Not started |
+| F035 | Auto-delegate feature PRs via copilot | ⏳ Not started |
 
 ---
 

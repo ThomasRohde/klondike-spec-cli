@@ -890,11 +890,14 @@
         "Works with copilot --additional-mcp-config flag"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T14:58:37.754824",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "tests/test_mcp.py (14 passing tests)",
+        "manual verification of mcp serve/install/config commands"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-07T14:52:54.890508",
       "notes": null
@@ -1039,8 +1042,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T14:47:07.018875",
+    "lastUpdated": "2025-12-07T14:58:37.754837",
     "totalFeatures": 38,
-    "passingFeatures": 31
+    "passingFeatures": 32
   }
 }

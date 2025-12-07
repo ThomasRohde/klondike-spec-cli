@@ -124,11 +124,6 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F032",
-        "description": "MCP server exposing klondike tools to copilot",
-        "status": "in-progress"
-      },
-      {
         "id": "F033",
         "description": "Generate feature-specific prompts for copilot",
         "status": "not-started"
@@ -136,6 +131,11 @@
       {
         "id": "F034",
         "description": "Generate AGENTS.md from klondike configuration",
+        "status": "not-started"
+      },
+      {
+        "id": "F035",
+        "description": "Auto-delegate feature PRs via copilot",
         "status": "not-started"
       }
     ]
