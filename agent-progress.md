@@ -25,7 +25,7 @@ klondike feature list  # List all features
 |----|-------------|--------|
 | F029 | Implement git integration for session management | ⏳ Not started |
 | F025 | Add shell completion support | ⏳ Not started |
-| F028 | Validate and sanitize all user inputs | ⏳ Not started |
+| F028 | Validate and sanitize all user inputs | 🔄 In progress |
 
 ---
 

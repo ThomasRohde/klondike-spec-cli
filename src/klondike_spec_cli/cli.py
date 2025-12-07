@@ -29,6 +29,13 @@ from .templates import (
     PROGRESS_TEMPLATE,
     read_template,
 )
+from .validation import (
+    sanitize_string,
+    validate_description,
+    validate_feature_id,
+    validate_file_path,
+    validate_output_path,
+)
 
 # --- Constants ---
 
@@ -377,8 +384,8 @@ def _feature_add(
     notes: str | None,
 ) -> None:
     """Add a new feature."""
-    if not description:
-        raise PithException("--description is required for 'add' action")
+    # Validate description
+    validated_desc = validate_description(description)
 
     registry = load_features()
     progress = load_progress()
@@ -389,16 +396,21 @@ def _feature_add(
     cat = FeatureCategory(category) if category else config.default_category
     prio = priority if priority else config.default_priority
     acceptance = (
-        [c.strip() for c in criteria.split(",")] if criteria else ["Feature works as described"]
+        [sanitize_string(c.strip()) or "" for c in criteria.split(",") if c.strip()]
+        if criteria
+        else ["Feature works as described"]
     )
+
+    # Sanitize notes
+    sanitized_notes = sanitize_string(notes)
 
     feature = Feature(
         id=feature_id,
-        description=description,
+        description=validated_desc,
         category=cat,
         priority=prio,
         acceptance_criteria=acceptance,
-        notes=notes,
+        notes=sanitized_notes,
     )
 
     registry.add_feature(feature)
@@ -444,19 +456,18 @@ def _feature_list(status_filter: str | None, json_output: bool) -> None:
 
 def _feature_start(feature_id: str | None) -> None:
     """Mark feature as in-progress."""
-    if not feature_id:
-        raise PithException("Feature ID is required for 'start' action")
+    validated_id = validate_feature_id(feature_id or "")
 
     registry = load_features()
     progress = load_progress()
 
-    feature = registry.get_feature(feature_id)
+    feature = registry.get_feature(validated_id)
     if not feature:
-        raise PithException(f"Feature not found: {feature_id}")
+        raise PithException(f"Feature not found: {validated_id}")
 
     # Check for other in-progress features
     in_progress = registry.get_features_by_status(FeatureStatus.IN_PROGRESS)
-    if in_progress and feature_id not in [f.id for f in in_progress]:
+    if in_progress and validated_id not in [f.id for f in in_progress]:
         echo(f"⚠️  Warning: Other features are in-progress: {', '.join(f.id for f in in_progress)}")
 
     feature.status = FeatureStatus.IN_PROGRESS
@@ -467,25 +478,29 @@ def _feature_start(feature_id: str | None) -> None:
     save_progress(progress)
     regenerate_progress_md()
 
-    echo(f"🔄 Started: {feature_id} - {feature.description}")
+    echo(f"🔄 Started: {validated_id} - {feature.description}")
 
 
 def _feature_verify(feature_id: str | None, evidence: str | None) -> None:
     """Mark feature as verified."""
-    if not feature_id:
-        raise PithException("Feature ID is required for 'verify' action")
+    validated_id = validate_feature_id(feature_id or "")
     if not evidence:
         raise PithException("--evidence is required for 'verify' action")
+
+    # Sanitize evidence input
+    evidence = sanitize_string(evidence)
+    if not evidence:
+        raise PithException("--evidence cannot be empty")
 
     registry = load_features()
     progress = load_progress()
     config = load_config()
 
-    feature = registry.get_feature(feature_id)
+    feature = registry.get_feature(validated_id)
     if not feature:
-        raise PithException(f"Feature not found: {feature_id}")
+        raise PithException(f"Feature not found: {validated_id}")
 
-    evidence_paths = [p.strip() for p in evidence.split(",")]
+    evidence_paths = [sanitize_string(p.strip()) or "" for p in evidence.split(",") if p.strip()]
 
     feature.status = FeatureStatus.VERIFIED
     feature.passes = True
@@ -1318,9 +1333,14 @@ def import_features(
     """
     import yaml
 
-    input_path = Path(file_path)
-    if not input_path.exists():
-        raise PithException(f"File not found: {input_path}")
+    # Validate file path
+    input_path = validate_file_path(file_path, must_exist=True)
+
+    # Validate extension
+    if input_path.suffix.lower() not in [".yaml", ".yml", ".json"]:
+        raise PithException(
+            f"Unsupported file format: {input_path.suffix}. Use .yaml, .yml, or .json"
+        )
 
     # Load file content
     content = input_path.read_text(encoding="utf-8")
@@ -1477,13 +1497,8 @@ def export_features(
     """
     import yaml
 
-    output_path = Path(output)
-
-    # Validate extension
-    if output_path.suffix.lower() not in [".yaml", ".yml", ".json"]:
-        raise PithException(
-            f"Unsupported file format: {output_path.suffix}. Use .yaml, .yml, or .json"
-        )
+    # Validate output path
+    output_path = validate_output_path(output, extensions=[".yaml", ".yml", ".json"])
 
     registry = load_features()
     features = registry.features

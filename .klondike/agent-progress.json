@@ -101,7 +101,7 @@
       {
         "id": "F028",
         "description": "Validate and sanitize all user inputs",
-        "status": "not-started"
+        "status": "in-progress"
       }
     ]
   }
