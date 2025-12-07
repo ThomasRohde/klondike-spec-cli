@@ -698,13 +698,13 @@
         "Suitable for sharing with stakeholders"
       ],
       "estimatedEffort": "medium",
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-07T13:29:42.811851",
       "notes": null
     },
     {

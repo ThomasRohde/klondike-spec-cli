@@ -314,3 +314,90 @@ class TestValidateCommand:
                 assert "✅ All artifacts valid!" in result.output
             finally:
                 os.chdir(original_cwd)
+
+
+class TestReportCommand:
+    """Integration tests for 'klondike report' command."""
+
+    def test_report_generates_markdown(self) -> None:
+        """Test report generates markdown output."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init", "--name", "test-project"])
+                runner.invoke(app, ["feature", "add", "--description", "Feature One"])
+                runner.invoke(
+                    app, ["feature", "verify", "F001", "--evidence", "test.txt"]
+                )
+
+                result = runner.invoke(app, ["report"])
+
+                assert result.exit_code == 0
+                assert "# test-project - Progress Report" in result.output
+                assert "Executive Summary" in result.output
+                assert "1/1 features complete (100.0%)" in result.output
+                assert "Feature One" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_report_plain_format(self) -> None:
+        """Test report with plain text format."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init", "--name", "plain-test"])
+                runner.invoke(app, ["feature", "add", "--description", "Plain Feature"])
+
+                result = runner.invoke(app, ["report", "--format", "plain"])
+
+                assert result.exit_code == 0
+                assert "plain-test - Progress Report" in result.output
+                assert "EXECUTIVE SUMMARY" in result.output
+                assert "0/1 features (0.0%)" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_report_output_to_file(self) -> None:
+        """Test report saves to file with --output flag."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(app, ["report", "--output", "report.md"])
+
+                assert result.exit_code == 0
+                assert "Report saved to" in result.output
+
+                # Verify file was created
+                report_path = Path(tmpdir) / "report.md"
+                assert report_path.exists()
+                content = report_path.read_text(encoding="utf-8")
+                assert "Progress Report" in content
+            finally:
+                os.chdir(original_cwd)
+
+    def test_report_shows_in_progress_features(self) -> None:
+        """Test report shows in-progress features."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "WIP Feature"])
+                runner.invoke(app, ["feature", "start", "F001"])
+
+                result = runner.invoke(app, ["report"])
+
+                assert result.exit_code == 0
+                assert "In Progress" in result.output
+                assert "WIP Feature" in result.output
+            finally:
+                os.chdir(original_cwd)
