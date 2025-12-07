@@ -88,22 +88,27 @@ This repository uses a **multi-context-window agent workflow** designed to maint
 
 ## Pre-Commit Verification (MANDATORY)
 
-### Step 1: Detect Project Stack
+### Step 1: Detect Project Stack and Tools
 
 Before running checks, detect available commands:
 
-1. Read `package.json` → look for `scripts.build`, `scripts.test`, `scripts.lint`
-2. If Python: check for `pyproject.toml`, `setup.py`, or `requirements.txt`
-3. If Rust: check for `Cargo.toml`
-4. If Go: check for `go.mod`
+1. **Python with uv**: Check for `pyproject.toml` with `[tool.uv]` or `uv.lock`
+   - Use `uv run` prefix for all commands
+2. **Python with pip**: Check for `pyproject.toml`, `setup.py`, or `requirements.txt`
+3. **Node.js**: Read `package.json` → look for `scripts.build`, `scripts.test`, `scripts.lint`
+4. **Rust**: Check for `Cargo.toml`
+5. **Go**: Check for `go.mod`
 
 ### Step 2: Run Detected Commands
 
-| Check | Node.js | Python | Rust | Go |
-|-------|---------|--------|------|----|
-| Build | `npm run build` | `python -m py_compile` | `cargo build` | `go build` |
-| Test | `npm test` | `pytest` | `cargo test` | `go test` |
-| Lint | `npm run lint` | `ruff check` or `flake8` | `cargo clippy` | `golangci-lint` |
+| Check | Python (uv) | Python (pip) | Node.js | Rust | Go |
+|-------|-------------|--------------|---------|------|----|
+| Lint | `uv run ruff check src tests` | `ruff check` or `flake8` | `npm run lint` | `cargo clippy` | `golangci-lint` |
+| Format | `uv run ruff format --check src tests` | `ruff format --check` | `npm run format` | `cargo fmt --check` | `gofmt -l` |
+| Test | `uv run pytest` | `pytest` | `npm test` | `cargo test` | `go test` |
+| Build | N/A (interpreted) | N/A | `npm run build` | `cargo build` | `go build` |
+
+**CRITICAL**: Many Python projects use `ruff format` (not `black`) for formatting. Check the CI workflow (`.github/workflows/*.yml`) to see exactly which tools are used.
 
 ### Step 3: Record Results Before Commit
 
@@ -113,9 +118,9 @@ Before running checks, detect available commands:
 #### Pre-Commit Verification
 | Command | Exit Code | Notes |
 |---------|-----------|-------|
-| npm run build | 0 | ✅ |
-| npm test | 0 | ✅ 42 tests passed |
-| npm run lint | 0 | ✅ |
+| uv run ruff check src tests | 0 | ✅ |
+| uv run ruff format --check src tests | 0 | ✅ |
+| uv run pytest | 0 | ✅ 42 tests passed |
 ```
 
 **If a command is missing from the project:**
@@ -126,11 +131,11 @@ Before running checks, detect available commands:
 ### Step 4: Commit Only If All Pass
 
 ```
-Detect stack → Run build → Run tests → Run lint → Record results → All pass? → Commit
-                  ↓           ↓           ↓
-              Fix errors  Fix tests  Fix lint
-                  ↓           ↓           ↓
-              Re-run    → Re-run   → Re-run  → Record → All pass? → Commit
+Detect stack → Run lint → Run format check → Run tests → Record results → All pass? → Commit
+                  ↓              ↓               ↓
+              Fix lint      Fix format      Fix tests
+                  ↓              ↓               ↓
+              Re-run    →   Re-run     →   Re-run  → Record → All pass? → Commit
 ```
 
 **If you skip verification and a build/test fails after commit:**
@@ -249,3 +254,47 @@ Ensures:
 - [ ] `init.sh` and/or `init.ps1` for environment setup (if dev server)
 - [ ] Initial git commit with clean state
 - [ ] `.vscode/settings.json` with Copilot configuration
+
+---
+
+## Release Workflow
+
+### Using klondike release (Recommended)
+
+The CLI provides automated release management:
+
+```bash
+# Show current version
+klondike release
+
+# Bump and release
+klondike release --bump patch   # 0.2.0 -> 0.2.1
+klondike release --bump minor   # 0.2.0 -> 0.3.0
+klondike release --bump major   # 0.2.0 -> 1.0.0
+
+# Or specify exact version
+klondike release 0.3.0
+
+# Preview without changes
+klondike release --bump minor --dry-run
+```
+
+### Publishing Pipeline
+
+Most projects use a two-stage publish:
+
+1. **Push tag** → Publishes to TestPyPI/npm staging (automatic)
+2. **Create GitHub Release** → Publishes to PyPI/npm production
+
+After `klondike release` completes:
+1. Go to GitHub → Releases → Create new release
+2. Select the tag that was just pushed
+3. Add release notes
+4. Click "Publish release"
+
+### When CI Fails After Release
+
+If CI fails after pushing a tag:
+1. Fix the issue locally
+2. Delete the tag: `git tag -d vX.Y.Z && git push origin :refs/tags/vX.Y.Z`
+3. Fix and re-release: `klondike release X.Y.Z`

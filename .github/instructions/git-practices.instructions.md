@@ -142,6 +142,25 @@ git tag -a checkpoint-auth-complete -m "Authentication features done"
 git tag -l
 ```
 
+## Releasing with klondike
+
+For projects using klondike, use the built-in release command:
+
+```bash
+# Bump and release (runs tests, commits, tags, pushes)
+klondike release --bump patch   # 0.2.0 -> 0.2.1
+klondike release --bump minor   # 0.2.0 -> 0.3.0  
+klondike release --bump major   # 0.2.0 -> 1.0.0
+
+# Preview first
+klondike release --bump minor --dry-run
+
+# Skip tests for hotfixes
+klondike release --bump patch --skip-tests
+```
+
+After pushing the tag, create a GitHub Release to publish to production.
+
 ## What to Never Commit
 
 - Secrets, API keys, passwords

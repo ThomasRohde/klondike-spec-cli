@@ -1038,12 +1038,31 @@
       "blockedBy": null,
       "lastWorkedOn": null,
       "notes": null
+    },
+    {
+      "id": "F039",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Local CI check command that detects and runs project CI checks",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Reports pass/fail status"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T14:58:37.754837",
-    "totalFeatures": 38,
+    "lastUpdated": "2025-12-07T15:32:12.577883",
+    "totalFeatures": 39,
     "passingFeatures": 32
   }
 }

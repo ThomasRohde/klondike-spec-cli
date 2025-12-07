@@ -141,8 +141,8 @@
         "status": "not-started"
       },
       {
-        "id": "F035",
-        "description": "Auto-delegate feature PRs via copilot",
+        "id": "F039",
+        "description": "Local CI check command that detects and runs project CI checks",
         "status": "not-started"
       }
     ]
