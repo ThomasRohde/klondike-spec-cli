@@ -1,0 +1,96 @@
+{
+  "projectName": "example-project",
+  "version": "0.1.0",
+  "features": [
+    {
+      "id": "F001",
+      "category": "infrastructure",
+      "priority": 1,
+      "description": "Initialize project with development environment",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Project structure created with appropriate directories",
+        "Package manager initialized with dependencies",
+        "Development server can be started",
+        "Basic health check endpoint responds"
+      ],
+      "estimatedEffort": "small",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null
+    },
+    {
+      "id": "F002",
+      "category": "core",
+      "priority": 1,
+      "description": "Define core data models",
+      "dependencies": ["F001"],
+      "acceptanceCriteria": [
+        "Data models defined with TypeScript/types",
+        "Validation rules in place",
+        "Example data can be created programmatically"
+      ],
+      "estimatedEffort": "small",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null
+    },
+    {
+      "id": "F003",
+      "category": "core",
+      "priority": 1,
+      "description": "Implement data persistence",
+      "dependencies": ["F002"],
+      "acceptanceCriteria": [
+        "Data can be saved to storage",
+        "Data can be retrieved from storage",
+        "Data persists across application restarts",
+        "Error handling for storage failures"
+      ],
+      "estimatedEffort": "medium",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null
+    },
+    {
+      "id": "F004",
+      "category": "ui",
+      "priority": 2,
+      "description": "Create main application layout",
+      "dependencies": ["F001"],
+      "acceptanceCriteria": [
+        "Main page renders without errors",
+        "Navigation structure in place",
+        "Responsive design works on mobile and desktop",
+        "Loading state displayed while data loads"
+      ],
+      "estimatedEffort": "medium",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null
+    },
+    {
+      "id": "F005",
+      "category": "testing",
+      "priority": 2,
+      "description": "Set up testing infrastructure",
+      "dependencies": ["F001"],
+      "acceptanceCriteria": [
+        "Unit test framework configured",
+        "At least one passing test exists",
+        "Test command runs successfully",
+        "Code coverage reporting available"
+      ],
+      "estimatedEffort": "small",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null
+    }
+  ],
+  "metadata": {
+    "createdAt": "2025-01-01T00:00:00Z",
+    "lastUpdated": "2025-01-01T00:00:00Z",
+    "totalFeatures": 5,
+    "passingFeatures": 0
+  }
+}

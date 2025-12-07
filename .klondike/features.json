@@ -1,0 +1,809 @@
+{
+  "projectName": "klondike-spec-cli",
+  "version": "0.1.0",
+  "features": [
+    {
+      "id": "F001",
+      "category": "infrastructure",
+      "priority": 1,
+      "description": "Initialize Python project with pyproject.toml and pith dependency",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "pyproject.toml exists with correct metadata",
+        "pith (pypith) is listed as dependency",
+        "Project can be installed in development mode with pip install -e .",
+        "Entry point 'klondike' is configured"
+      ],
+      "estimatedEffort": "small",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:15.173825",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "pyproject.toml",
+        "src/klondike_spec_cli/__init__.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-07T12:58:08.773009",
+      "notes": null
+    },
+    {
+      "id": "F002",
+      "category": "core",
+      "priority": 1,
+      "description": "Define core data models for features and progress",
+      "dependencies": [
+        "F001"
+      ],
+      "acceptanceCriteria": [
+        "Feature dataclass/model with all required fields defined",
+        "FeatureRegistry model for managing features.json",
+        "Session dataclass for progress tracking",
+        "ProgressLog model for agent-progress.json",
+        "Models support JSON serialization/deserialization"
+      ],
+      "estimatedEffort": "medium",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:21.825881",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/models.py",
+        "tests/test_models.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F003",
+      "category": "core",
+      "priority": 1,
+      "description": "Implement 'klondike init' command to initialize .klondike directory",
+      "dependencies": [
+        "F002"
+      ],
+      "acceptanceCriteria": [
+        "Running 'klondike init' creates .klondike directory",
+        "Creates features.json with empty feature list and metadata",
+        "Creates agent-progress.json with initialization session",
+        "Creates config.yaml with default settings",
+        "Generates agent-progress.md from JSON",
+        "Shows error if .klondike already exists (unless --force)"
+      ],
+      "estimatedEffort": "medium",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:29.395542",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F004",
+      "category": "core",
+      "priority": 1,
+      "description": "Implement 'klondike feature add' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Can add a single feature interactively",
+        "Can add feature with --id, --description, --category flags",
+        "Auto-generates next available feature ID if not specified",
+        "Validates feature ID format (F###)",
+        "Updates metadata.totalFeatures count",
+        "Regenerates agent-progress.md"
+      ],
+      "estimatedEffort": "medium",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:34.728170",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F005",
+      "category": "core",
+      "priority": 1,
+      "description": "Implement 'klondike feature list' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Lists all features with ID, description, status",
+        "Supports --status filter (not-started, in-progress, blocked, verified)",
+        "Supports --category filter",
+        "Supports --json output format",
+        "Shows summary counts at bottom"
+      ],
+      "estimatedEffort": "small",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:34.828338",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F006",
+      "category": "core",
+      "priority": 1,
+      "description": "Implement 'klondike feature start' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Sets feature status to 'in-progress'",
+        "Sets lastWorkedOn timestamp",
+        "Validates feature exists",
+        "Shows warning if another feature is already in-progress",
+        "Updates agent-progress.md"
+      ],
+      "estimatedEffort": "small",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:34.940451",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F007",
+      "category": "core",
+      "priority": 1,
+      "description": "Implement 'klondike feature verify' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Sets feature status to 'verified' and passes to true",
+        "Requires --evidence flag with path(s) to evidence files",
+        "Sets verifiedAt timestamp and verifiedBy identifier",
+        "Updates metadata.passingFeatures count",
+        "Validates evidence files exist",
+        "Updates agent-progress.md"
+      ],
+      "estimatedEffort": "medium",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:35.038637",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F008",
+      "category": "core",
+      "priority": 2,
+      "description": "Implement 'klondike feature block' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Sets feature status to 'blocked'",
+        "Requires --reason flag explaining the blocker",
+        "Optionally accepts --blocked-by for dependency feature IDs",
+        "Updates agent-progress.md"
+      ],
+      "estimatedEffort": "small",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:35.136475",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F009",
+      "category": "core",
+      "priority": 1,
+      "description": "Implement 'klondike session start' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Creates new session entry in agent-progress.json",
+        "Validates artifact integrity (features.json, agent-progress.json)",
+        "Shows current project status summary",
+        "Lists recommended next features to work on",
+        "Regenerates agent-progress.md"
+      ],
+      "estimatedEffort": "medium",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:40.338604",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F010",
+      "category": "core",
+      "priority": 1,
+      "description": "Implement 'klondike session end' command",
+      "dependencies": [
+        "F002",
+        "F003",
+        "F009"
+      ],
+      "acceptanceCriteria": [
+        "Updates current session with completion data",
+        "Prompts for session summary if not provided",
+        "Validates all in-progress features are handled",
+        "Shows warning for uncommitted git changes",
+        "Regenerates agent-progress.md"
+      ],
+      "estimatedEffort": "medium",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:40.436739",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F011",
+      "category": "core",
+      "priority": 2,
+      "description": "Implement 'klondike status' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Shows project name and version",
+        "Shows feature counts by status",
+        "Shows progress percentage",
+        "Shows current session info if active",
+        "Shows last session summary",
+        "Supports --json output"
+      ],
+      "estimatedEffort": "small",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:40.543803",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F012",
+      "category": "core",
+      "priority": 2,
+      "description": "Implement 'klondike progress' command to regenerate markdown",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Generates agent-progress.md from agent-progress.json",
+        "Uses proper markdown formatting with session log",
+        "Includes quick reference section with current priorities",
+        "Supports --output flag for custom output path"
+      ],
+      "estimatedEffort": "medium",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:40.642977",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F013",
+      "category": "core",
+      "priority": 2,
+      "description": "Implement 'klondike validate' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Validates features.json against schema",
+        "Validates metadata counts match actual counts",
+        "Validates agent-progress.json structure",
+        "Checks for orphaned/missing features",
+        "Reports all issues found with suggestions to fix",
+        "Returns non-zero exit code on validation failure"
+      ],
+      "estimatedEffort": "medium",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:40.752911",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "src/klondike_spec_cli/cli.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F014",
+      "category": "core",
+      "priority": 3,
+      "description": "Implement 'klondike feature edit' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Can update feature notes with --notes flag",
+        "Can add acceptance criteria with --add-criteria flag",
+        "Cannot modify description or id (enforces immutability)",
+        "Shows clear error for forbidden modifications"
+      ],
+      "estimatedEffort": "small",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F015",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Bake templates into the executable",
+      "dependencies": [
+        "F001"
+      ],
+      "acceptanceCriteria": [
+        "Templates are included in package data",
+        "Templates can be extracted to .klondike/templates/ on demand",
+        "Includes features.json template",
+        "Includes agent-progress.json template",
+        "Includes config.yaml template"
+      ],
+      "estimatedEffort": "small",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F016",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Implement configuration management",
+      "dependencies": [
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Reads config from .klondike/config.yaml",
+        "Supports default_category, default_priority settings",
+        "Supports progress_output_path setting",
+        "Supports verifiedBy identifier for current user/agent"
+      ],
+      "estimatedEffort": "small",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F017",
+      "category": "ui",
+      "priority": 3,
+      "description": "Add rich terminal output with colors and formatting",
+      "dependencies": [
+        "F001"
+      ],
+      "acceptanceCriteria": [
+        "Status indicators use color coding (green=verified, yellow=in-progress, red=blocked)",
+        "Progress bars for overall completion",
+        "Tables are properly formatted",
+        "Colors can be disabled with --no-color flag"
+      ],
+      "estimatedEffort": "small",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F018",
+      "category": "testing",
+      "priority": 2,
+      "description": "Set up pytest testing infrastructure",
+      "dependencies": [
+        "F001"
+      ],
+      "acceptanceCriteria": [
+        "pytest is configured in pyproject.toml",
+        "Test directory structure exists",
+        "At least one passing test exists",
+        "Coverage reporting is configured"
+      ],
+      "estimatedEffort": "small",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:45.610251",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "tests/test_models.py",
+        "pyproject.toml"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F019",
+      "category": "testing",
+      "priority": 2,
+      "description": "Unit tests for data models",
+      "dependencies": [
+        "F002",
+        "F018"
+      ],
+      "acceptanceCriteria": [
+        "Tests for Feature model serialization/deserialization",
+        "Tests for FeatureRegistry operations",
+        "Tests for Session model",
+        "Tests for ProgressLog operations",
+        "All tests pass"
+      ],
+      "estimatedEffort": "medium",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:45.704909",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "tests/test_models.py"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F020",
+      "category": "testing",
+      "priority": 2,
+      "description": "Integration tests for CLI commands",
+      "dependencies": [
+        "F003",
+        "F004",
+        "F005",
+        "F018"
+      ],
+      "acceptanceCriteria": [
+        "Tests for 'klondike init' command",
+        "Tests for 'klondike feature add' command",
+        "Tests for 'klondike feature list' command",
+        "Uses pith CliRunner for testing",
+        "Tests verify file system changes"
+      ],
+      "estimatedEffort": "medium",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F021",
+      "category": "docs",
+      "priority": 3,
+      "description": "Create README with installation and usage instructions",
+      "dependencies": [
+        "F003",
+        "F004",
+        "F005"
+      ],
+      "acceptanceCriteria": [
+        "Installation instructions (pip install)",
+        "Quick start guide",
+        "Command reference table",
+        "Example workflow walkthrough"
+      ],
+      "estimatedEffort": "small",
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-07T12:58:45.801949",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "README.md"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F022",
+      "category": "infrastructure",
+      "priority": 3,
+      "description": "Set up GitHub Actions CI/CD",
+      "dependencies": [
+        "F018"
+      ],
+      "acceptanceCriteria": [
+        "Runs tests on push and PR",
+        "Runs linting (ruff)",
+        "Runs type checking (mypy)",
+        "Publishes to PyPI on release tag"
+      ],
+      "estimatedEffort": "medium",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F023",
+      "category": "core",
+      "priority": 3,
+      "description": "Implement 'klondike feature import' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Can import features from a YAML or JSON file",
+        "Validates imported features against schema",
+        "Merges with existing features (no duplicates)",
+        "Shows summary of imported features"
+      ],
+      "estimatedEffort": "medium",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F024",
+      "category": "core",
+      "priority": 3,
+      "description": "Implement 'klondike feature export' command",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Exports features to YAML or JSON format",
+        "Supports --status filter to export subset",
+        "Supports --output flag for file path",
+        "Default outputs to stdout"
+      ],
+      "estimatedEffort": "small",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F025",
+      "category": "infrastructure",
+      "priority": 4,
+      "description": "Add shell completion support",
+      "dependencies": [
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Bash completion script can be generated",
+        "Zsh completion script can be generated",
+        "PowerShell completion script can be generated",
+        "Completes command names and feature IDs"
+      ],
+      "estimatedEffort": "medium",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F026",
+      "category": "core",
+      "priority": 2,
+      "description": "Implement 'klondike report' command for stakeholder reports",
+      "dependencies": [
+        "F002",
+        "F003"
+      ],
+      "acceptanceCriteria": [
+        "Generates human-readable progress report",
+        "Shows completed features in current session",
+        "Shows overall progress metrics",
+        "Supports --format flag (markdown, plain)",
+        "Suitable for sharing with stakeholders"
+      ],
+      "estimatedEffort": "medium",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F027",
+      "category": "infrastructure",
+      "priority": 1,
+      "description": "Update repository prompts to use klondike CLI",
+      "dependencies": [
+        "F003",
+        "F009",
+        "F010"
+      ],
+      "acceptanceCriteria": [
+        "session-start.prompt.md uses 'klondike session start'",
+        "session-end.prompt.md uses 'klondike session end'",
+        "verify-feature.prompt.md uses 'klondike feature verify'",
+        "init-project.prompt.md uses 'klondike init'",
+        "All prompts reference .klondike directory structure"
+      ],
+      "estimatedEffort": "medium",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F028",
+      "category": "security",
+      "priority": 4,
+      "description": "Validate and sanitize all user inputs",
+      "dependencies": [
+        "F003",
+        "F004"
+      ],
+      "acceptanceCriteria": [
+        "Feature IDs are validated against pattern",
+        "File paths are validated and sanitized",
+        "JSON/YAML inputs are validated against schema",
+        "No path traversal vulnerabilities"
+      ],
+      "estimatedEffort": "small",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F029",
+      "category": "core",
+      "priority": 3,
+      "description": "Implement git integration for session management",
+      "dependencies": [
+        "F009",
+        "F010"
+      ],
+      "acceptanceCriteria": [
+        "Session start checks for uncommitted changes",
+        "Session end warns if changes are uncommitted",
+        "Can show recent git log in status",
+        "Optional auto-commit on session end"
+      ],
+      "estimatedEffort": "medium",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F030",
+      "category": "performance",
+      "priority": 5,
+      "description": "Optimize for large feature registries",
+      "dependencies": [
+        "F002"
+      ],
+      "acceptanceCriteria": [
+        "Handles 100+ features without noticeable lag",
+        "Lazy loading of feature details",
+        "Efficient JSON parsing"
+      ],
+      "estimatedEffort": "small",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    }
+  ],
+  "metadata": {
+    "createdAt": "2025-12-07T00:00:00Z",
+    "lastUpdated": "2025-12-07T12:58:45.801955",
+    "totalFeatures": 30,
+    "passingFeatures": 16
+  }
+}
