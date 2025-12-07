@@ -979,6 +979,71 @@ def validate() -> None:
         echo(f"   Sessions: {len(progress.sessions)}")
 
 
+@app.command(pith="Generate shell completion scripts", priority=55)
+@app.intents(
+    "shell completion",
+    "bash completion",
+    "zsh completion",
+    "powershell completion",
+    "generate completions",
+)
+def completion(
+    shell: str = Argument(..., pith="Shell type: bash, zsh, powershell"),
+    output: str | None = Option(None, "--output", "-o", pith="Output file path"),
+) -> None:
+    """Generate shell completion scripts.
+
+    Creates completion scripts for Bash, Zsh, or PowerShell that enable
+    tab completion for klondike commands, options, and feature IDs.
+
+    Examples:
+        $ klondike completion bash
+        $ klondike completion zsh --output ~/.zsh/completions/_klondike
+        $ klondike completion powershell >> $PROFILE
+
+    Installation:
+        Bash: source <(klondike completion bash)
+        Zsh:  klondike completion zsh > ~/.zsh/completions/_klondike
+        PowerShell: klondike completion powershell >> $PROFILE
+
+    Related:
+        help - Show command help
+    """
+    from klondike_spec_cli.completion import (
+        generate_bash_completion,
+        generate_powershell_completion,
+        generate_zsh_completion,
+    )
+
+    generators = {
+        "bash": generate_bash_completion,
+        "zsh": generate_zsh_completion,
+        "powershell": generate_powershell_completion,
+    }
+
+    if shell not in generators:
+        raise PithException(f"Unsupported shell: {shell}. Use: bash, zsh, powershell")
+
+    content = generators[shell]()
+
+    if output:
+        from pathlib import Path
+
+        output_path = Path(output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(content)
+        echo(f"✅ Completion script written to: {output_path}")
+        if shell == "bash":
+            echo(f"   Run: source {output_path}")
+        elif shell == "zsh":
+            echo("   Add the directory to your fpath and restart shell")
+        elif shell == "powershell":
+            echo("   Run: . " + str(output_path))
+    else:
+        # Print to stdout for piping
+        print(content)
+
+
 @app.command(pith="Regenerate agent-progress.md from JSON", priority=60)
 @app.intents(
     "regenerate markdown",

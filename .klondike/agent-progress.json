@@ -89,14 +89,9 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F029",
-        "description": "Implement git integration for session management",
-        "status": "in-progress"
-      },
-      {
         "id": "F025",
         "description": "Add shell completion support",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F030",
