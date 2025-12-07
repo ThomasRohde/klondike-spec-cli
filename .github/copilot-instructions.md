@@ -259,9 +259,38 @@ Ensures:
 
 ## Release Workflow
 
-### Using klondike release (Recommended)
+### Dynamic Versioning (Recommended for Python)
 
-The CLI provides automated release management:
+For continuous deployment, use `hatch-vcs` for automatic version management:
+
+```toml
+# pyproject.toml
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+# CRITICAL: Use no-local-version for PyPI compatibility
+raw-options = { local_scheme = "no-local-version" }
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/package_name/_version.py"
+```
+
+**Why `no-local-version`?** PyPI rejects versions with local identifiers (e.g., `0.2.0+g627da09`). The `no-local-version` scheme produces clean versions like `0.2.1.dev3`.
+
+### Version Format with hatch-vcs
+
+| Git State | Example Version |
+|-----------|----------------|
+| On tag `v0.3.0` | `0.3.0` |
+| 3 commits after tag | `0.3.1.dev3` |
+| Dirty working tree | `0.3.1.dev3` |
+
+### Using klondike release (For Static Versioning)
+
+If not using dynamic versioning, the CLI provides release management:
 
 ```bash
 # Show current version
@@ -272,25 +301,36 @@ klondike release --bump patch   # 0.2.0 -> 0.2.1
 klondike release --bump minor   # 0.2.0 -> 0.3.0
 klondike release --bump major   # 0.2.0 -> 1.0.0
 
-# Or specify exact version
-klondike release 0.3.0
-
 # Preview without changes
 klondike release --bump minor --dry-run
 ```
 
-### Publishing Pipeline
+### CI/CD Publishing Pipeline
 
-Most projects use a two-stage publish:
+**Continuous Deployment (with dynamic versioning):**
+- Every push to master → CI runs → if passes → auto-publish to PyPI
+- Use `skip-existing: true` in pypa/gh-action-pypi-publish
+- Unique dev versions ensure no conflicts
 
-1. **Push tag** → Publishes to TestPyPI/npm staging (automatic)
+**Staged Deployment (traditional):**
+1. **Push tag** → Publishes to TestPyPI/npm staging
 2. **Create GitHub Release** → Publishes to PyPI/npm production
 
-After `klondike release` completes:
-1. Go to GitHub → Releases → Create new release
-2. Select the tag that was just pushed
-3. Add release notes
-4. Click "Publish release"
+### GitHub Actions Workflow Pattern
+
+```yaml
+# Trigger publish after CI succeeds
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [master, main]
+
+jobs:
+  publish:
+    if: github.event.workflow_run.conclusion == 'success'
+    # ... publish steps with skip-existing: true
+```
 
 ### When CI Fails After Release
 
@@ -298,3 +338,11 @@ If CI fails after pushing a tag:
 1. Fix the issue locally
 2. Delete the tag: `git tag -d vX.Y.Z && git push origin :refs/tags/vX.Y.Z`
 3. Fix and re-release: `klondike release X.Y.Z`
+
+### Common PyPI Publishing Errors
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `File already exists` | Same version uploaded twice | Bump version or use dynamic versioning |
+| `400 Bad Request: local version` | Version has `+g...` suffix | Use `local_scheme = "no-local-version"` |
+| `403 Forbidden` | Missing PyPI trusted publisher | Configure OIDC in PyPI project settings |
