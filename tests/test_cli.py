@@ -898,3 +898,156 @@ class TestCopilotCommand:
                 assert "Unknown action" in result.output
             finally:
                 os.chdir(original_cwd)
+
+
+class TestReleaseCommand:
+    """Integration tests for 'klondike release' command."""
+
+    def test_release_shows_current_version(self) -> None:
+        """Test release without args shows current version."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                # Create a pyproject.toml
+                pyproject = Path(tmpdir) / "pyproject.toml"
+                pyproject.write_text('[project]\nname = "test"\nversion = "1.2.3"\n')
+
+                result = runner.invoke(app, ["release"])
+
+                assert result.exit_code == 0
+                assert "Current version: 1.2.3" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_release_dry_run(self) -> None:
+        """Test release dry run shows plan without changes."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                pyproject = Path(tmpdir) / "pyproject.toml"
+                pyproject.write_text('[project]\nname = "test"\nversion = "1.0.0"\n')
+
+                result = runner.invoke(app, ["release", "1.1.0", "--dry-run", "--skip-tests"])
+
+                assert result.exit_code == 0
+                assert "DRY RUN" in result.output
+                assert "New version:     1.1.0" in result.output
+                assert "Tag:             v1.1.0" in result.output
+
+                # Verify file wasn't changed
+                content = pyproject.read_text()
+                assert 'version = "1.0.0"' in content
+            finally:
+                os.chdir(original_cwd)
+
+    def test_release_bump_patch(self) -> None:
+        """Test release with --bump patch."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                pyproject = Path(tmpdir) / "pyproject.toml"
+                pyproject.write_text('[project]\nname = "test"\nversion = "1.2.3"\n')
+
+                result = runner.invoke(
+                    app, ["release", "--bump", "patch", "--dry-run", "--skip-tests"]
+                )
+
+                assert result.exit_code == 0
+                assert "New version:     1.2.4" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_release_bump_minor(self) -> None:
+        """Test release with --bump minor."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                pyproject = Path(tmpdir) / "pyproject.toml"
+                pyproject.write_text('[project]\nname = "test"\nversion = "1.2.3"\n')
+
+                result = runner.invoke(
+                    app, ["release", "--bump", "minor", "--dry-run", "--skip-tests"]
+                )
+
+                assert result.exit_code == 0
+                assert "New version:     1.3.0" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_release_bump_major(self) -> None:
+        """Test release with --bump major."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                pyproject = Path(tmpdir) / "pyproject.toml"
+                pyproject.write_text('[project]\nname = "test"\nversion = "1.2.3"\n')
+
+                result = runner.invoke(
+                    app, ["release", "--bump", "major", "--dry-run", "--skip-tests"]
+                )
+
+                assert result.exit_code == 0
+                assert "New version:     2.0.0" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_release_no_pyproject(self) -> None:
+        """Test release fails without pyproject.toml."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+
+                result = runner.invoke(app, ["release", "1.0.0"])
+
+                assert result.exit_code != 0
+                assert "pyproject.toml not found" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_release_invalid_version(self) -> None:
+        """Test release fails with invalid version format."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                pyproject = Path(tmpdir) / "pyproject.toml"
+                pyproject.write_text('[project]\nname = "test"\nversion = "1.0.0"\n')
+
+                result = runner.invoke(app, ["release", "invalid"])
+
+                assert result.exit_code != 0
+                assert "Invalid version format" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_release_invalid_bump_type(self) -> None:
+        """Test release fails with invalid bump type."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                pyproject = Path(tmpdir) / "pyproject.toml"
+                pyproject.write_text('[project]\nname = "test"\nversion = "1.0.0"\n')
+
+                result = runner.invoke(
+                    app, ["release", "--bump", "invalid", "--dry-run", "--skip-tests"]
+                )
+
+                assert result.exit_code != 0
+                assert "Invalid bump type" in result.output
+            finally:
+                os.chdir(original_cwd)

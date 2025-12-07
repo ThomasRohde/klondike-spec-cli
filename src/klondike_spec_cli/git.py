@@ -288,3 +288,114 @@ def format_git_log(commits: list[GitCommit], max_msg_len: int = 50) -> str:
         lines.append(f"  {commit.short_hash} {commit.date} {msg}")
 
     return "\n".join(lines)
+
+
+def git_push(path: Path | None = None) -> tuple[bool, str]:
+    """Push commits to remote.
+
+    Args:
+        path: Path to repository, defaults to current directory
+
+    Returns:
+        Tuple of (success, output/error message)
+    """
+    cwd = path or Path.cwd()
+    try:
+        result = subprocess.run(
+            ["git", "push"],
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+            timeout=60,
+        )
+        if result.returncode == 0:
+            return True, result.stdout.strip() or result.stderr.strip()
+        else:
+            return False, result.stderr.strip() or result.stdout.strip()
+    except (FileNotFoundError, subprocess.TimeoutExpired) as e:
+        return False, str(e)
+
+
+def git_tag(tag: str, message: str | None = None, path: Path | None = None) -> tuple[bool, str]:
+    """Create a git tag.
+
+    Args:
+        tag: Tag name (e.g., "v0.2.0")
+        message: Optional tag message (creates annotated tag if provided)
+        path: Path to repository, defaults to current directory
+
+    Returns:
+        Tuple of (success, output/error message)
+    """
+    cwd = path or Path.cwd()
+    try:
+        if message:
+            cmd = ["git", "tag", "-a", tag, "-m", message]
+        else:
+            cmd = ["git", "tag", tag]
+
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+            timeout=10,
+        )
+        if result.returncode == 0:
+            return True, f"Created tag {tag}"
+        else:
+            return False, result.stderr.strip() or result.stdout.strip()
+    except (FileNotFoundError, subprocess.TimeoutExpired) as e:
+        return False, str(e)
+
+
+def git_push_tag(tag: str, path: Path | None = None) -> tuple[bool, str]:
+    """Push a specific tag to remote.
+
+    Args:
+        tag: Tag name to push
+        path: Path to repository, defaults to current directory
+
+    Returns:
+        Tuple of (success, output/error message)
+    """
+    cwd = path or Path.cwd()
+    try:
+        result = subprocess.run(
+            ["git", "push", "origin", tag],
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+            timeout=60,
+        )
+        if result.returncode == 0:
+            return True, result.stdout.strip() or result.stderr.strip()
+        else:
+            return False, result.stderr.strip() or result.stdout.strip()
+    except (FileNotFoundError, subprocess.TimeoutExpired) as e:
+        return False, str(e)
+
+
+def get_tags(path: Path | None = None) -> list[str]:
+    """Get list of git tags.
+
+    Args:
+        path: Path to repository, defaults to current directory
+
+    Returns:
+        List of tag names, sorted by version
+    """
+    cwd = path or Path.cwd()
+    try:
+        result = subprocess.run(
+            ["git", "tag", "--sort=-v:refname"],
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+            timeout=10,
+        )
+        if result.returncode == 0:
+            return [t for t in result.stdout.strip().split("\n") if t]
+        return []
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return []

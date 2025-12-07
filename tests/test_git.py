@@ -10,6 +10,7 @@ from klondike_spec_cli.git import (
     format_git_status,
     get_git_status,
     get_recent_commits,
+    get_tags,
     is_git_installed,
     is_git_repo,
 )
@@ -141,3 +142,21 @@ class TestGitCommits:
         with TemporaryDirectory() as tmpdir:
             commits = get_recent_commits(5, Path(tmpdir))
             assert commits == []
+
+
+class TestGitTags:
+    """Tests for git tag functions."""
+
+    def test_get_tags_current_repo(self) -> None:
+        """Test getting tags from current repo."""
+        tags = get_tags()
+        # Current project should have tags after releases
+        assert isinstance(tags, list)
+        # All tags should be strings
+        assert all(isinstance(t, str) for t in tags)
+
+    def test_get_tags_non_repo(self) -> None:
+        """Test getting tags from non-repo."""
+        with TemporaryDirectory() as tmpdir:
+            tags = get_tags(Path(tmpdir))
+            assert tags == []
