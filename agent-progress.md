@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F029 | Implement git integration for session management | ⏳ Not started |
+| F029 | Implement git integration for session management | 🔄 In progress |
 | F025 | Add shell completion support | ⏳ Not started |
-| F028 | Validate and sanitize all user inputs | 🔄 In progress |
+| F030 | Optimize for large feature registries | ⏳ Not started |
 
 ---
 

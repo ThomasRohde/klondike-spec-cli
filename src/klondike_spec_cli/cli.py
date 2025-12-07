@@ -295,6 +295,23 @@ def status(
         console.print(f"   [dim]Focus:[/dim] {current.focus}")
         console.print()
 
+    # Git status and recent commits
+    from klondike_spec_cli.git import (
+        format_git_log,
+        format_git_status,
+        get_git_status,
+        get_recent_commits,
+    )
+
+    git_status = get_git_status()
+    if git_status.is_git_repo:
+        console.print(f"[bold]📂 Git Status:[/bold] {format_git_status(git_status)}")
+        commits = get_recent_commits(5)
+        if commits:
+            console.print("[dim]Recent commits:[/dim]")
+            console.print(format_git_log(commits))
+        console.print()
+
     # Priority features
     priority = registry.get_priority_features(3)
     if priority:
@@ -682,6 +699,7 @@ def session(
     ),
     blockers: str | None = Option(None, "--blockers", "-b", pith="Blockers encountered"),
     next_steps: str | None = Option(None, "--next", "-n", pith="Next steps (comma-separated)"),
+    auto_commit: bool = Option(False, "--auto-commit", pith="Auto-commit changes on session end"),
 ) -> None:
     """Manage coding sessions.
 
@@ -692,6 +710,7 @@ def session(
     Examples:
         $ klondike session start --focus "F001 - User login"
         $ klondike session end --summary "Completed login form" --completed "Added form,Added validation"
+        $ klondike session end --summary "Done" --auto-commit
 
     Related:
         status - Check project status
@@ -700,15 +719,28 @@ def session(
     if action == "start":
         _session_start(focus)
     elif action == "end":
-        _session_end(summary, completed, blockers, next_steps)
+        _session_end(summary, completed, blockers, next_steps, auto_commit)
     else:
         raise PithException(f"Unknown action: {action}. Use: start, end")
 
 
 def _session_start(focus: str | None) -> None:
     """Start a new session."""
+    from klondike_spec_cli.git import format_git_status, get_git_status
+
     registry = load_features()
     progress = load_progress()
+
+    # Check git status first
+    echo("🔍 Checking git status...")
+    git_status = get_git_status()
+    if git_status.is_git_repo:
+        echo(f"   {format_git_status(git_status)}")
+        if git_status.has_uncommitted_changes:
+            echo("   ⚠️  Consider committing or stashing changes before starting.")
+    else:
+        echo("   ℹ️  Not a git repository")
+    echo("")
 
     # Validate artifact integrity
     echo("🔍 Validating artifacts...")
@@ -782,8 +814,16 @@ def _session_end(
     completed: str | None,
     blockers: str | None,
     next_steps: str | None,
+    auto_commit: bool = False,
 ) -> None:
     """End current session."""
+    from klondike_spec_cli.git import (
+        format_git_status,
+        get_git_status,
+        git_add_all,
+        git_commit,
+    )
+
     registry = load_features()
     progress = load_progress()
 
@@ -824,9 +864,27 @@ def _session_end(
         for item in current.completed:
             echo(f"     • {item}")
 
-    # Reminder about uncommitted changes
+    # Check git status and optionally auto-commit
+    git_status = get_git_status()
+    if git_status.is_git_repo:
+        echo("")
+        echo(f"📂 Git: {format_git_status(git_status)}")
+
+        if git_status.has_uncommitted_changes:
+            if auto_commit:
+                # Auto-commit with session summary
+                commit_msg = f"chore(session): end session {current.session_number}"
+                if summary:
+                    commit_msg += f"\n\n{summary}"
+                git_add_all()
+                success, result = git_commit(commit_msg)
+                if success:
+                    echo("   ✅ Auto-committed changes")
+                else:
+                    echo(f"   ⚠️  Auto-commit failed: {result}")
+            else:
+                echo("   💡 Use --auto-commit to commit changes automatically")
     echo("")
-    echo("💡 Remember to commit your changes before ending work!")
 
 
 @app.command(pith="Validate artifact integrity", priority=50)

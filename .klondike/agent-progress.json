@@ -91,7 +91,7 @@
       {
         "id": "F029",
         "description": "Implement git integration for session management",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F025",
@@ -99,9 +99,9 @@
         "status": "not-started"
       },
       {
-        "id": "F028",
-        "description": "Validate and sanitize all user inputs",
-        "status": "in-progress"
+        "id": "F030",
+        "description": "Optimize for large feature registries",
+        "status": "not-started"
       }
     ]
   }
