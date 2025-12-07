@@ -1,165 +1,318 @@
 # 🎴 Klondike Spec CLI
 
-A CLI tool for managing [Klondike Spec](https://github.com/ThomasRohde/klondike-spec) agent workflow artifacts.
+> **The CLI that built itself** — A tool for managing AI agent workflows, created through the very methodology it implements.
 
 [![PyPI version](https://badge.fury.io/py/klondike-spec-cli.svg)](https://badge.fury.io/py/klondike-spec-cli)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://github.com/ThomasRohde/klondike-spec-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/ThomasRohde/klondike-spec-cli/actions)
+[![Coverage](https://img.shields.io/badge/coverage-74%25-green.svg)](https://github.com/ThomasRohde/klondike-spec-cli)
 
-## Overview
+---
 
-Klondike Spec CLI provides command-line tools for managing the structured artifacts that enable multi-context-window agent workflows:
+## 🌟 The Story: When AI Builds Its Own Tools
 
-- **Feature Registry** (`features.json`) - Track feature completion with verification evidence
-- **Progress Log** (`agent-progress.json`) - Session-by-session handoff documentation
-- **Generated Markdown** (`agent-progress.md`) - Human-readable progress for stakeholders
+**What happens when you ask an AI coding agent to build a tool for managing AI coding agents?**
 
-Built with [pith](https://github.com/ThomasRohde/pith) for agent-native progressive discovery.
+You get Klondike Spec CLI — a project that went from concept to **100% feature completion** in just 4 coding sessions, with the AI agent using the very methodology and artifacts the tool was designed to manage.
 
-## Installation
+### The Challenge
+
+Modern AI coding agents like GitHub Copilot are powerful, but they face a fundamental limitation: **context windows reset between sessions**. Every new conversation starts fresh, losing the accumulated knowledge, decisions, and progress from previous work.
+
+[Anthropic's research on effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) highlighted this challenge and inspired a solution: structured artifacts that bridge context windows.
+
+### The Solution: Klondike Spec
+
+The **Klondike Spec** framework provides:
+- 📋 A **feature registry** that prevents "victory declarations" (agents claiming completion prematurely)
+- 📝 A **progress log** for session-to-session handoffs
+- ✅ **Verification evidence** requirements before features can be marked complete
+- 🔄 **Structured workflows** that guide agents through complex, multi-session projects
+
+### The Meta-Journey
+
+This CLI tool was built by an AI agent **following the Klondike Spec methodology** — tracking its own features, managing its own sessions, and providing verification evidence for each completed feature. The dog ate its own dog food, and it was delicious.
+
+**30 features. 4 sessions. 98 tests. 100% verified.**
+
+---
+
+## ⚡ Built with Pith: Agent-Native CLI Design
+
+Klondike Spec CLI is powered by [**Pith**](https://github.com/ThomasRohde/pith) — a revolutionary CLI framework designed specifically for AI agents.
+
+Unlike traditional CLI frameworks that prioritize human interaction patterns, Pith implements **progressive discovery**:
+
+```
+Tier 1: pith → Overview of all commands
+Tier 2: command → Synopsis and usage  
+Tier 3: command --help → Full documentation
+```
+
+AI agents can efficiently navigate the CLI surface, discovering exactly what they need without overwhelming context. Pith also supports:
+
+- 🎯 **Semantic intents** — Commands can be invoked by meaning, not just exact syntax
+- 📊 **Structured output** — JSON mode for programmatic integration
+- 🧠 **Schema export** — Full command structure for AI tooling
+
+---
+
+## 🚀 Installation
 
 ```bash
 pip install klondike-spec-cli
 ```
 
-## Quick Start
-
-### Initialize a New Project
+Or with [uv](https://github.com/astral-sh/uv) (recommended):
 
 ```bash
-# Create .klondike directory with artifacts
-klondike init --name my-project
+uv add klondike-spec-cli
+```
 
-# Check status
+---
+
+## 🎯 Quick Start
+
+### Initialize Your Project
+
+```bash
+# Create .klondike directory with all artifacts
+klondike init my-awesome-project
+
+# See where you stand
 klondike status
 ```
 
-### Manage Features
+```
+📊 Project: my-awesome-project v0.1.0
+   Completion: 0.0%
 
-```bash
-# Add a feature
-klondike feature add --description "User authentication" --category core
+Progress: [░░░░░░░░░░░░░░░░░░░░] 0.0%
 
-# List all features
-klondike feature list
+  ⏳     Not Started         0
 
-# Start working on a feature
-klondike feature start F001
-
-# Verify a feature (with evidence)
-klondike feature verify F001 --evidence test-results/F001-login.png
-
-# Block a feature
-klondike feature block F002 --reason "Waiting for API spec"
+🎯 Ready to add features!
 ```
 
-### Session Management
+### Define Your Features
+
+```bash
+# Add features with acceptance criteria
+klondike feature add -d "User authentication" -c core -p 1 \
+  --criteria "Login form works,Password validation,Session management"
+
+klondike feature add -d "Dashboard UI" -c ui -p 2 \
+  --criteria "Responsive layout,Data visualization,Real-time updates"
+
+# See your feature backlog
+klondike feature list
+```
+
+### Work Through Features
 
 ```bash
 # Start a coding session
 klondike session start --focus "F001 - User authentication"
 
-# End session with summary
-klondike session end --summary "Completed login form" --completed "Added form,Validation"
+# Mark what you're working on
+klondike feature start F001
+
+# When complete with evidence
+klondike feature verify F001 --evidence "All tests pass, demo video recorded"
+
+# End the session
+klondike session end --summary "Auth complete" --completed "Login,Logout,Sessions"
 ```
 
-### Other Commands
+### Track Progress Across Sessions
 
 ```bash
-# Validate artifact integrity
-klondike validate
-
-# Regenerate agent-progress.md
-klondike progress
-
-# View feature details
-klondike feature show F001 --json
+# Check overall status (includes git info!)
+klondike status
 ```
 
-## Command Reference
+```
+📊 Project: my-awesome-project v0.1.0
+   Completion: 50.0%
+
+Progress: [██████████░░░░░░░░░░] 50.0%
+
+  ✅     Verified            1
+  ⏳     Not Started         1
+
+📅 Last Session: #1 (2025-12-07)
+   Focus: F001 - User authentication
+
+📂 Git Status: ✅ Clean (branch: main)
+Recent commits:
+  abc123 2025-12-07 feat(auth): implement user login
+
+🎯 Next Priority Features:
+    ⏳ Not started  F002: Dashboard UI
+```
+
+---
+
+## 📚 Complete Command Reference
+
+### Project Commands
 
 | Command | Description |
 |---------|-------------|
-| `klondike init` | Initialize .klondike directory |
-| `klondike status` | Show project status summary |
-| `klondike feature add` | Add a new feature |
-| `klondike feature list` | List features with filters |
-| `klondike feature start <id>` | Mark feature as in-progress |
-| `klondike feature verify <id>` | Mark feature as verified |
-| `klondike feature block <id>` | Mark feature as blocked |
-| `klondike feature show <id>` | Show feature details |
-| `klondike session start` | Begin a new session |
-| `klondike session end` | End current session |
-| `klondike validate` | Validate artifact integrity |
-| `klondike progress` | Regenerate agent-progress.md |
+| `klondike init [name]` | Initialize .klondike directory with artifacts |
+| `klondike status` | Show project status, git info, and next priorities |
+| `klondike validate` | Check artifact integrity and consistency |
+| `klondike progress` | Regenerate agent-progress.md from JSON |
+| `klondike report` | Generate detailed status report |
 
-## Directory Structure
+### Feature Management
+
+| Command | Description |
+|---------|-------------|
+| `klondike feature add` | Add a new feature with description and criteria |
+| `klondike feature list` | List features with optional status filter |
+| `klondike feature show <id>` | Display full feature details |
+| `klondike feature start <id>` | Mark feature as in-progress |
+| `klondike feature verify <id>` | Mark as verified with evidence |
+| `klondike feature block <id>` | Mark as blocked with reason |
+| `klondike feature edit <id>` | Edit notes, criteria, priority |
+
+### Session Management
+
+| Command | Description |
+|---------|-------------|
+| `klondike session start` | Begin session (validates artifacts, shows status) |
+| `klondike session end` | End session with summary and handoff notes |
+
+### Import/Export
+
+| Command | Description |
+|---------|-------------|
+| `klondike import-features <file>` | Import features from YAML/JSON |
+| `klondike export-features <file>` | Export features to YAML/JSON |
+
+### Shell Completion
+
+```bash
+# Bash
+klondike completion bash >> ~/.bashrc
+
+# Zsh  
+klondike completion zsh > ~/.zsh/completions/_klondike
+
+# PowerShell
+klondike completion powershell >> $PROFILE
+```
+
+---
+
+## 📁 Project Structure
 
 ```
 your-project/
 ├── .klondike/
-│   ├── features.json         # Feature registry (primary data)
-│   ├── agent-progress.json   # Progress log (JSON format)
-│   └── config.yaml           # CLI configuration
-└── agent-progress.md         # Generated from JSON (human-readable)
+│   ├── features.json         # 📋 Feature registry (source of truth)
+│   ├── agent-progress.json   # 📝 Session log and handoffs
+│   └── config.yaml           # ⚙️ CLI configuration
+├── agent-progress.md         # 📖 Generated human-readable progress
+└── .github/
+    └── copilot-instructions.md  # 🤖 Agent behavior rules
 ```
 
-## Configuration
+---
 
-The `.klondike/config.yaml` file contains:
+## 🔧 Configuration
+
+`.klondike/config.yaml`:
 
 ```yaml
 # Default category for new features
 default_category: core
 
-# Default priority (1-5, 1=critical)
+# Default priority (1=critical, 5=nice-to-have)
 default_priority: 2
 
-# Identifier for verifiedBy field
+# Who verifies features
 verified_by: coding-agent
 
-# Output path for generated markdown
+# Where to generate the markdown progress file
 progress_output_path: agent-progress.md
 
 # Auto-regenerate markdown on changes
 auto_regenerate_progress: true
 ```
 
-## Integration with Klondike Spec Framework
+---
 
-This CLI is designed to work with the [Klondike Spec](https://github.com/ThomasRohde/klondike-spec) prompting framework for GitHub Copilot. The framework provides:
+## 🤝 Integration with Klondike Spec Framework
 
-- Slash commands (`/session-start`, `/session-end`, `/verify-feature`)
-- Embedded instructions for agent behavior
-- Templates for structured agent workflows
+This CLI is designed to work seamlessly with the [**Klondike Spec**](https://github.com/ThomasRohde/klondike-spec) prompting framework for GitHub Copilot.
 
-When used together, the CLI handles artifact manipulation while the prompts guide agent behavior.
+The framework provides:
+- 📜 **Copilot instructions** that embed agent behavior rules
+- 🎬 **Slash commands** (`/session-start`, `/session-end`, `/verify-feature`)
+- 📐 **Templates** for consistent project structure
 
-## Development
+**The CLI handles artifact manipulation. The framework guides agent behavior.**
+
+Together, they enable sophisticated multi-session agent workflows that maintain coherence across context window resets.
+
+---
+
+## 🧪 Development
 
 ```bash
-# Clone the repository
+# Clone and setup
 git clone https://github.com/ThomasRohde/klondike-spec-cli.git
 cd klondike-spec-cli
+uv sync
 
-# Install in development mode
-pip install -e ".[dev]"
+# Run tests (98 tests, 74% coverage)
+uv run pytest -v
 
-# Run tests
-pytest
+# Lint and type check
+uv run ruff check .
+uv run mypy src
 
-# Run linting
-ruff check .
-
-# Run type checking
-mypy src
+# Build
+uv build
 ```
 
-## License
+### Project Stats
 
-MIT - See [LICENSE](LICENSE) for details.
+- **30 features** — all verified with evidence
+- **98 tests** — comprehensive coverage
+- **4 sessions** — from zero to 100%
+- **1600+ lines** of well-structured Python
 
-## Related Projects
+---
 
-- [Klondike Spec](https://github.com/ThomasRohde/klondike-spec) - The prompting framework
-- [Pith](https://github.com/ThomasRohde/pith) - Agent-native CLI ecosystem
+## 🎴 Why "Klondike"?
+
+Like the classic card game, building complex software with AI agents requires **patience, strategy, and careful arrangement** of moving pieces. You can't just pile cards randomly — you need structure, rules, and a clear view of your progress.
+
+Klondike Spec provides that structure. The CLI gives you the tools to maintain it.
+
+---
+
+## 📜 License
+
+MIT — See [LICENSE](LICENSE) for details.
+
+---
+
+## 🔗 Related Projects
+
+- [**Klondike Spec**](https://github.com/ThomasRohde/klondike-spec) — The prompting framework for GitHub Copilot
+- [**Pith**](https://github.com/ThomasRohde/pith) — Agent-native CLI framework with progressive discovery
+
+---
+
+<div align="center">
+
+**Built with 🤖 by AI, for AI, verified by humans**
+
+*"The best way to predict the future is to build the tools that build the future."*
+
+</div>
