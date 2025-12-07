@@ -1854,6 +1854,139 @@ def export_features(
     echo(f"✅ Exported {len(features_data)} features to {output_path}")
 
 
+@app.command(name="mcp", pith="Manage MCP server for AI agent integration", priority=78)
+@app.intents(
+    "mcp server",
+    "start mcp",
+    "run mcp server",
+    "install mcp",
+    "copilot mcp",
+    "ai tools",
+)
+def mcp(
+    action: str = Argument(..., pith="Action: serve, install, config"),
+    transport: str = Option("stdio", "--transport", "-t", pith="Transport: stdio, streamable-http"),
+    output: str | None = Option(None, "--output", "-o", pith="Output path for config file"),
+) -> None:
+    """Manage MCP (Model Context Protocol) server for AI agent integration.
+
+    Exposes klondike tools to AI agents like GitHub Copilot through the
+    Model Context Protocol.
+
+    Actions:
+        serve   - Start the MCP server (default: stdio transport)
+        install - Generate config and install MCP server for copilot
+        config  - Generate MCP configuration file
+
+    Tools exposed:
+        get_features    - List all features with optional status filter
+        get_feature     - Get details for a specific feature
+        start_feature   - Mark a feature as in-progress
+        verify_feature  - Mark a feature as verified
+        block_feature   - Mark a feature as blocked
+        get_status      - Get project status summary
+        start_session   - Start a new coding session
+        end_session     - End the current session
+        validate_artifacts - Check artifact integrity
+
+    Examples:
+        $ klondike mcp serve
+        $ klondike mcp serve --transport streamable-http
+        $ klondike mcp config --output mcp-config.json
+        $ klondike mcp install
+
+    Related:
+        copilot start - Launch copilot with klondike context
+        status - Check project status
+    """
+    if action == "serve":
+        _mcp_serve(transport)
+    elif action == "install":
+        _mcp_install(output)
+    elif action == "config":
+        _mcp_config(output)
+    else:
+        raise PithException(f"Unknown action: {action}. Use: serve, install, config")
+
+
+def _mcp_serve(transport: str) -> None:
+    """Start the MCP server."""
+    from klondike_spec_cli.mcp_server import MCP_AVAILABLE, run_server
+
+    if not MCP_AVAILABLE:
+        echo("❌ MCP SDK not installed.")
+        echo("   Install with: pip install 'klondike-spec-cli[mcp]'")
+        echo("   Or: pip install mcp")
+        raise PithException("MCP SDK not available")
+
+    if transport not in ["stdio", "streamable-http"]:
+        raise PithException(f"Invalid transport: {transport}. Use: stdio, streamable-http")
+
+    echo(f"🚀 Starting klondike MCP server (transport: {transport})...")
+    echo("   Press Ctrl+C to stop")
+    echo("")
+
+    try:
+        run_server(transport=transport)
+    except KeyboardInterrupt:
+        echo("")
+        echo("✅ MCP server stopped")
+
+
+def _mcp_install(output: str | None) -> None:
+    """Install MCP server configuration for copilot."""
+    import os
+    import platform
+
+    from klondike_spec_cli.mcp_server import generate_mcp_config
+
+    # Determine config location based on platform
+    system = platform.system()
+    if system == "Windows":
+        config_dir = Path(os.environ.get("APPDATA", "")) / "Code" / "User" / "globalStorage"
+        copilot_config_path = config_dir / "github.copilot" / "mcp.json"
+    elif system == "Darwin":  # macOS
+        config_dir = Path.home() / "Library" / "Application Support" / "Code" / "User"
+        copilot_config_path = config_dir / "globalStorage" / "github.copilot" / "mcp.json"
+    else:  # Linux
+        config_dir = Path.home() / ".config" / "Code" / "User"
+        copilot_config_path = config_dir / "globalStorage" / "github.copilot" / "mcp.json"
+
+    # Generate config
+    if output:
+        output_path = Path(output)
+    else:
+        output_path = copilot_config_path
+
+    config = generate_mcp_config(output_path)
+
+    echo("✅ MCP configuration generated")
+    echo(f"   📄 Config file: {output_path}")
+    echo("")
+    echo("📋 MCP Server Configuration:")
+    echo(json.dumps(config, indent=2))
+    echo("")
+    echo("💡 To use with GitHub Copilot:")
+    echo("   1. Restart VS Code")
+    echo("   2. Use --additional-mcp-config flag with copilot CLI")
+    echo(f"      copilot --additional-mcp-config {output_path}")
+    echo("")
+    echo("   Or add to your copilot settings manually.")
+
+
+def _mcp_config(output: str | None) -> None:
+    """Generate MCP configuration file."""
+    from klondike_spec_cli.mcp_server import generate_mcp_config
+
+    if output:
+        output_path = Path(output)
+        generate_mcp_config(output_path)
+        echo(f"✅ MCP config written to: {output_path}")
+    else:
+        config = generate_mcp_config()
+        echo(json.dumps(config, indent=2))
+
+
 # --- Entry Point ---
 
 

@@ -890,13 +890,13 @@
         "Works with copilot --additional-mcp-config flag"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-07T14:52:54.890508",
       "notes": null
     },
     {
