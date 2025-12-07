@@ -409,9 +409,7 @@ def create_mcp_server() -> FastMCP | None:
                     "percent": progress_pct,
                 },
                 "by_status": by_status,
-                "current_session": (
-                    current_session.to_dict() if current_session else None
-                ),
+                "current_session": (current_session.to_dict() if current_session else None),
                 "priority_features": [
                     {"id": f.id, "description": f.description, "priority": f.priority}
                     for f in priority_features
@@ -478,8 +476,7 @@ def create_mcp_server() -> FastMCP | None:
                     "percent": progress_pct,
                 },
                 "priority_features": [
-                    {"id": f.id, "description": f.description}
-                    for f in priority_features
+                    {"id": f.id, "description": f.description} for f in priority_features
                 ],
             }
         except FileNotFoundError as e:
@@ -514,19 +511,13 @@ def create_mcp_server() -> FastMCP | None:
             current.focus = summary
 
             if completed:
-                current.completed = [
-                    c.strip() for c in completed.split(",") if c.strip()
-                ]
+                current.completed = [c.strip() for c in completed.split(",") if c.strip()]
 
             if next_steps:
-                current.next_steps = [
-                    n.strip() for n in next_steps.split(",") if n.strip()
-                ]
+                current.next_steps = [n.strip() for n in next_steps.split(",") if n.strip()]
             else:
                 priority = registry.get_priority_features(3)
-                current.next_steps = [
-                    f"Continue {f.id}: {f.description}" for f in priority
-                ]
+                current.next_steps = [f"Continue {f.id}: {f.description}" for f in priority]
 
             progress.current_status = "Session Ended"
             _update_quick_reference(progress, registry)
@@ -649,9 +640,7 @@ def run_server(transport: str = "stdio") -> None:
         transport: Transport type (stdio or streamable-http)
     """
     if not MCP_AVAILABLE:
-        logger.error(
-            "MCP SDK not installed. Install with: pip install 'klondike-spec-cli[mcp]'"
-        )
+        logger.error("MCP SDK not installed. Install with: pip install 'klondike-spec-cli[mcp]'")
         raise ImportError("MCP SDK not available")
 
     mcp = create_mcp_server()

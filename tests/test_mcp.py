@@ -57,9 +57,7 @@ class TestMcpCommand:
                 runner.invoke(app, ["init"])
 
                 output_path = Path(tmpdir) / "mcp-config.json"
-                result = runner.invoke(
-                    app, ["mcp", "config", "--output", str(output_path)]
-                )
+                result = runner.invoke(app, ["mcp", "config", "--output", str(output_path)])
 
                 assert result.exit_code == 0
                 assert output_path.exists()
@@ -81,9 +79,7 @@ class TestMcpCommand:
                 runner.invoke(app, ["init"])
 
                 output_path = Path(tmpdir) / "mcp-install-config.json"
-                result = runner.invoke(
-                    app, ["mcp", "install", "--output", str(output_path)]
-                )
+                result = runner.invoke(app, ["mcp", "install", "--output", str(output_path)])
 
                 assert result.exit_code == 0
                 assert "MCP configuration generated" in result.output
