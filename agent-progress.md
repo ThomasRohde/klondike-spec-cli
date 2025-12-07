@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F023 | Implement 'klondike feature import' command | 🔄 In progress |
-| F024 | Implement 'klondike feature export' command | ⏳ Not started |
 | F029 | Implement git integration for session management | ⏳ Not started |
+| F025 | Add shell completion support | ⏳ Not started |
+| F028 | Validate and sanitize all user inputs | ⏳ Not started |
 
 ---
 

@@ -89,18 +89,18 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F023",
-        "description": "Implement 'klondike feature import' command",
-        "status": "in-progress"
-      },
-      {
-        "id": "F024",
-        "description": "Implement 'klondike feature export' command",
+        "id": "F029",
+        "description": "Implement git integration for session management",
         "status": "not-started"
       },
       {
-        "id": "F029",
-        "description": "Implement git integration for session management",
+        "id": "F025",
+        "description": "Add shell completion support",
+        "status": "not-started"
+      },
+      {
+        "id": "F028",
+        "description": "Validate and sanitize all user inputs",
         "status": "not-started"
       }
     ]
