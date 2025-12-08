@@ -436,7 +436,7 @@ def feature(
 def _feature_add(
     description: str | None,
     category: str | None,
-    priority: int | None,
+    priority: int | str | None,
     criteria: str | None,
     notes: str | None,
 ) -> None:
@@ -451,7 +451,8 @@ def _feature_add(
     feature_id = registry.next_feature_id()
     # Use config defaults if not specified
     cat = FeatureCategory(category) if category else config.default_category
-    prio = priority if priority else config.default_priority
+    # Ensure priority is an integer (CLI may pass as string)
+    prio = int(priority) if priority is not None else config.default_priority
     acceptance = (
         [sanitize_string(c.strip()) or "" for c in criteria.split(",") if c.strip()]
         if criteria
@@ -652,7 +653,7 @@ def _feature_edit(
     feature_id: str | None,
     description: str | None,
     category: str | None,
-    priority: int | None,
+    priority: int | str | None,
     notes: str | None,
     add_criteria: str | None,
 ) -> None:
@@ -700,10 +701,12 @@ def _feature_edit(
             raise PithException(f"Invalid category: {category}. Use: {valid_cats}") from e
 
     if priority is not None:
-        if priority < 1 or priority > 5:
+        # Ensure priority is an integer (CLI may pass as string)
+        prio = int(priority)
+        if prio < 1 or prio > 5:
             raise PithException("Priority must be between 1 and 5")
-        feature.priority = priority
-        changes.append(f"priority: {priority}")
+        feature.priority = prio
+        changes.append(f"priority: {prio}")
 
     if not changes:
         raise PithException(
