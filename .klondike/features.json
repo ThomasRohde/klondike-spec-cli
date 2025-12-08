@@ -1057,12 +1057,34 @@
       "blockedBy": null,
       "lastWorkedOn": null,
       "notes": null
+    },
+    {
+      "id": "F040",
+      "category": "infrastructure",
+      "priority": 1,
+      "description": "Scaffold .github directory with copilot instructions, prompts, and templates during init",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "init creates .github/copilot-instructions.md",
+        "init creates .github/instructions/ with files",
+        "init creates .github/prompts/ with files",
+        "init creates .github/templates/ with files"
+      ],
+      "estimatedEffort": null,
+      "status": "in-progress",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-08T01:44:15.138939",
+      "notes": null
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-07T15:32:12.577883",
-    "totalFeatures": 39,
+    "lastUpdated": "2025-12-08T01:44:11.690362",
+    "totalFeatures": 40,
     "passingFeatures": 32
   }
 }

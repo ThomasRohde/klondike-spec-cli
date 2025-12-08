@@ -25,6 +25,9 @@ AVAILABLE_TEMPLATES = [
     CONFIG_TEMPLATE,
 ]
 
+# GitHub templates structure
+GITHUB_TEMPLATES_PACKAGE = "klondike_spec_cli.templates.github_templates"
+
 
 def get_template_path(template_name: str) -> Traversable:
     """Get a traversable path to a template file.
@@ -120,3 +123,120 @@ def list_templates() -> list[str]:
         List of template file names
     """
     return AVAILABLE_TEMPLATES.copy()
+
+
+def _copy_traversable_to_path(
+    source: Traversable,
+    destination: Path,
+    overwrite: bool = False,
+) -> list[Path]:
+    """Recursively copy a Traversable resource to a filesystem path.
+
+    Args:
+        source: Traversable resource (file or directory)
+        destination: Destination path on filesystem
+        overwrite: If True, overwrite existing files
+
+    Returns:
+        List of paths to extracted files
+    """
+    extracted: list[Path] = []
+
+    if source.is_file():
+        # It's a file - copy it
+        if destination.exists() and not overwrite:
+            return extracted
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        content = source.read_text(encoding="utf-8")
+        destination.write_text(content, encoding="utf-8")
+        extracted.append(destination)
+    else:
+        # It's a directory - recurse
+        destination.mkdir(parents=True, exist_ok=True)
+        for child in source.iterdir():
+            child_dest = destination / child.name
+            extracted.extend(_copy_traversable_to_path(child, child_dest, overwrite=overwrite))
+
+    return extracted
+
+
+def extract_github_templates(
+    destination: Path,
+    overwrite: bool = False,
+    template_vars: dict[str, str] | None = None,
+) -> list[Path]:
+    """Extract .github templates to the destination directory.
+
+    Creates the .github directory structure with:
+    - copilot-instructions.md
+    - instructions/ (git-practices, session-artifacts, testing-practices)
+    - prompts/ (session-start, session-end, verify-feature, etc.)
+    - templates/ (init scripts, schemas)
+
+    Args:
+        destination: Path where .github directory should be created
+        overwrite: If True, overwrite existing files
+        template_vars: Optional dict of template variables to substitute
+                      (e.g., {"{{PROJECT_NAME}}": "my-project"})
+
+    Returns:
+        List of paths to extracted files
+    """
+    github_dir = destination / ".github"
+    extracted: list[Path] = []
+
+    # Get the github_templates package
+    try:
+        github_templates = importlib.resources.files(GITHUB_TEMPLATES_PACKAGE)
+    except ModuleNotFoundError:
+        # Fallback for older Python or edge cases
+        return extracted
+
+    # Copy all files from the package
+    for item in github_templates.iterdir():
+        if item.name == "__pycache__" or item.name.endswith(".pyc"):
+            continue
+        dest_path = github_dir / item.name
+        extracted.extend(_copy_traversable_to_path(item, dest_path, overwrite=overwrite))
+
+    # Apply template variable substitution if provided
+    if template_vars:
+        for file_path in extracted:
+            if file_path.suffix in [".md", ".json", ".yaml", ".yml", ".sh", ".ps1"]:
+                try:
+                    content = file_path.read_text(encoding="utf-8")
+                    for var, value in template_vars.items():
+                        content = content.replace(var, value)
+                    file_path.write_text(content, encoding="utf-8")
+                except Exception:
+                    # Skip files that can't be processed
+                    pass
+
+    return extracted
+
+
+def get_github_templates_list() -> list[str]:
+    """List all files available in the github_templates package.
+
+    Returns:
+        List of relative paths within the github_templates
+    """
+    files: list[str] = []
+
+    try:
+        github_templates = importlib.resources.files(GITHUB_TEMPLATES_PACKAGE)
+    except ModuleNotFoundError:
+        return files
+
+    def _collect_files(traversable: Traversable, prefix: str = "") -> None:
+        for item in traversable.iterdir():
+            if item.name == "__pycache__" or item.name.endswith(".pyc"):
+                continue
+            rel_path = f"{prefix}/{item.name}" if prefix else item.name
+            if item.is_file():
+                files.append(rel_path)
+            else:
+                _collect_files(item, rel_path)
+
+    _collect_files(github_templates)
+    return files

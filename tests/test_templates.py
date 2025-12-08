@@ -11,7 +11,9 @@ from klondike_spec_cli.templates import (
     FEATURES_TEMPLATE,
     PROGRESS_TEMPLATE,
     extract_all_templates,
+    extract_github_templates,
     extract_template,
+    get_github_templates_list,
     list_templates,
     read_template,
 )
@@ -120,3 +122,139 @@ class TestTemplates:
             assert (dest_dir / FEATURES_TEMPLATE).exists()
             assert (dest_dir / CONFIG_TEMPLATE).exists()
             assert not (dest_dir / PROGRESS_TEMPLATE).exists()
+
+
+class TestGitHubTemplates:
+    """Tests for GitHub templates extraction."""
+
+    def test_get_github_templates_list(self) -> None:
+        """Test listing available GitHub templates."""
+        templates = get_github_templates_list()
+        # Should have at least the main files
+        assert len(templates) > 0
+        # Check for expected template files
+        template_names = [t.split("/")[-1] for t in templates]
+        assert "copilot-instructions.md" in template_names
+
+    def test_extract_github_templates(self) -> None:
+        """Test extracting GitHub templates to a directory."""
+        with TemporaryDirectory() as tmpdir:
+            dest_dir = Path(tmpdir)
+            results = extract_github_templates(dest_dir)
+
+            # Should have extracted files
+            assert len(results) > 0
+
+            # Should have created .github directory
+            github_dir = dest_dir / ".github"
+            assert github_dir.exists()
+
+            # Check for main instruction file
+            assert (github_dir / "copilot-instructions.md").exists()
+
+    def test_extract_github_templates_with_subdirs(self) -> None:
+        """Test that GitHub templates include subdirectories."""
+        with TemporaryDirectory() as tmpdir:
+            dest_dir = Path(tmpdir)
+            extract_github_templates(dest_dir)
+
+            github_dir = dest_dir / ".github"
+
+            # Check for expected subdirectories
+            assert (github_dir / "instructions").is_dir()
+            assert (github_dir / "prompts").is_dir()
+            assert (github_dir / "templates").is_dir()
+
+    def test_extract_github_templates_instruction_files(self) -> None:
+        """Test that instruction files are extracted."""
+        with TemporaryDirectory() as tmpdir:
+            dest_dir = Path(tmpdir)
+            extract_github_templates(dest_dir)
+
+            instructions_dir = dest_dir / ".github" / "instructions"
+            assert instructions_dir.exists()
+
+            # Should have instruction files
+            instruction_files = list(instructions_dir.glob("*.md"))
+            assert len(instruction_files) > 0
+
+    def test_extract_github_templates_prompt_files(self) -> None:
+        """Test that prompt files are extracted."""
+        with TemporaryDirectory() as tmpdir:
+            dest_dir = Path(tmpdir)
+            extract_github_templates(dest_dir)
+
+            prompts_dir = dest_dir / ".github" / "prompts"
+            assert prompts_dir.exists()
+
+            # Should have prompt files
+            prompt_files = list(prompts_dir.glob("*.md"))
+            assert len(prompt_files) > 0
+
+    def test_extract_github_templates_with_variables(self) -> None:
+        """Test template variable substitution."""
+        with TemporaryDirectory() as tmpdir:
+            dest_dir = Path(tmpdir)
+            template_vars = {
+                "{{PROJECT_NAME}}": "my-test-project",
+                "{{DATE}}": "2025-01-01",
+            }
+            extract_github_templates(dest_dir, template_vars=template_vars)
+
+            # Check that variables were substituted in agent-progress.template.md
+            template_path = dest_dir / ".github" / "templates" / "agent-progress.template.md"
+            content = template_path.read_text(encoding="utf-8")
+
+            # Should have the substituted project name
+            assert "my-test-project" in content
+            # Should not have the raw template variable
+            assert "{{PROJECT_NAME}}" not in content
+
+    def test_extract_github_templates_no_overwrite(self) -> None:
+        """Test that existing files are not overwritten by default."""
+        with TemporaryDirectory() as tmpdir:
+            dest_dir = Path(tmpdir)
+            github_dir = dest_dir / ".github"
+            github_dir.mkdir(parents=True)
+
+            existing_file = github_dir / "copilot-instructions.md"
+            existing_file.write_text("existing content", encoding="utf-8")
+
+            extract_github_templates(dest_dir, overwrite=False)
+
+            # Original content should be preserved
+            assert existing_file.read_text(encoding="utf-8") == "existing content"
+
+    def test_extract_github_templates_with_overwrite(self) -> None:
+        """Test that existing files are overwritten when flag is set."""
+        with TemporaryDirectory() as tmpdir:
+            dest_dir = Path(tmpdir)
+            github_dir = dest_dir / ".github"
+            github_dir.mkdir(parents=True)
+
+            existing_file = github_dir / "copilot-instructions.md"
+            existing_file.write_text("existing content", encoding="utf-8")
+
+            results = extract_github_templates(dest_dir, overwrite=True)
+
+            # File should be in results
+            assert existing_file in results
+
+            # Content should be new template content
+            content = existing_file.read_text(encoding="utf-8")
+            assert "existing content" not in content
+
+    def test_extract_github_templates_creates_init_scripts(self) -> None:
+        """Test that init scripts are created in templates dir."""
+        with TemporaryDirectory() as tmpdir:
+            dest_dir = Path(tmpdir)
+            extract_github_templates(dest_dir)
+
+            templates_dir = dest_dir / ".github" / "templates"
+            assert templates_dir.exists()
+
+            # Check for init scripts
+            init_sh = templates_dir / "init.sh"
+            init_ps1 = templates_dir / "init.ps1"
+
+            assert init_sh.exists() or init_ps1.exists()

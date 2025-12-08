@@ -38,6 +38,7 @@ from .templates import (
     CONFIG_TEMPLATE,
     FEATURES_TEMPLATE,
     PROGRESS_TEMPLATE,
+    extract_github_templates,
     read_template,
 )
 from .validation import (
@@ -166,16 +167,24 @@ app = Pith(
 def init(
     project_name: str | None = Option(None, "--name", "-n", pith="Project name"),
     force: bool = Option(False, "--force", "-f", pith="Overwrite existing .klondike"),
+    skip_github: bool = Option(False, "--skip-github", pith="Skip creating .github directory"),
 ) -> None:
     """Initialize a new Klondike Spec project.
 
     Creates the .klondike directory with features.json, agent-progress.json,
     and config.yaml. Also generates agent-progress.md in the project root.
 
+    Additionally scaffolds the .github directory with:
+    - copilot-instructions.md for GitHub Copilot
+    - instructions/ with agent workflow instructions
+    - prompts/ with reusable prompt templates
+    - templates/ with init scripts and schemas
+
     Examples:
         $ klondike init
         $ klondike init --name my-project
         $ klondike init --force
+        $ klondike init --skip-github
 
     Related:
         status - Check project status after init
@@ -227,12 +236,28 @@ def init(
     progress = load_progress(root)
     progress.save_markdown(root / PROGRESS_MD_FILE)
 
+    # Extract .github templates unless skipped
+    github_files_count = 0
+    if not skip_github:
+        github_dir = root / ".github"
+        if github_dir.exists() and not force:
+            echo("⚠️  .github directory already exists, skipping (use --force to overwrite)")
+        else:
+            github_files = extract_github_templates(
+                root, overwrite=force, template_vars=template_vars
+            )
+            github_files_count = len(github_files)
+
     echo(f"✅ Initialized Klondike project: {project_name}")
     echo(f"   📁 Created {klondike_dir}")
     echo(f"   📋 Created {FEATURES_FILE}")
     echo(f"   📝 Created {PROGRESS_FILE}")
     echo(f"   ⚙️  Created {CONFIG_FILE}")
     echo(f"   📄 Generated {PROGRESS_MD_FILE}")
+    if github_files_count > 0:
+        echo(
+            f"   🤖 Created .github/ with {github_files_count} files (Copilot instructions, prompts)"
+        )
     echo("")
     echo("Next steps:")
     echo("  1. Add features: klondike feature add --description 'My feature'")
