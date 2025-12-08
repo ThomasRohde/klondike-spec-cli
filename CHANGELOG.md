@@ -7,6 +7,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.7] - 2025-12-08
+
+### 🐛 Fixed
+
+- MCP `install` now creates `.vscode/mcp.json` in workspace (not global Copilot storage)
+- MCP install uses correct VS Code format with `servers` key (not `mcpServers`)
+- MCP install adds `type: stdio` as required by VS Code MCP support
+- MCP stdio mode no longer writes status messages to stdout (was corrupting protocol)
+- Fixed UnicodeEncodeError from emojis in Windows stdio mode
+
+### ✨ Added
+
+- `generate_vscode_mcp_config()` function for portable VS Code MCP configuration
+
+---
+
+## [0.2.6] - 2025-12-08
+
+### 🐛 Fixed
+
+- Priority is now always cast to int for consistency
+
+---
+
+## [0.2.0] - 2025-12-08
+
+### ✨ Added
+
+#### MCP Server Support
+- `klondike mcp serve` - Run MCP server for AI agent integration (stdio or streamable-http transport)
+- `klondike mcp install` - Generate `.vscode/mcp.json` configuration for VS Code workspace
+- `klondike mcp config` - Output MCP configuration to stdout or file
+- MCP tools exposed: `get_features`, `get_feature`, `start_feature`, `verify_feature`, `block_feature`, `get_status`, `start_session`, `end_session`, `validate_artifacts`
+
+#### GitHub Templates Scaffolding
+- `klondike init` now creates `.github/` directory with Copilot instructions
+- Includes `copilot-instructions.md` with agent workflow guidelines
+- Includes `instructions/` with git practices, session management, and testing guides
+- Includes `prompts/` with reusable prompt templates for common workflows
+- Includes `templates/` with init scripts and JSON schemas
+- Added `--skip-github` flag to opt out of GitHub scaffolding
+
+#### Enhanced Feature Management
+- `klondike feature add` now supports positional description argument
+- Improved interactive prompts with better UX (pypith 0.1.2)
+- Priority always cast to int for consistency
+
+### 🐛 Fixed
+
+- MCP stdio mode no longer writes status messages to stdout (was corrupting protocol)
+- MCP install now uses correct VS Code format (`servers` key, not `mcpServers`)
+- Fixed UnicodeEncodeError from emojis in Windows stdio mode
+
+### 🔧 Changed
+
+- MCP configuration now uses portable `klondike mcp serve` command when available
+- Upgraded to pypith 0.1.2 for improved CLI UX
+
+---
+
 ## [0.1.0] - 2025-12-07
 
 ### 🎉 Initial Release
