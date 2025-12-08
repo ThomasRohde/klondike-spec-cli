@@ -1071,11 +1071,18 @@
         "init creates .github/templates/ with files"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-08T02:07:04.843289",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Manual testing verified: (1) klondike init creates .github/ with 18 files including copilot-instructions.md",
+        "instructions/",
+        "prompts/",
+        "templates/ subdirectories (2) --skip-github flag correctly skips .github creation (3) Template variable substitution works for PROJECT_NAME",
+        "DATE",
+        "CREATED_AT (4) 142 tests pass including 9 new tests for GitHub templates"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-08T01:44:15.138939",
       "notes": null
@@ -1083,8 +1090,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-08T01:44:11.690362",
+    "lastUpdated": "2025-12-08T02:07:04.843325",
     "totalFeatures": 40,
-    "passingFeatures": 32
+    "passingFeatures": 33
   }
 }
