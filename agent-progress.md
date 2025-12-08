@@ -2,7 +2,7 @@
 
 ## Project: klondike-spec-cli
 ## Started: 2025-12-07
-## Current Status: In Progress
+## Current Status: Session Ended
 
 ---
 
@@ -210,20 +210,24 @@ klondike feature list  # List all features
 
 ### Session 8 - 2025-12-08
 **Agent**: Coding Agent
-**Duration**: (in progress)
-**Focus**: F034 - Generate AGENTS.md from klondike configuration
+**Duration**: ~session
+**Focus**: Implemented F034: AGENTS.md generation
 
 #### Completed
-- None
+- Add agents command
+- Generate AGENTS.md
+- Verify F034
 
 #### In Progress
-- Session started
+- None
 
 #### Blockers
 - None
 
 #### Recommended Next Steps
-1. Continue implementation
+1. Continue F039: Local CI check command that detects and runs project CI checks
+2. Continue F035: Auto-delegate feature PRs via copilot
+3. Continue F036: Copilot session resume integration
 
 #### Technical Notes
 - None
