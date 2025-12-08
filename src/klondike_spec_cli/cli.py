@@ -1953,67 +1953,60 @@ def mcp(
 
 def _mcp_serve(transport: str) -> None:
     """Start the MCP server."""
+    import sys
+
     from klondike_spec_cli.mcp_server import MCP_AVAILABLE, run_server
 
     if not MCP_AVAILABLE:
-        echo("❌ MCP SDK not installed.")
-        echo("   Install with: pip install 'klondike-spec-cli[mcp]'")
-        echo("   Or: pip install mcp")
+        # Write to stderr since stdout is reserved for MCP protocol in stdio mode
+        sys.stderr.write("Error: MCP SDK not installed.\n")
+        sys.stderr.write("Install with: pip install 'klondike-spec-cli[mcp]'\n")
+        sys.stderr.write("Or: pip install mcp\n")
         raise PithException("MCP SDK not available")
 
     if transport not in ["stdio", "streamable-http"]:
         raise PithException(f"Invalid transport: {transport}. Use: stdio, streamable-http")
 
-    echo(f"🚀 Starting klondike MCP server (transport: {transport})...")
-    echo("   Press Ctrl+C to stop")
-    echo("")
+    # For stdio transport, don't write anything to stdout - it's reserved for MCP protocol
+    # Write status messages to stderr instead
+    if transport == "stdio":
+        sys.stderr.write("Starting klondike MCP server (stdio)...\n")
+    else:
+        echo(f"🚀 Starting klondike MCP server (transport: {transport})...")
+        echo("   Press Ctrl+C to stop")
+        echo("")
 
     try:
         run_server(transport=transport)
     except KeyboardInterrupt:
-        echo("")
-        echo("✅ MCP server stopped")
+        if transport != "stdio":
+            echo("")
+            echo("✅ MCP server stopped")
 
 
 def _mcp_install(output: str | None) -> None:
-    """Install MCP server configuration for copilot."""
-    import os
-    import platform
+    """Install MCP server configuration for VS Code workspace."""
+    from klondike_spec_cli.mcp_server import generate_vscode_mcp_config
 
-    from klondike_spec_cli.mcp_server import generate_mcp_config
-
-    # Determine config location based on platform
-    system = platform.system()
-    if system == "Windows":
-        config_dir = Path(os.environ.get("APPDATA", "")) / "Code" / "User" / "globalStorage"
-        copilot_config_path = config_dir / "github.copilot" / "mcp.json"
-    elif system == "Darwin":  # macOS
-        config_dir = Path.home() / "Library" / "Application Support" / "Code" / "User"
-        copilot_config_path = config_dir / "globalStorage" / "github.copilot" / "mcp.json"
-    else:  # Linux
-        config_dir = Path.home() / ".config" / "Code" / "User"
-        copilot_config_path = config_dir / "globalStorage" / "github.copilot" / "mcp.json"
-
-    # Generate config
+    # Default to .vscode/mcp.json in current workspace
     if output:
         output_path = Path(output)
     else:
-        output_path = copilot_config_path
+        output_path = Path.cwd() / ".vscode" / "mcp.json"
 
-    config = generate_mcp_config(output_path)
+    config = generate_vscode_mcp_config(output_path)
 
-    echo("✅ MCP configuration generated")
+    echo("✅ MCP configuration installed")
     echo(f"   📄 Config file: {output_path}")
     echo("")
     echo("📋 MCP Server Configuration:")
     echo(json.dumps(config, indent=2))
     echo("")
     echo("💡 To use with GitHub Copilot:")
-    echo("   1. Restart VS Code")
-    echo("   2. Use --additional-mcp-config flag with copilot CLI")
-    echo(f"      copilot --additional-mcp-config {output_path}")
+    echo("   1. Reload VS Code window (Ctrl+Shift+P → 'Reload Window')")
+    echo("   2. The klondike MCP server will be available in Copilot Chat")
     echo("")
-    echo("   Or add to your copilot settings manually.")
+    echo("   Tools available: get_features, start_feature, verify_feature, etc.")
 
 
 def _mcp_config(output: str | None) -> None:

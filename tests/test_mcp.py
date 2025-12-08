@@ -82,7 +82,7 @@ class TestMcpCommand:
                 result = runner.invoke(app, ["mcp", "install", "--output", str(output_path)])
 
                 assert result.exit_code == 0
-                assert "MCP configuration generated" in result.output
+                assert "MCP configuration installed" in result.output
                 assert output_path.exists()
             finally:
                 os.chdir(original_cwd)

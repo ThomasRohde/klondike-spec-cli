@@ -603,7 +603,7 @@ def create_mcp_server() -> FastMCP | None:
 
 
 def generate_mcp_config(output_path: Path | None = None) -> dict[str, Any]:
-    """Generate MCP configuration for copilot.
+    """Generate MCP configuration for copilot (legacy format).
 
     Args:
         output_path: Optional path to write the config file
@@ -625,6 +625,64 @@ def generate_mcp_config(output_path: Path | None = None) -> dict[str, Any]:
             }
         }
     }
+
+    if output_path:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(json.dumps(config, indent=2), encoding="utf-8")
+
+    return config
+
+
+def generate_vscode_mcp_config(output_path: Path | None = None) -> dict[str, Any]:
+    """Generate VS Code workspace MCP configuration (.vscode/mcp.json format).
+
+    Creates configuration in the format expected by VS Code's MCP support:
+    {
+      "servers": {
+        "klondike": {
+          "type": "stdio",
+          "command": "klondike",
+          "args": ["mcp", "serve"]
+        }
+      }
+    }
+
+    Args:
+        output_path: Optional path to write the config file
+
+    Returns:
+        MCP configuration dictionary in VS Code format
+    """
+    import shutil
+
+    # Try to find klondike in PATH first (preferred - more portable)
+    klondike_path = shutil.which("klondike")
+
+    if klondike_path:
+        # Use the klondike CLI directly (works across environments)
+        config: dict[str, Any] = {
+            "servers": {
+                "klondike": {
+                    "type": "stdio",
+                    "command": klondike_path,
+                    "args": ["mcp", "serve"],
+                }
+            }
+        }
+    else:
+        # Fallback: use python -m approach
+        import sys
+
+        python_path = sys.executable
+        config = {
+            "servers": {
+                "klondike": {
+                    "type": "stdio",
+                    "command": python_path,
+                    "args": ["-m", "klondike_spec_cli.mcp_server"],
+                }
+            }
+        }
 
     if output_path:
         output_path.parent.mkdir(parents=True, exist_ok=True)
