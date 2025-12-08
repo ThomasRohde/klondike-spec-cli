@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F033 | Generate feature-specific prompts for copilot | 🔄 In progress |
 | F034 | Generate AGENTS.md from klondike configuration | ⏳ Not started |
 | F039 | Local CI check command that detects and runs project CI checks | ⏳ Not started |
+| F035 | Auto-delegate feature PRs via copilot | ⏳ Not started |
 
 ---
 

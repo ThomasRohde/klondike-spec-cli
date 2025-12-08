@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.11] - 2025-12-08
+
+### ✨ Added
+
+- `klondike feature prompt <ID>` - Generate copilot-ready prompts for implementing features
+  - Includes feature description, acceptance criteria, and project context
+  - Pre-commit verification instructions (lint, format, test)
+  - Klondike workflow steps for feature completion
+  - `--output <file>` option to write prompt to a file
+  - `--interactive` flag to launch GitHub Copilot CLI with the prompt
+
+---
+
 ## [0.2.10] - 2025-12-08
 
 ### ✨ Added
