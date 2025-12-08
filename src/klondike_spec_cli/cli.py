@@ -294,6 +294,7 @@ def status(
     progress = load_progress()
 
     if json_output:
+        current_session = progress.get_current_session()
         status_data = {
             "projectName": registry.project_name,
             "version": registry.version,
@@ -310,9 +311,7 @@ def status(
                 status.value: len(registry.get_features_by_status(status))
                 for status in FeatureStatus
             },
-            "currentSession": progress.get_current_session().to_dict()
-            if progress.sessions
-            else None,
+            "currentSession": current_session.to_dict() if current_session is not None else None,
         }
         echo(json.dumps(status_data, indent=2))
         return
@@ -1207,12 +1206,12 @@ def _generate_markdown_report(
     total: int,
     passing: int,
     progress_pct: float,
-    verified: list,
-    in_progress: list,
-    blocked: list,
-    not_started: list,
-    priority: list,
-    current_session,
+    verified: list[Feature],
+    in_progress: list[Feature],
+    blocked: list[Feature],
+    not_started: list[Feature],
+    priority: list[Feature],
+    current_session: Session | None,
     include_details: bool,
 ) -> str:
     """Generate a markdown-formatted stakeholder report."""
@@ -1346,12 +1345,12 @@ def _generate_plain_report(
     total: int,
     passing: int,
     progress_pct: float,
-    verified: list,
-    in_progress: list,
-    blocked: list,
-    not_started: list,
-    priority: list,
-    current_session,
+    verified: list[Feature],
+    in_progress: list[Feature],
+    blocked: list[Feature],
+    not_started: list[Feature],
+    priority: list[Feature],
+    current_session: Session | None,
     include_details: bool,
 ) -> str:
     """Generate a plain text stakeholder report."""

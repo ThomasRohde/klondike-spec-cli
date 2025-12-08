@@ -639,6 +639,8 @@ def run_server(transport: str = "stdio") -> None:
     Args:
         transport: Transport type (stdio or streamable-http)
     """
+    from typing import Literal, cast
+
     if not MCP_AVAILABLE:
         logger.error("MCP SDK not installed. Install with: pip install 'klondike-spec-cli[mcp]'")
         raise ImportError("MCP SDK not available")
@@ -648,7 +650,9 @@ def run_server(transport: str = "stdio") -> None:
         raise RuntimeError("Failed to create MCP server")
 
     logger.info("Starting klondike MCP server...")
-    mcp.run(transport=transport)
+    # Cast transport to the literal type expected by FastMCP
+    transport_literal = cast(Literal["stdio", "sse", "streamable-http"], transport)
+    mcp.run(transport=transport_literal)
 
 
 # Entry point for running as module: python -m klondike_spec_cli.mcp_server

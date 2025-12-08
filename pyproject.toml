@@ -24,7 +24,7 @@ classifiers = [
 dependencies = ["pypith>=0.1.0", "pyyaml>=6.0", "rich>=13.0"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-cov>=4.0", "ruff>=0.1.0", "mypy>=1.0"]
+dev = ["pytest>=8.0", "pytest-cov>=4.0", "ruff>=0.1.0", "mypy>=1.0", "types-PyYAML>=6.0"]
 mcp = ["mcp>=1.2.0"]
 all = ["mcp>=1.2.0"]
 
@@ -87,3 +87,12 @@ python_version = "3.10"
 strict = true
 warn_return_any = true
 warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = "klondike_spec_cli.cli"
+# Pith/Typer use Argument/Option as defaults which mypy can't understand
+disable_error_code = ["assignment"]
+
+[[tool.mypy.overrides]]
+module = "pith.*"
+ignore_missing_imports = true
