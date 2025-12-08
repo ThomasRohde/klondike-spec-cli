@@ -447,7 +447,7 @@ requires-dist = [
     { name = "mcp", marker = "extra == 'all'", specifier = ">=1.2.0" },
     { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.2.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0" },
-    { name = "pypith", specifier = ">=0.1.0" },
+    { name = "pypith", specifier = ">=0.1.2" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.0" },
     { name = "pyyaml", specifier = ">=6.0" },
@@ -839,11 +839,11 @@ crypto = [
 
 [[package]]
 name = "pypith"
-version = "0.1.1"
+version = "0.1.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d4/f6/e97394d99c97e36341349a01504e2edc947832bab8490dca6ed051571956/pypith-0.1.1.tar.gz", hash = "sha256:dd3ae6477f3ae70b9a4032d4165f8f6eb7f89a41e2ac775fe74b9766c2a82c2d", size = 15171, upload-time = "2025-12-06T08:05:57.191Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ba/7f/52661763779b8b2e0cf99da6db20b7b17497db91110a715774e072d37017/pypith-0.1.2.tar.gz", hash = "sha256:b5efef8c892fcd5e2c9a636ca0466d93ec6916b51343637bfa0bf6bbbb5050ff", size = 17955, upload-time = "2025-12-08T02:34:55.115Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5e/55/8894c252084fda14809a3dc3153e378d5e349029da24111065bb93a9092f/pypith-0.1.1-py3-none-any.whl", hash = "sha256:e7216471ec7e64cb97fc93f3b7fe1446394376529bb796fe326752084029b3ba", size = 20929, upload-time = "2025-12-06T08:05:56.095Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/98/ef2ba7a55a28e2239b973a6ae16d4685769d73013bba497b30f85e6b6ab4/pypith-0.1.2-py3-none-any.whl", hash = "sha256:37693e9f6c354bbbe4e769e10fb727e19bdc45eaf031b7459ea4dfbd4562fdb5", size = 23970, upload-time = "2025-12-08T02:34:53.695Z" },
 ]
 
 [[package]]
