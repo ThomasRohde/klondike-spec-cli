@@ -367,7 +367,9 @@ def status(
 )
 def feature(
     action: str = Argument(..., pith="Action: add, list, start, verify, block, show, edit"),
-    feature_id: str | None = Argument(None, pith="Feature ID (e.g., F001)"),
+    feature_id: str | None = Argument(
+        None, pith="Feature ID (e.g., F001) or description for 'add'"
+    ),
     description: str | None = Option(None, "--description", "-d", pith="Feature description"),
     category: str | None = Option(None, "--category", "-c", pith="Feature category"),
     priority: int | None = Option(None, "--priority", "-p", pith="Priority (1-5)"),
@@ -386,7 +388,7 @@ def feature(
     """Manage features in the registry.
 
     Actions:
-        add    - Add a new feature (requires --description)
+        add    - Add a new feature (description as positional or --description)
         list   - List all features (optional --status filter)
         start  - Mark feature as in-progress (requires feature_id)
         verify - Mark feature as verified (requires feature_id and --evidence)
@@ -395,6 +397,7 @@ def feature(
         edit   - Edit feature (requires feature_id, use --notes or --add-criteria)
 
     Examples:
+        $ klondike feature add "User login" --category core
         $ klondike feature add --description "User login" --category core
         $ klondike feature list --status not-started
         $ klondike feature start F001
@@ -409,7 +412,9 @@ def feature(
         session start - Begin working on features
     """
     if action == "add":
-        _feature_add(description, category, priority, criteria, notes)
+        # For 'add' action, feature_id position is used as description if --description not given
+        effective_description = description if description else feature_id
+        _feature_add(effective_description, category, priority, criteria, notes)
     elif action == "list":
         _feature_list(status_filter, json_output)
     elif action == "start":

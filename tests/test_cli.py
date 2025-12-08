@@ -163,6 +163,56 @@ class TestFeatureAddCommand:
             finally:
                 os.chdir(original_cwd)
 
+    def test_feature_add_positional_description(self) -> None:
+        """Test feature add with description as positional argument."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                # Use description as positional argument (after 'add')
+                result = runner.invoke(
+                    app,
+                    ["feature", "add", "My positional feature", "--category", "core"],
+                )
+
+                assert result.exit_code == 0
+                assert "✅ Added feature F001" in result.output
+                assert "My positional feature" in result.output
+
+                features_path = Path(tmpdir) / ".klondike" / "features.json"
+                with open(features_path) as f:
+                    data = json.load(f)
+                assert data["features"][0]["description"] == "My positional feature"
+            finally:
+                os.chdir(original_cwd)
+
+    def test_feature_add_setup_category(self) -> None:
+        """Test feature add with 'setup' category."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                runner.invoke(app, ["init"])
+
+                result = runner.invoke(
+                    app,
+                    ["feature", "add", "Setup feature", "--category", "setup"],
+                )
+
+                assert result.exit_code == 0
+                assert "Category: setup" in result.output
+
+                features_path = Path(tmpdir) / ".klondike" / "features.json"
+                with open(features_path) as f:
+                    data = json.load(f)
+                assert data["features"][0]["category"] == "setup"
+            finally:
+                os.chdir(original_cwd)
+
     def test_feature_add_increments_id(self) -> None:
         """Test that feature IDs increment correctly."""
         runner = CliRunner()

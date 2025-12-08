@@ -36,7 +36,7 @@ The **Klondike Spec** framework provides:
 
 This CLI tool was built by an AI agent **following the Klondike Spec methodology** — tracking its own features, managing its own sessions, and providing verification evidence for each completed feature. The dog ate its own dog food, and it was delicious.
 
-**30 features. 4 sessions. 98 tests. 100% verified.**
+**40 features. 7 sessions. 142 tests. 100% verified.**
 
 ---
 
@@ -95,8 +95,11 @@ pip install klondike-spec-cli
 ### Initialize Your Project
 
 ```bash
-# Create .klondike directory with all artifacts
+# Create .klondike directory and .github templates
 klondike init my-awesome-project
+
+# Skip .github scaffolding if you already have it
+klondike init my-awesome-project --skip-github
 
 # See where you stand
 klondike status
@@ -178,11 +181,13 @@ Recent commits:
 
 | Command | Description |
 |---------|-------------|
-| `klondike init [name]` | Initialize .klondike directory with artifacts |
+| `klondike init [name]` | Initialize .klondike directory and .github templates |
+| `klondike init --skip-github` | Initialize without .github scaffolding |
 | `klondike status` | Show project status, git info, and next priorities |
 | `klondike validate` | Check artifact integrity and consistency |
 | `klondike progress` | Regenerate agent-progress.md from JSON |
 | `klondike report` | Generate detailed status report |
+| `klondike release [version]` | Automate version bumping and release tagging |
 
 ### Feature Management
 
@@ -202,6 +207,15 @@ Recent commits:
 |---------|-------------|
 | `klondike session start` | Begin session (validates artifacts, shows status) |
 | `klondike session end` | End session with summary and handoff notes |
+
+### AI Agent Integration
+
+| Command | Description |
+|---------|-------------|
+| `klondike copilot start` | Launch GitHub Copilot CLI with klondike context |
+| `klondike mcp serve` | Start MCP server for AI agent integration |
+| `klondike mcp install` | Generate MCP server config for VS Code |
+| `klondike mcp config` | Output MCP configuration JSON |
 
 ### Import/Export
 
@@ -227,6 +241,8 @@ klondike completion powershell >> $PROFILE
 
 ## 📁 Project Structure
 
+After running `klondike init`, your project will have:
+
 ```
 your-project/
 ├── .klondike/
@@ -235,8 +251,26 @@ your-project/
 │   └── config.yaml           # ⚙️ CLI configuration
 ├── agent-progress.md         # 📖 Generated human-readable progress
 └── .github/
-    └── copilot-instructions.md  # 🤖 Agent behavior rules
+    ├── copilot-instructions.md  # 🤖 Agent behavior rules
+    ├── instructions/            # 📚 Workflow instruction files
+    │   ├── git-practices.instructions.md
+    │   ├── session-artifacts.instructions.md
+    │   └── testing-practices.instructions.md
+    ├── prompts/                 # 💬 Reusable prompt templates
+    │   ├── add-features.prompt.md
+    │   ├── progress-report.prompt.md
+    │   ├── recover-from-failure.prompt.md
+    │   ├── session-end.prompt.md
+    │   ├── session-start.prompt.md
+    │   └── verify-feature.prompt.md
+    └── templates/               # 📐 Init scripts and schemas
+        ├── agent-progress.template.md
+        ├── features.schema.json
+        ├── init.ps1
+        └── init.sh
 ```
+
+> **Tip**: Use `--skip-github` if your project already has a `.github` directory you want to preserve.
 
 ---
 
@@ -286,7 +320,7 @@ git clone https://github.com/ThomasRohde/klondike-spec-cli.git
 cd klondike-spec-cli
 uv sync
 
-# Run tests (98 tests, 74% coverage)
+# Run tests (142 tests)
 uv run pytest -v
 
 # Lint and type check
@@ -299,10 +333,10 @@ uv build
 
 ### Project Stats
 
-- **30 features** — all verified with evidence
-- **98 tests** — comprehensive coverage
-- **4 sessions** — from zero to 100%
-- **1600+ lines** of well-structured Python
+- **40 features** — all verified with evidence
+- **142 tests** — comprehensive coverage
+- **7 sessions** — iterative development
+- **4200+ lines** of well-structured Python
 
 ---
 
