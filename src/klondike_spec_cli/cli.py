@@ -905,7 +905,7 @@ def _feature_prompt(
         ]
         for tool in safe_tools:
             cmd.extend(["--allow-tool", tool])
-        cmd.extend(["--message", prompt_content])
+        cmd.extend(["--interactive", prompt_content])
 
         try:
             subprocess.run(cmd, check=True)
@@ -2091,8 +2091,8 @@ def _copilot_start(
         for tool in safe_tools:
             cmd.extend(["--allow-tool", tool])
 
-    # Add the context prompt as initial message
-    cmd.extend(["--message", context_prompt])
+    # Add the context prompt as initial prompt (-i for interactive mode)
+    cmd.extend(["--interactive", context_prompt])
 
     if dry_run:
         echo("🔍 Dry run - would execute:")
