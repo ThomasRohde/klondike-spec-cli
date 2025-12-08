@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.8] - 2025-12-08
+
+### ✨ Added
+
+- Added `init-project.prompt.md` and `init-and-build.prompt.md` to templates
+- `klondike init` now creates essential project initialization prompts in `.github/prompts/`
+
+---
+
 ## [0.2.7] - 2025-12-08
 
 ### 🐛 Fixed
