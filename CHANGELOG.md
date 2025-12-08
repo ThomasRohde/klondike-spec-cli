@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.9] - 2025-12-08
+
+### 🐛 Fixed
+
+- Template extraction no longer copies `__init__.py` files to user's `.github` directory
+- Fixed filtering in `_copy_traversable_to_path`, `extract_github_templates`, and `get_github_templates_list`
+
+---
+
 ## [0.2.8] - 2025-12-08
 
 ### ✨ Added

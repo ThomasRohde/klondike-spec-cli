@@ -154,6 +154,9 @@ def _copy_traversable_to_path(
         # It's a directory - recurse
         destination.mkdir(parents=True, exist_ok=True)
         for child in source.iterdir():
+            # Skip Python package artifacts - not needed in extracted templates
+            if child.name in ("__pycache__", "__init__.py") or child.name.endswith(".pyc"):
+                continue
             child_dest = destination / child.name
             extracted.extend(_copy_traversable_to_path(child, child_dest, overwrite=overwrite))
 
@@ -194,7 +197,8 @@ def extract_github_templates(
 
     # Copy all files from the package
     for item in github_templates.iterdir():
-        if item.name == "__pycache__" or item.name.endswith(".pyc"):
+        # Skip Python package artifacts
+        if item.name in ("__pycache__", "__init__.py") or item.name.endswith(".pyc"):
             continue
         dest_path = github_dir / item.name
         extracted.extend(_copy_traversable_to_path(item, dest_path, overwrite=overwrite))
@@ -230,7 +234,8 @@ def get_github_templates_list() -> list[str]:
 
     def _collect_files(traversable: Traversable, prefix: str = "") -> None:
         for item in traversable.iterdir():
-            if item.name == "__pycache__" or item.name.endswith(".pyc"):
+            # Skip Python package artifacts
+            if item.name in ("__pycache__", "__init__.py") or item.name.endswith(".pyc"):
                 continue
             rel_path = f"{prefix}/{item.name}" if prefix else item.name
             if item.is_file():
