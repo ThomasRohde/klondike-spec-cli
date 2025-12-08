@@ -1724,17 +1724,23 @@ def copilot(
     """Launch GitHub Copilot CLI with klondike project context.
 
     Automatically includes project status, in-progress features, and
-    klondike workflow instructions in the prompt context.
+    klondike workflow instructions in the prompt context. Pre-configures
+    safe tool permissions for file operations and terminal commands.
 
     Actions:
-        start - Launch copilot with project context
+        start - Launch copilot with project context injected as initial message.
+                Includes project name, version, progress %, and workflow reminders.
+                If a feature is in-progress, its details and acceptance criteria
+                are included. Uses default safe tools: read_file, list_dir,
+                grep_search, file_search, run_in_terminal, create_file,
+                replace_string_in_file.
 
     Examples:
-        $ klondike copilot start
-        $ klondike copilot start --model claude-sonnet
-        $ klondike copilot start --feature F001
-        $ klondike copilot start --resume
-        $ klondike copilot start --dry-run
+        $ klondike copilot start                      # Launch with project context
+        $ klondike copilot start --model claude-sonnet  # Specify model
+        $ klondike copilot start --feature F001       # Focus on specific feature
+        $ klondike copilot start --resume             # Resume previous session
+        $ klondike copilot start --dry-run            # Preview command
 
     Related:
         status - Check project status first
