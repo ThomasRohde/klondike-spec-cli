@@ -148,7 +148,7 @@ def update_quick_reference(progress: ProgressLog, registry: FeatureRegistry) -> 
 
 app = Pith(
     name="klondike",
-    pith="Manage Klondike Spec agent workflow artifacts: features, sessions, and progress",
+    pith="Manage agent workflows: init to scaffold, feature to track, session to log work",
 )
 
 
@@ -163,6 +163,12 @@ app = Pith(
     "setup project",
     "init",
     "new project",
+    "first time setup",
+    "getting started",
+    "scaffold project",
+    "bootstrap workflow",
+    "create features.json",
+    "setup github copilot",
 )
 def init(
     project_name: str | None = Option(None, "--name", "-n", pith="Project name"),
@@ -273,6 +279,13 @@ def init(
     "progress overview",
     "summary",
     "what's done",
+    "check progress",
+    "dashboard",
+    "project health",
+    "feature count",
+    "current state",
+    "git status",
+    "recent commits",
 )
 def status(
     json_output: bool = Option(False, "--json", pith="Output as JSON"),
@@ -356,7 +369,9 @@ def status(
             console.print("   ", status_text, f" [cyan]{f.id}[/cyan]: {f.description}")
 
 
-@app.command(name="feature", pith="Manage features: add, list, start, verify, block", priority=30)
+@app.command(
+    name="feature", pith="Manage features: add, list, start, verify, block, show, edit", priority=30
+)
 @app.intents(
     "manage features",
     "feature operations",
@@ -364,6 +379,16 @@ def status(
     "list features",
     "verify feature",
     "edit feature",
+    "create feature",
+    "track feature",
+    "mark complete",
+    "feature status",
+    "show feature",
+    "block feature",
+    "start working",
+    "update feature",
+    "feature details",
+    "acceptance criteria",
 )
 def feature(
     action: str = Argument(..., pith="Action: add, list, start, verify, block, show, edit"),
@@ -732,6 +757,14 @@ def _feature_edit(
     "begin work",
     "finish work",
     "session management",
+    "start coding",
+    "end coding",
+    "log work",
+    "track session",
+    "work log",
+    "handoff",
+    "context bridge",
+    "save progress",
 )
 def session(
     action: str = Argument(..., pith="Action: start, end"),
@@ -937,6 +970,12 @@ def _session_end(
     "verify features.json",
     "check progress",
     "validate",
+    "lint features",
+    "check consistency",
+    "verify metadata",
+    "find issues",
+    "health check",
+    "audit artifacts",
 )
 def validate() -> None:
     """Validate Klondike artifact integrity.
@@ -1029,6 +1068,10 @@ def validate() -> None:
     "zsh completion",
     "powershell completion",
     "generate completions",
+    "tab completion",
+    "autocomplete",
+    "install completions",
+    "enable tab",
 )
 def completion(
     shell: str = Argument(..., pith="Shell type: bash, zsh, powershell"),
@@ -1093,6 +1136,10 @@ def completion(
     "update progress file",
     "generate progress",
     "refresh markdown",
+    "sync markdown",
+    "update agent-progress",
+    "export progress",
+    "create progress file",
 )
 def progress(
     output: str | None = Option(None, "--output", "-o", pith="Output file path"),
@@ -1129,6 +1176,12 @@ def progress(
     "progress report",
     "share progress",
     "report",
+    "executive summary",
+    "status report",
+    "email update",
+    "team report",
+    "project summary",
+    "milestone report",
 )
 def report(
     format_type: str = Option("markdown", "--format", "-f", pith="Output format: markdown, plain"),
@@ -1470,6 +1523,12 @@ def _generate_progress_bar(percentage: float, width: int = 40) -> str:
     "load features",
     "add features from file",
     "bulk import",
+    "restore features",
+    "merge features",
+    "batch add",
+    "import backlog",
+    "load yaml",
+    "load json",
 )
 def import_features(
     file_path: str = Argument(..., pith="Path to YAML or JSON file with features"),
@@ -1642,6 +1701,12 @@ def import_features(
     "run copilot",
     "copilot agent",
     "ai agent",
+    "ai assistant",
+    "coding agent",
+    "launch ai",
+    "start ai",
+    "copilot chat",
+    "agent mode",
 )
 def copilot(
     action: str = Argument(..., pith="Action: start"),
@@ -1821,6 +1886,11 @@ def _copilot_start(
     "save features",
     "backup features",
     "dump features",
+    "share features",
+    "export yaml",
+    "export json",
+    "serialize features",
+    "archive features",
 )
 def export_features(
     output: str = Argument(..., pith="Output file path (.yaml, .yml, or .json)"),
@@ -1904,6 +1974,12 @@ def export_features(
     "install mcp",
     "copilot mcp",
     "ai tools",
+    "model context protocol",
+    "expose tools",
+    "agent tools",
+    "serve mcp",
+    "mcp config",
+    "vscode mcp",
 )
 def mcp(
     action: str = Argument(..., pith="Action: serve, install, config"),
@@ -2025,7 +2101,21 @@ def _mcp_config(output: str | None) -> None:
 # --- Release Command ---
 
 
-@app.command()
+@app.command(pith="Automate version bumping and release tagging", priority=80)
+@app.intents(
+    "release version",
+    "bump version",
+    "create release",
+    "tag release",
+    "publish",
+    "version bump",
+    "semantic version",
+    "patch release",
+    "minor release",
+    "major release",
+    "push tag",
+    "prepare release",
+)
 def release(
     version: str = Argument(
         None,
@@ -2061,13 +2151,20 @@ def release(
 ) -> None:
     """Automate version bumping and release tagging.
 
+    Handles the complete release workflow: runs tests, bumps version in
+    pyproject.toml, commits, tags, and pushes to trigger CI/CD.
+
     Examples:
-        klondike release                    # Show current version
-        klondike release 0.3.0              # Release version 0.3.0
-        klondike release --bump patch       # Bump patch version (0.2.0 -> 0.2.1)
-        klondike release --bump minor       # Bump minor version (0.2.0 -> 0.3.0)
-        klondike release --bump major       # Bump major version (0.2.0 -> 1.0.0)
-        klondike release 0.3.0 --dry-run    # Preview release without changes
+        $ klondike release                    # Show current version
+        $ klondike release 0.3.0              # Release version 0.3.0
+        $ klondike release --bump patch       # Bump patch (0.2.0 -> 0.2.1)
+        $ klondike release --bump minor       # Bump minor (0.2.0 -> 0.3.0)
+        $ klondike release --bump major       # Bump major (0.2.0 -> 1.0.0)
+        $ klondike release 0.3.0 --dry-run    # Preview release
+
+    Related:
+        validate - Check project health before release
+        status - View current project state
     """
     pyproject_path = Path.cwd() / "pyproject.toml"
 

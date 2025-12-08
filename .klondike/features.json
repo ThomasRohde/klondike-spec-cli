@@ -1086,12 +1086,38 @@
       "blockedBy": null,
       "lastWorkedOn": "2025-12-08T01:44:15.138939",
       "notes": null
+    },
+    {
+      "id": "F041",
+      "category": "docs",
+      "priority": 2,
+      "description": "Improve pith help for all subcommands with comprehensive intents and examples",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "All subcommands have 8+ intents for semantic search",
+        "Examples are formatted with $ prefix and comments",
+        "Related commands listed in docstrings",
+        "Release command has pith decorator and intents"
+      ],
+      "estimatedEffort": null,
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-08T06:51:34.923218",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "klondike pith feature -vv output",
+        "semantic search working",
+        "144 tests passing"
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-08T06:51:31.020276",
+      "notes": null
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-08T02:07:04.843325",
-    "totalFeatures": 40,
-    "passingFeatures": 33
+    "lastUpdated": "2025-12-08T06:51:34.923229",
+    "totalFeatures": 41,
+    "passingFeatures": 34
   }
 }
