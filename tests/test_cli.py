@@ -739,12 +739,12 @@ class TestCopilotCommand:
                 assert result.exit_code == 0
                 assert "Dry run - would execute" in result.output
                 assert "copilot" in result.output
-                assert "Working on project: test-project" in result.output
+                assert "session-start.prompt.md" in result.output
             finally:
                 os.chdir(original_cwd)
 
-    def test_copilot_start_includes_in_progress_feature(self) -> None:
-        """Test copilot start includes in-progress feature in context."""
+    def test_copilot_start_includes_feature_with_flag(self) -> None:
+        """Test copilot start includes feature when using --feature flag."""
         runner = CliRunner()
         with TemporaryDirectory() as tmpdir:
             original_cwd = os.getcwd()
@@ -762,9 +762,8 @@ class TestCopilotCommand:
                         "Must work,Must be fast",
                     ],
                 )
-                runner.invoke(app, ["feature", "start", "F001"])
 
-                result = runner.invoke(app, ["copilot", "start", "--dry-run"])
+                result = runner.invoke(app, ["copilot", "start", "--dry-run", "--feature", "F001"])
 
                 assert result.exit_code == 0
                 assert "F001" in result.output
@@ -880,8 +879,8 @@ class TestCopilotCommand:
             finally:
                 os.chdir(original_cwd)
 
-    def test_copilot_start_includes_default_tools(self) -> None:
-        """Test copilot start includes default safe tools."""
+    def test_copilot_start_uses_allow_all_tools_by_default(self) -> None:
+        """Test copilot start uses --allow-all-tools by default."""
         runner = CliRunner()
         with TemporaryDirectory() as tmpdir:
             original_cwd = os.getcwd()
@@ -892,15 +891,13 @@ class TestCopilotCommand:
                 result = runner.invoke(app, ["copilot", "start", "--dry-run"])
 
                 assert result.exit_code == 0
-                # Should include default safe tools
-                assert "read_file" in result.output
-                assert "list_dir" in result.output
-                assert "grep_search" in result.output
+                # Should use --allow-all-tools by default
+                assert "--allow-all-tools" in result.output
             finally:
                 os.chdir(original_cwd)
 
-    def test_copilot_start_shows_workflow_reminders(self) -> None:
-        """Test copilot start includes klondike workflow reminders."""
+    def test_copilot_start_references_prompt_file(self) -> None:
+        """Test copilot start references the session-start prompt file."""
         runner = CliRunner()
         with TemporaryDirectory() as tmpdir:
             original_cwd = os.getcwd()
@@ -911,9 +908,8 @@ class TestCopilotCommand:
                 result = runner.invoke(app, ["copilot", "start", "--dry-run"])
 
                 assert result.exit_code == 0
-                assert "klondike feature start" in result.output
-                assert "klondike feature verify" in result.output
-                assert "klondike session end" in result.output
+                assert "session-start.prompt.md" in result.output
+                assert "--prompt" in result.output
             finally:
                 os.chdir(original_cwd)
 

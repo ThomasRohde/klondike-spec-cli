@@ -2010,7 +2010,7 @@ def _copilot_start(
             "Or see: https://docs.github.com/en/copilot/github-copilot-in-the-cli"
         )
 
-    # Load project context
+    # Load project context for feature lookup
     registry = load_features()
 
     # Determine focus feature
@@ -2020,46 +2020,25 @@ def _copilot_start(
         focus_feature = registry.get_feature(validated_id)
         if not focus_feature:
             raise PithException(f"Feature not found: {validated_id}")
-    else:
-        # Auto-detect in-progress feature
-        in_progress = registry.get_features_by_status(FeatureStatus.IN_PROGRESS)
-        if in_progress:
-            focus_feature = in_progress[0]
 
-    # Build context-aware prompt
-    prompt_parts = []
+    # Build prompt - point to session-start prompt file
+    prompt_parts = ["Follow instructions in .github/prompts/session-start.prompt.md"]
 
-    # Project context
-    total = registry.metadata.total_features
-    passing = registry.metadata.passing_features
-    progress_pct = round(passing / total * 100, 1) if total > 0 else 0
-
-    prompt_parts.append(f"Working on project: {registry.project_name} v{registry.version}")
-    prompt_parts.append(f"Progress: {passing}/{total} features ({progress_pct}%)")
-
-    # Feature focus
+    # Add feature implementation instruction if specified
     if focus_feature:
         prompt_parts.append("")
-        prompt_parts.append(f"Current focus: {focus_feature.id} - {focus_feature.description}")
+        prompt_parts.append(
+            f"After completing the session start routine, implement feature {focus_feature.id}: {focus_feature.description}"
+        )
         if focus_feature.acceptance_criteria:
             prompt_parts.append("Acceptance criteria:")
             for ac in focus_feature.acceptance_criteria:
                 prompt_parts.append(f"  - {ac}")
-        if focus_feature.notes:
-            prompt_parts.append(f"Notes: {focus_feature.notes}")
-
-    # Workflow instructions
-    prompt_parts.append("")
-    prompt_parts.append("Klondike workflow reminders:")
-    prompt_parts.append("- Use 'klondike feature start <ID>' to mark a feature in-progress")
-    prompt_parts.append("- Use 'klondike feature verify <ID> --evidence <path>' when complete")
-    prompt_parts.append("- Run 'npm run build' and 'npm run test' before committing")
-    prompt_parts.append("- Use 'klondike session end --summary \"...\"' when done")
 
     # Additional instructions
     if instructions:
         prompt_parts.append("")
-        prompt_parts.append(f"Additional instructions: {instructions}")
+        prompt_parts.append(instructions)
 
     context_prompt = "\n".join(prompt_parts)
 
@@ -2072,27 +2051,17 @@ def _copilot_start(
     if model:
         cmd.extend(["--model", model])
 
-    # Safe tool permissions - default to safe set
+    # Tool permissions - use allow-all-tools by default, or specific tools if provided
     if allow_tools:
         tools = allow_tools.split(",")
         for tool in tools:
             cmd.extend(["--allow-tool", tool.strip()])
     else:
-        # Default safe tools
-        safe_tools = [
-            "read_file",
-            "list_dir",
-            "grep_search",
-            "file_search",
-            "run_in_terminal",
-            "create_file",
-            "replace_string_in_file",
-        ]
-        for tool in safe_tools:
-            cmd.extend(["--allow-tool", tool])
+        # Default to allowing all tools for non-interactive workflow
+        cmd.append("--allow-all-tools")
 
-    # Add the context prompt as initial prompt (-i for interactive mode)
-    cmd.extend(["--interactive", context_prompt])
+    # Add the prompt for non-interactive execution
+    cmd.extend(["--prompt", context_prompt])
 
     if dry_run:
         echo("🔍 Dry run - would execute:")
