@@ -370,7 +370,9 @@ def status(
 
 
 @app.command(
-    name="feature", pith="Manage features: add, list, start, verify, block, show, edit", priority=30
+    name="feature",
+    pith="Manage features: add, list, start, verify, block, show, edit, prompt",
+    priority=30,
 )
 @app.intents(
     "manage features",
@@ -389,9 +391,12 @@ def status(
     "update feature",
     "feature details",
     "acceptance criteria",
+    "generate prompt",
+    "feature prompt",
+    "copilot prompt",
 )
 def feature(
-    action: str = Argument(..., pith="Action: add, list, start, verify, block, show, edit"),
+    action: str = Argument(..., pith="Action: add, list, start, verify, block, show, edit, prompt"),
     feature_id: str | None = Argument(
         None, pith="Feature ID (e.g., F001) or description for 'add'"
     ),
@@ -409,6 +414,8 @@ def feature(
     status_filter: str | None = Option(None, "--status", "-s", pith="Filter by status"),
     json_output: bool = Option(False, "--json", pith="Output as JSON"),
     notes: str | None = Option(None, "--notes", pith="Additional notes"),
+    output: str | None = Option(None, "--output", "-o", pith="Output file path for prompt"),
+    interactive: bool = Option(False, "--interactive", "-i", pith="Launch copilot with prompt"),
 ) -> None:
     """Manage features in the registry.
 
@@ -420,6 +427,7 @@ def feature(
         block  - Mark feature as blocked (requires feature_id and --reason)
         show   - Show feature details (requires feature_id)
         edit   - Edit feature (requires feature_id, use --notes or --add-criteria)
+        prompt - Generate copilot-ready prompt for a feature (requires feature_id)
 
     Examples:
         $ klondike feature add "User login" --category core
@@ -431,10 +439,14 @@ def feature(
         $ klondike feature show F001
         $ klondike feature edit F001 --notes "Implementation notes"
         $ klondike feature edit F001 --add-criteria "Must handle edge cases"
+        $ klondike feature prompt F001
+        $ klondike feature prompt F001 --output prompt.md
+        $ klondike feature prompt F001 --interactive
 
     Related:
         status - Project overview
         session start - Begin working on features
+        copilot start - Launch copilot with context
     """
     if action == "add":
         # For 'add' action, feature_id position is used as description if --description not given
@@ -452,9 +464,11 @@ def feature(
         _feature_show(feature_id, json_output)
     elif action == "edit":
         _feature_edit(feature_id, description, category, priority, notes, add_criteria)
+    elif action == "prompt":
+        _feature_prompt(feature_id, output, interactive)
     else:
         raise PithException(
-            f"Unknown action: {action}. Use: add, list, start, verify, block, show, edit"
+            f"Unknown action: {action}. Use: add, list, start, verify, block, show, edit, prompt"
         )
 
 
@@ -748,6 +762,168 @@ def _feature_edit(
     echo(f"✏️  Updated: {feature_id} - {feature.description}")
     for change in changes:
         echo(f"   • {change}")
+
+
+def _feature_prompt(
+    feature_id: str | None,
+    output: str | None,
+    interactive: bool,
+) -> None:
+    """Generate a copilot-ready prompt for implementing a feature.
+
+    Creates a detailed prompt with feature description, acceptance criteria,
+    dependencies, and pre-commit verification instructions.
+    """
+    if not feature_id:
+        raise PithException("Feature ID is required for 'prompt' action")
+
+    validated_id = validate_feature_id(feature_id)
+    registry = load_features()
+
+    feature = registry.get_feature(validated_id)
+    if not feature:
+        raise PithException(f"Feature not found: {validated_id}")
+
+    # Build the prompt
+    prompt_lines = [
+        f"# Implement Feature {feature.id}",
+        "",
+        f"**Description:** {feature.description}",
+        "",
+        f"**Category:** {feature.category.value}",
+        f"**Priority:** {feature.priority}",
+        f"**Status:** {feature.status.value}",
+        "",
+    ]
+
+    # Acceptance criteria
+    if feature.acceptance_criteria:
+        prompt_lines.append("## Acceptance Criteria")
+        prompt_lines.append("")
+        for i, criterion in enumerate(feature.acceptance_criteria, 1):
+            prompt_lines.append(f"{i}. {criterion}")
+        prompt_lines.append("")
+
+    # Notes
+    if feature.notes:
+        prompt_lines.append("## Implementation Notes")
+        prompt_lines.append("")
+        prompt_lines.append(feature.notes)
+        prompt_lines.append("")
+
+    # Dependencies - check if feature has blocked_by or related features
+    if feature.blocked_by:
+        prompt_lines.append("## Dependencies/Blockers")
+        prompt_lines.append("")
+        prompt_lines.append(f"- {feature.blocked_by}")
+        prompt_lines.append("")
+
+    # Add project context
+    total = registry.metadata.total_features
+    passing = registry.metadata.passing_features
+    progress_pct = round(passing / total * 100, 1) if total > 0 else 0
+
+    prompt_lines.extend(
+        [
+            "## Project Context",
+            "",
+            f"- **Project:** {registry.project_name} v{registry.version}",
+            f"- **Progress:** {passing}/{total} features ({progress_pct}%)",
+            "",
+        ]
+    )
+
+    # Pre-commit verification instructions
+    prompt_lines.extend(
+        [
+            "## Pre-Commit Verification Requirements",
+            "",
+            "Before committing any changes, you MUST:",
+            "",
+            "1. **Run linting:** Check for code style issues",
+            "   - Python: `uv run ruff check src tests`",
+            "   - Node.js: `npm run lint`",
+            "",
+            "2. **Run format check:** Ensure code is properly formatted",
+            "   - Python: `uv run ruff format --check src tests`",
+            "   - Node.js: `npm run format`",
+            "",
+            "3. **Run tests:** Verify all tests pass",
+            "   - Python: `uv run pytest`",
+            "   - Node.js: `npm test`",
+            "",
+            "4. **Build (if applicable):** Ensure project builds",
+            "   - Node.js: `npm run build`",
+            "",
+            "5. **Record results:** Document each command's exit code",
+            "",
+            "Only commit if ALL checks pass. Fix any issues before committing.",
+            "",
+        ]
+    )
+
+    # Workflow instructions
+    prompt_lines.extend(
+        [
+            "## Klondike Workflow",
+            "",
+            "1. Mark feature as started: `klondike feature start " + validated_id + "`",
+            "2. Implement the feature following acceptance criteria",
+            "3. Run pre-commit verification",
+            "4. Commit changes with descriptive message",
+            f"5. Verify feature: `klondike feature verify {validated_id} --evidence <test-output>`",
+            "",
+        ]
+    )
+
+    prompt_content = "\n".join(prompt_lines)
+
+    # Handle output
+    if interactive:
+        # Launch copilot with this prompt
+        import shutil
+        import subprocess
+
+        copilot_path = shutil.which("copilot")
+        if not copilot_path:
+            raise PithException(
+                "GitHub Copilot CLI not found. Install with: npm install -g @anthropic/copilot-cli\n"
+                "Or see: https://docs.github.com/en/copilot/github-copilot-in-the-cli"
+            )
+
+        echo(f"🚀 Launching Copilot with prompt for {validated_id}...")
+
+        # Build copilot command with safe tools
+        cmd = ["copilot"]
+        safe_tools = [
+            "read_file",
+            "list_dir",
+            "grep_search",
+            "file_search",
+            "run_in_terminal",
+            "create_file",
+            "replace_string_in_file",
+        ]
+        for tool in safe_tools:
+            cmd.extend(["--allow-tool", tool])
+        cmd.extend(["--message", prompt_content])
+
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            raise PithException(f"Copilot exited with error code {e.returncode}") from e
+        except FileNotFoundError as e:
+            raise PithException("GitHub Copilot CLI not found in PATH") from e
+
+    elif output:
+        # Write to file
+        output_path = validate_output_path(output, extensions=[".md", ".txt"])
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(prompt_content, encoding="utf-8")
+        echo(f"✅ Prompt written to: {output_path}")
+    else:
+        # Print to stdout
+        print(prompt_content)
 
 
 @app.command(name="session", pith="Manage coding sessions: start, end", priority=40)
