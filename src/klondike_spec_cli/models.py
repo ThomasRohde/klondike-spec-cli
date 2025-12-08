@@ -35,6 +35,7 @@ class FeatureCategory(str, Enum):
     SECURITY = "security"
     PERFORMANCE = "performance"
     SETUP = "setup"
+    ASSETS = "assets"
 
 
 @dataclass
