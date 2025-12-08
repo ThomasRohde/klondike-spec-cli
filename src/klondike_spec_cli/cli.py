@@ -881,20 +881,19 @@ def _feature_prompt(
     # Handle output
     if interactive:
         # Launch copilot with this prompt
-        import shutil
         import subprocess
 
-        copilot_path = shutil.which("copilot")
+        copilot_path = _find_copilot_executable()
         if not copilot_path:
             raise PithException(
-                "GitHub Copilot CLI not found. Install with: npm install -g @anthropic/copilot-cli\n"
+                "GitHub Copilot CLI not found. Install with: npm install -g @github/copilot\n"
                 "Or see: https://docs.github.com/en/copilot/github-copilot-in-the-cli"
             )
 
         echo(f"🚀 Launching Copilot with prompt for {validated_id}...")
 
         # Build copilot command with safe tools
-        cmd = ["copilot"]
+        cmd = [copilot_path]
         safe_tools = [
             "read_file",
             "list_dir",
@@ -1928,6 +1927,70 @@ def copilot(
         raise PithException(f"Unknown action: {action}. Use: start")
 
 
+def _find_copilot_executable() -> str | None:
+    """Find the real GitHub Copilot CLI executable.
+
+    On Windows, shutil.which("copilot") may find a PowerShell wrapper script
+    (copilot.ps1) instead of the actual executable. We need to find:
+    - Windows: copilot.cmd (npm batch wrapper) or node calling the JS directly
+    - Unix/WSL: copilot (shell script from npm)
+
+    Returns the path to the executable, or None if not found.
+    """
+    import os
+    import shutil
+
+    # First, try to find the npm-installed copilot
+    if sys.platform == "win32":
+        # On Windows, look for copilot.cmd specifically in npm global bin
+        # This avoids the VS Code PS1 wrapper that shutil.which might find first
+
+        # Method 1: Check npm global prefix
+        try:
+            result = subprocess.run(
+                ["npm", "config", "get", "prefix"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+            if result.returncode == 0:
+                npm_prefix = result.stdout.strip()
+                copilot_cmd = Path(npm_prefix) / "copilot.cmd"
+                if copilot_cmd.exists():
+                    return str(copilot_cmd)
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
+
+        # Method 2: Check common npm locations
+        common_paths = [
+            Path(os.environ.get("APPDATA", "")) / "npm" / "copilot.cmd",
+            Path(os.environ.get("LOCALAPPDATA", "")) / "npm" / "copilot.cmd",
+        ]
+        for path in common_paths:
+            if path.exists():
+                return str(path)
+
+        # Method 3: Fall back to shutil.which but verify it's not a PS1 file
+        copilot_path = shutil.which("copilot")
+        if copilot_path:
+            # If it's a .ps1 file, it won't work with subprocess.run directly
+            if not copilot_path.lower().endswith(".ps1"):
+                return copilot_path
+            # Try to find copilot.cmd in the same directory
+            copilot_dir = Path(copilot_path).parent
+            copilot_cmd = copilot_dir / "copilot.cmd"
+            if copilot_cmd.exists():
+                return str(copilot_cmd)
+
+    else:
+        # On Unix/Linux/WSL, shutil.which should work correctly
+        copilot_path = shutil.which("copilot")
+        if copilot_path:
+            return copilot_path
+
+    return None
+
+
 def _copilot_start(
     model: str | None,
     resume: bool,
@@ -1937,14 +2000,13 @@ def _copilot_start(
     dry_run: bool,
 ) -> None:
     """Launch GitHub Copilot CLI with project context."""
-    import shutil
     import subprocess
 
     # Check if copilot CLI is available
-    copilot_path = shutil.which("copilot")
+    copilot_path = _find_copilot_executable()
     if not copilot_path and not dry_run:
         raise PithException(
-            "GitHub Copilot CLI not found. Install with: npm install -g @anthropic/copilot-cli\n"
+            "GitHub Copilot CLI not found. Install with: npm install -g @github/copilot\n"
             "Or see: https://docs.github.com/en/copilot/github-copilot-in-the-cli"
         )
 
@@ -2001,8 +2063,8 @@ def _copilot_start(
 
     context_prompt = "\n".join(prompt_parts)
 
-    # Build copilot command
-    cmd = ["copilot"]
+    # Build copilot command - use the found executable path
+    cmd = [copilot_path] if copilot_path else ["copilot"]
 
     if resume:
         cmd.append("--resume")
