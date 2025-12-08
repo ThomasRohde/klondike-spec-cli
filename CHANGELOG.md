@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.12] - 2025-12-08
+
+### ✨ Added
+
+- `klondike agents generate` - Generate AGENTS.md from klondike configuration
+  - Includes workflow overview, key commands, and configuration settings
+  - Lists current priority features from progress log
+- Added `assets` to FeatureCategory enum for asset-related features
+
+### 🐛 Fixed
+
+- Fixed Windows copilot executable detection - now correctly finds `copilot.cmd` instead of the PowerShell wrapper script (`copilot.ps1`)
+- Fixed copilot CLI option - use `--prompt` for non-interactive mode instead of invalid `--message`
+
+### 🔧 Changed
+
+- `klondike copilot start` now uses `--prompt` with reference to `session-start.prompt.md`
+- Uses `--allow-all-tools` by default for autonomous operation
+- Feature implementation instruction added when `--feature` flag is specified
+
+---
+
 ## [0.2.11] - 2025-12-08
 
 ### ✨ Added
