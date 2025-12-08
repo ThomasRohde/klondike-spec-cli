@@ -941,13 +941,15 @@
         "Follows copilot AGENTS.md format specification"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-08T17:35:35.989766",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "AGENTS.md"
+      ],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-08T17:35:35.514457",
       "notes": null
     },
     {
@@ -1118,8 +1120,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-08T07:08:42.406541",
+    "lastUpdated": "2025-12-08T17:35:35.989776",
     "totalFeatures": 41,
-    "passingFeatures": 35
+    "passingFeatures": 36
   }
 }

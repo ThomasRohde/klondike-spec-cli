@@ -2,7 +2,7 @@
 
 ## Project: klondike-spec-cli
 ## Started: 2025-12-07
-## Current Status: Session Ended
+## Current Status: In Progress
 
 ---
 
@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F034 | Generate AGENTS.md from klondike configuration | ⏳ Not started |
 | F039 | Local CI check command that detects and runs project CI checks | ⏳ Not started |
 | F035 | Auto-delegate feature PRs via copilot | ⏳ Not started |
+| F036 | Copilot session resume integration | ⏳ Not started |
 
 ---
 
@@ -202,6 +202,28 @@ klondike feature list  # List all features
 
 #### Recommended Next Steps
 1. Consider adding CI workflows templates to .github scaffolding. Push changes to trigger CI/CD.
+
+#### Technical Notes
+- None
+
+---
+
+### Session 8 - 2025-12-08
+**Agent**: Coding Agent
+**Duration**: (in progress)
+**Focus**: F034 - Generate AGENTS.md from klondike configuration
+
+#### Completed
+- None
+
+#### In Progress
+- Session started
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
 
 #### Technical Notes
 - None

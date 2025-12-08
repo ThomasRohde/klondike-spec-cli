@@ -1,7 +1,7 @@
 {
   "projectName": "klondike-spec-cli",
   "startedAt": "2025-12-07T00:00:00Z",
-  "currentStatus": "Session Ended",
+  "currentStatus": "In Progress",
   "sessions": [
     {
       "sessionNumber": 1,
@@ -133,6 +133,20 @@
         "Consider adding CI workflows templates to .github scaffolding. Push changes to trigger CI/CD."
       ],
       "technicalNotes": []
+    },
+    {
+      "sessionNumber": 8,
+      "date": "2025-12-08",
+      "agent": "Coding Agent",
+      "duration": "(in progress)",
+      "focus": "F034 - Generate AGENTS.md from klondike configuration",
+      "completed": [],
+      "inProgress": [
+        "Session started"
+      ],
+      "blockers": [],
+      "nextSteps": [],
+      "technicalNotes": []
     }
   ],
   "quickReference": {
@@ -145,11 +159,6 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F034",
-        "description": "Generate AGENTS.md from klondike configuration",
-        "status": "not-started"
-      },
-      {
         "id": "F039",
         "description": "Local CI check command that detects and runs project CI checks",
         "status": "not-started"
@@ -157,6 +166,11 @@
       {
         "id": "F035",
         "description": "Auto-delegate feature PRs via copilot",
+        "status": "not-started"
+      },
+      {
+        "id": "F036",
+        "description": "Copilot session resume integration",
         "status": "not-started"
       }
     ]
