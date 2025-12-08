@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.10] - 2025-12-08
+
+### ✨ Added
+
+- Enhanced pith help for all subcommands with 8-16 intents each for better semantic search
+- Added pith decorator and intents to `release` command
+- Comprehensive documentation for `copilot start` action explaining context injection
+
+### 🔧 Changed
+
+- Improved main app pith to be more action-oriented
+- Examples now formatted with `$` prefix and inline comments
+- Related commands listed in docstrings for better discoverability
+
+---
+
 ## [0.2.9] - 2025-12-08
 
 ### 🐛 Fixed
