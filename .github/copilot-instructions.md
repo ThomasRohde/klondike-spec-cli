@@ -307,10 +307,19 @@ klondike release --bump minor --dry-run
 
 ### CI/CD Publishing Pipeline
 
+**This project uses automated CI/CD publishing. NEVER run `uv publish` manually.**
+
 **Continuous Deployment (with dynamic versioning):**
 - Every push to master → CI runs → if passes → auto-publish to PyPI
 - Use `skip-existing: true` in pypa/gh-action-pypi-publish
 - Unique dev versions ensure no conflicts
+
+**Release Workflow:**
+1. Update CHANGELOG.md and README.md as needed
+2. Commit changes: `git add . && git commit -m "docs: update for vX.Y.Z"`
+3. Create tag: `git tag -a vX.Y.Z -m "vX.Y.Z - Brief description"`
+4. Push: `git push origin master && git push origin vX.Y.Z`
+5. GitHub Actions handles PyPI publication automatically
 
 **Staged Deployment (traditional):**
 1. **Push tag** → Publishes to TestPyPI/npm staging
