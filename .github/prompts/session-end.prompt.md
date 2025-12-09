@@ -7,24 +7,13 @@ description: "End a coding session with proper documentation and clean state"
 
 Execute the **standardized shutdown routine** for a long-running agent session, ensuring the codebase is left in a clean, well-documented state for the next session.
 
-## Context
-
-This prompt implements the "clean state" requirement from Anthropic's long-running agent research. Every session must end with the environment in a state that:
-- Is appropriate for merging to main branch
-- Has no major bugs or half-implemented features
-- Is well-documented with clear next steps
-- Could be picked up by any developer (human or AI)
-
 ## Instructions
 
 ### 1. Verify Clean State
 
 **Step 1: Detect stack and available commands**
 
-Read `package.json` (or `pyproject.toml`, `Cargo.toml`, `go.mod`) to find:
-- Build command (e.g., `scripts.build`)
-- Test command (e.g., `scripts.test`)
-- Lint command (e.g., `scripts.lint`)
+Read project configuration files to find build, test, and lint commands.
 
 **Step 2: Run and record each command**
 
@@ -32,9 +21,14 @@ Read `package.json` (or `pyproject.toml`, `Cargo.toml`, `go.mod`) to find:
 # Check for uncommitted changes
 git status
 
-# Run detected commands (example for Node.js)
+# Run detected commands
+# Example for Python:
+uv run ruff check src tests
+uv run pytest
+
+# Example for Node.js:
 npm run build
-npm run test
+npm test
 npm run lint
 ```
 
@@ -44,144 +38,47 @@ npm run lint
 #### Pre-Commit Verification
 | Command | Exit Code | Notes |
 |---------|-----------|-------|
-| npm run build | 0 | ✅ Build succeeded |
-| npm test | 0 | ✅ 42/42 tests passed |
-| npm run lint | 0 | ✅ No issues |
+| <build command> | 0 | ✅ |
+| <test command> | 0 | ✅ N tests passed |
+| <lint command> | 0 | ✅ |
 ```
-
-**If a command is missing:**
-- Note in Technical Notes: "No lint script configured"
-- Do NOT silently skip
-
-**If there are failures:**
-- Fix them before proceeding
-- If unfixable, revert to last good state and document
 
 ### 2. Commit Outstanding Work
 
 All changes should be committed with descriptive messages:
 
 ```bash
-# Stage changes
 git add -A
-
-# Commit with conventional commit message
-git commit -m "<type>(<scope>): <description>
-
-<body explaining what and why>
-
-<footer with any breaking changes or issues>"
+git commit -m "<type>(<scope>): <description>"
 ```
-
-Commit types:
-- `feat`: New feature
-- `fix`: Bug fix
-- `refactor`: Code change that doesn't fix bug or add feature
-- `docs`: Documentation only
-- `test`: Adding or updating tests
-- `chore`: Maintenance tasks
 
 ### 3. Verify Feature Completion
 
 For any features you worked on:
 
-1. **Run end-to-end verification** (not just unit tests)
-2. **Test as a user would** - browser, CLI, actual API calls
-3. **Capture evidence** - logs, screenshots, command output
-4. **Only mark complete** if ALL acceptance criteria are met
-
-**Use klondike CLI to verify features:**
-
 ```bash
 # Verify a feature with evidence
-klondike feature verify F00X --evidence "test-results/F00X-screenshot.png,test-results/F00X-console.log"
+klondike feature verify F00X --evidence "test-results/F00X-screenshot.png"
 
 # Or block a feature if incomplete
 klondike feature block F00X --reason "Waiting for API specification"
 ```
 
-The CLI automatically:
-- Sets `status` to `verified` and `passes` to `true`
-- Records `verifiedAt` timestamp and `verifiedBy` identifier
-- Links evidence files
-- Updates metadata counts
-- Regenerates agent-progress.md
-
-**Important**: If feature is incomplete, use `klondike feature block` - it's okay!
-
-### 4. Complete or Park Session Plan
-
-**Every task from your session plan must be resolved:**
-
-| Status | Action Required |
-|--------|----------------|
-| `done` | No action - task complete |
-| `blocked` | Document: what's blocking, who/what can unblock, suggested next step |
-| `in-progress` | Either finish it OR convert to `blocked` with handoff notes |
-| `not-started` | Either complete it OR document why deferred |
-
-**You may NOT end a session with tasks in `in-progress` or `not-started` without explicit handoff.**
-
-### 5. Update Progress File
-
-**Use klondike CLI to end the session:**
+### 4. End the Session
 
 ```bash
 klondike session end \
   --summary "Completed login form implementation" \
-  --completed "Added login form,Added validation,Fixed edge cases" \
+  --completed "Added login form,Added validation" \
   --next "Add password reset,Implement session management"
 ```
 
-This automatically:
-- Updates the current session in agent-progress.json
-- Regenerates agent-progress.md with the session summary
-- Shows reminder to commit changes
-
-Alternatively, append manually to `agent-progress.md`:
-
-```markdown
-### Session X - <Date>
-**Duration**: ~<time>
-**Focus**: <feature ID and name>
-
-#### Completed
-- <Specific accomplishment 1>
-- <Specific accomplishment 2>
-- <Files changed: list key files>
-
-#### Attempted But Incomplete
-- <What was tried that didn't work>
-- <Why it didn't work>
-
-#### Blockers Discovered
-- <Any issues that need resolution>
-- <Missing dependencies or decisions needed>
-
-#### Recommended Next Steps
-1. <Most important next action>
-2. <Second priority>
-3. <Third priority>
-
-#### Technical Notes
-- <Any non-obvious decisions made>
-- <Gotchas for next session>
-- <Useful commands discovered>
-```
-
-### 6. Final Verification
+### 5. Final Verification
 
 ```bash
 # Ensure everything is committed
 git status  # Should show "nothing to commit, working tree clean"
-
-# Verify app still works
-./init.sh && <smoke-test-command>
 ```
-
-### 7. Summary Report
-
-Provide a brief handoff summary.
 
 ## Output Format
 
@@ -194,40 +91,19 @@ Provide a brief handoff summary.
 ### Pre-Commit Verification
 | Command | Exit Code | Notes |
 |---------|-----------|-------|
-| npm run build | 0 | ✅ |
-| npm test | 0 | ✅ X tests passed |
-| npm run lint | 0 | ✅ |
-
-### Session Plan Resolution
-| # | Task | Final Status | Notes |
-|---|------|--------------|-------|
-| 1 | <task> | done | Completed |
-| 2 | <task> | done | Completed |
-| 3 | <task> | blocked | Needs API key - see notes |
+| <command> | 0 | ✅ |
 
 ### Accomplishments
 | Feature | Status | Evidence |
 |---------|--------|----------|
 | F00X | ✅ verified | [screenshot](test-results/F00X.png) |
-| F00Y | 🔄 in-progress | 80% done, needs E2E test |
-
-### Files Changed
-- `path/to/file1.ts` - <what changed>
-- `path/to/file2.ts` - <what changed>
+| F00Y | 🔄 in-progress | 80% done |
 
 ### State Verification
 - [x] All changes committed
-- [x] Pre-commit checks passed and recorded
-- [x] Smoke test passing
+- [x] Pre-commit checks passed
 - [x] Progress file updated
-- [x] Features.json accurate (with evidence links)
-- [x] Session plan resolved (no dangling tasks)
 
 ### Handoff to Next Session
 > <2-3 sentence summary of where things stand and what to do next>
-
-### Git Log (This Session)
-\`\`\`
-<output of git log showing this session's commits>
-\`\`\`
 ```

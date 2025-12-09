@@ -62,41 +62,17 @@ fi
 # Python project:
 # pip install -r requirements.txt
 
-# Rust project:
-# cargo build
-
-# 4. Set up environment variables (if needed)
-echo ""
-echo "🔧 Setting up environment..."
-
-# Load .env file if present
-# if [ -f .env ]; then
-#     export $(cat .env | grep -v '^#' | xargs)
-#     echo "   ✅ Environment variables loaded from .env"
-# fi
-
-# 5. Start development server in BACKGROUND
-# IMPORTANT: Using & and disown ensures the script doesn't block waiting for the server
+# 4. Start development server in BACKGROUND
 echo ""
 echo "🖥️  Starting development server in background..."
 
-# Node.js project (redirect output to log file, run in background):
+# Node.js project:
 npm run dev > .dev-server.log 2>&1 &
 DEV_PID=$!
 echo $DEV_PID > .dev-server.pid
 echo "   Started dev server in background (PID: $DEV_PID)"
 
-# Python Flask:
-# python app.py > .dev-server.log 2>&1 &
-# DEV_PID=$!
-# echo $DEV_PID > .dev-server.pid
-
-# Django:
-# python manage.py runserver > .dev-server.log 2>&1 &
-# DEV_PID=$!
-# echo $DEV_PID > .dev-server.pid
-
-# 6. Wait for server to be ready (with timeout)
+# 5. Wait for server to be ready (with timeout)
 echo ""
 echo "⏳ Waiting for server to be ready..."
 MAX_ATTEMPTS=30
@@ -125,7 +101,7 @@ fi
 
 echo "   ✅ Dev server ready on port $DEV_PORT"
 
-# 7. Health check - verify the app responds
+# 6. Health check
 echo ""
 echo "🏥 Running health check..."
 if command -v curl &> /dev/null; then
@@ -140,7 +116,7 @@ else
     echo "⚠ curl not available, skipping health check"
 fi
 
-# 8. Success message
+# 7. Success message
 echo ""
 echo "================================================"
 echo "✅ Environment ready!"

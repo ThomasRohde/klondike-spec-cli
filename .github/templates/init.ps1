@@ -60,46 +60,17 @@ else {
 # Python project:
 # pip install -r requirements.txt
 
-# .NET project:
-# dotnet restore
-
-# 4. Set up environment variables (if needed)
-Write-Host "`n🔧 Setting up environment..." -ForegroundColor Yellow
-
-# Load .env file if present
-# if (Test-Path .env) {
-#     Get-Content .env | ForEach-Object {
-#         if ($_ -match '^([^#][^=]+)=(.*)$') {
-#             [Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process')
-#         }
-#     }
-#     Write-Host "   ✅ Environment variables loaded from .env" -ForegroundColor Green
-# }
-
-# 5. Start development server in BACKGROUND using Start-Job
-# IMPORTANT: Using Start-Job ensures the script doesn't block waiting for the server
+# 4. Start development server in BACKGROUND using Start-Job
 Write-Host "`n🖥️  Starting development server in background..." -ForegroundColor Yellow
 
-# Node.js project (using Start-Job for non-blocking background execution):
+# Node.js project:
 $devJob = Start-Job -ScriptBlock {
     Set-Location $using:PWD
     npm run dev 2>&1
 }
 Write-Host "   Started dev server as background job (Job ID: $($devJob.Id))" -ForegroundColor Gray
 
-# Python project:
-# $devJob = Start-Job -ScriptBlock {
-#     Set-Location $using:PWD
-#     python app.py 2>&1
-# }
-
-# .NET project:
-# $devJob = Start-Job -ScriptBlock {
-#     Set-Location $using:PWD
-#     dotnet run 2>&1
-# }
-
-# 6. Wait for server to be ready (with timeout)
+# 5. Wait for server to be ready (with timeout)
 Write-Host "`n⏳ Waiting for server to be ready..." -ForegroundColor Yellow
 $maxAttempts = 30
 $attempt = 0
@@ -128,7 +99,7 @@ if (-not $serverReady) {
 
 Write-Host "   ✅ Dev server ready on port $DEV_PORT" -ForegroundColor Green
 
-# 7. Health check - verify the app responds
+# 6. Health check
 Write-Host "`n🏥 Running health check..." -ForegroundColor Yellow
 try {
     $response = Invoke-WebRequest -Uri "http://localhost:$DEV_PORT" -UseBasicParsing -TimeoutSec 10
@@ -141,7 +112,7 @@ catch {
     exit 1
 }
 
-# 8. Success message
+# 7. Success message
 Write-Host "`n================================================" -ForegroundColor Cyan
 Write-Host "✅ Environment ready!" -ForegroundColor Green
 Write-Host ""

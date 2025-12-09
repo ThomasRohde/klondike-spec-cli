@@ -7,14 +7,6 @@ description: "Start a new coding session with proper context gathering"
 
 Execute the **standardized startup routine** for a long-running agent session, ensuring you have full context before making any changes.
 
-## Context
-
-This prompt implements the "Getting up to speed" phase from Anthropic's long-running agent research. Every coding session should start with this routine to:
-- Understand current project state
-- Identify what was done recently
-- Verify the environment works
-- Choose the right next task
-
 ## Instructions
 
 ### 1. Orient Yourself
@@ -38,64 +30,23 @@ klondike status
 # List all features with their status
 klondike feature list
 
-# Show details for a specific feature
-klondike feature show F00X
-
 # Validate artifact integrity
 klondike validate
 ```
 
-> ⚠️ **IMPORTANT**: Do NOT read `.klondike/features.json`, `.klondike/agent-progress.json`, or `agent-progress.md` directly using file read tools. Always use klondike CLI commands to access this data. The CLI is the canonical interface.
+> ⚠️ **IMPORTANT**: Do NOT read `.klondike/features.json` or `agent-progress.md` directly. Always use klondike CLI commands.
 
 **Git history** - Recent changes:
 ```bash
 git log --oneline -15
 git status
-git diff --stat HEAD~3  # What changed recently
 ```
 
-### 3. Artifact Integrity Checks (MANDATORY)
-
-**Use klondike CLI for validation:**
-
-```bash
-klondike validate
-```
-
-This automatically checks:
-
-This automatically checks:
-
-**features.json:**
-- [ ] File is valid JSON
-- [ ] `metadata.totalFeatures` == actual feature count
-- [ ] `metadata.passingFeatures` == count where `passes: true`
-- [ ] All features have required fields: `id`, `description`, `acceptanceCriteria`, `passes`
-- [ ] No features from previous session are missing (compare with `agent-progress.md` if noted)
-
-**agent-progress.json:**
-- [ ] Session numbers are sequential (no gaps or duplicates)
-- [ ] Previous session entries are intact (not deleted/modified)
-
-**If any check fails:**
-1. Document the inconsistency in output
-2. Fix immediately before any coding work
-3. If unfixable, invoke `/recover-from-failure`
-
-### 4. Start the Session
-
-**Use klondike CLI to formally start a session:**
+### 3. Start the Session
 
 ```bash
 klondike session start --focus "F00X - Feature description"
 ```
-
-This will:
-1. Validate artifact integrity automatically
-2. Create a new session entry in agent-progress.json
-3. Show current project status
-4. List priority features to work on
-5. Regenerate agent-progress.md
 
 If your project has an init script for dev server:
 
@@ -103,21 +54,15 @@ If your project has an init script for dev server:
 ./init.sh  # or .\init.ps1 on Windows
 ```
 
-### 5. Smoke Test
+### 4. Smoke Test
 
 Before implementing new features, verify basic functionality:
 
 - **For web apps**: Navigate to main page, perform core action
 - **For APIs**: Hit health endpoint, test one main endpoint
 - **For CLI tools**: Run help command, execute basic operation
-- **For libraries**: Run test suite, import main module
 
-If smoke test fails:
-- **STOP** - Do not start new features
-- Investigate and fix the existing issue first
-- Document what was broken in progress file
-
-### 6. Create Session Plan
+### 5. Create Session Plan
 
 Before starting work, create a plan with 3-6 concrete steps:
 
@@ -130,81 +75,22 @@ Before starting work, create a plan with 3-6 concrete steps:
 | 3 | <specific task> | not-started |
 ```
 
-**Status values:** `not-started`, `in-progress`, `blocked`, `done`
-
-**Rules:**
-- Only ONE task `in-progress` at a time
-- Update status as you complete each task
-- If blocked, note the reason and move to next task
-- At session end, all tasks must be `done` or explicitly `blocked` with owner/next-step
-
-### 7. Select Next Task
-
-**Use klondike CLI to mark your selected feature:**
+### 6. Select Next Task
 
 ```bash
 klondike feature start F00X
 ```
 
 Based on your review:
-
 1. If environment is broken → Fix it first
 2. If there are incomplete in-progress features → Complete them
 3. Otherwise → Pick highest priority feature from `klondike status`
 
-### 8. Announce Your Plan and Begin
+### 7. Begin
 
 Before making changes, state:
 - Which feature you'll work on (by ID and description)
 - Your approach in 2-3 sentences
 - Any risks or dependencies you've identified
 
-**Then immediately begin implementation.** Do not wait for user confirmation—the purpose of this prompt is to get up to speed AND start working.
-
-## Output Format
-
-After completing the startup routine, provide a brief status report and **begin coding immediately**:
-
-```markdown
-## Session Start Report
-
-**Timestamp**: <current time>
-**Working Directory**: <path>
-
-### Artifact Integrity
-- [x] features.json valid (X features, Y passing)
-- [x] Metadata counts match actual
-- [x] agent-progress.md sessions sequential
-- [x] No missing features detected
-
-### Environment Status
-- [x] Init script executed
-- [x] Health checks passed
-- [x] Smoke test passed
-
-### Project Status
-- **Total Features**: X
-- **Passing**: Y (Z%)
-- **In-Progress**: N
-- **Blocked**: M
-- **Last Session**: <date> - <summary>
-
-### Session Plan
-| # | Task | Status |
-|---|------|--------|
-| 1 | <task> | in-progress |
-| 2 | <task> | not-started |
-| 3 | <task> | not-started |
-
-### Current Task
-**Target Feature**: F00X - <description>
-**Approach**: <brief plan>
-**Estimated Scope**: <small/medium/large>
-
-### Risks/Dependencies
-- <any concerns>
-```
-
-## After the Report
-
-**Immediately proceed to implement the selected feature.** Do not ask "Ready to proceed?" or wait for confirmation. The user invoked this prompt to start a productive coding session, so begin working right away.
+**Then immediately begin implementation.**
