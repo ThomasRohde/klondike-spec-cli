@@ -156,6 +156,9 @@ pip install klondike-spec-cli
 # Create .klondike directory and .github templates
 klondike init my-awesome-project
 
+# Include a link to your PRD for agent context
+klondike init my-awesome-project --prd ./docs/prd.md
+
 # Skip .github scaffolding if you already have it
 klondike init my-awesome-project --skip-github
 
@@ -240,9 +243,11 @@ Recent commits:
 | Command | Description |
 |---------|-------------|
 | `klondike init [name]` | Initialize .klondike directory and .github templates |
+| `klondike init --prd <path>` | Initialize with PRD link for agent context |
 | `klondike init --skip-github` | Initialize without .github scaffolding |
 | `klondike status` | Show project status, git info, and next priorities |
 | `klondike validate` | Check artifact integrity and consistency |
+| `klondike config` | View or set project configuration |
 | `klondike progress` | Regenerate agent-progress.md from JSON |
 | `klondike report` | Generate detailed status report |
 | `klondike release [version]` | Automate version bumping and release tagging |
@@ -355,7 +360,28 @@ progress_output_path: agent-progress.md
 
 # Auto-regenerate markdown on changes
 auto_regenerate_progress: true
+
+# Link to PRD document for agent context (set via --prd or config command)
+# prd_source: ./docs/prd.md
 ```
+
+### Managing Configuration
+
+```bash
+# View all configuration
+klondike config
+
+# View specific setting
+klondike config prd_source
+
+# Set PRD source
+klondike config prd_source --set ./docs/requirements.md
+
+# Clear PRD source
+klondike config prd_source --set null
+```
+
+When `prd_source` is set, the PRD link appears prominently in `agent-progress.md`, ensuring all future coding sessions have access to the original requirements.
 
 ---
 
