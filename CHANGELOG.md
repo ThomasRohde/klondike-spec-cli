@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.13] - 2025-12-09
+
+### ✨ Added
+
+- `klondike init --prd <path>` - Link to PRD document for agent context preservation
+  - PRD source stored in `.klondike/config.yaml`
+  - Automatically included in `agent-progress.md` as a clickable link
+  - Ensures future coding sessions always have access to original requirements
+- `klondike config` command - View and set project configuration values
+  - `klondike config` shows all configuration settings
+  - `klondike config <key>` shows specific setting
+  - `klondike config <key> --set <value>` updates setting
+  - Supports: `prd_source`, `default_category`, `default_priority`, `verified_by`, `progress_output_path`, `auto_regenerate_progress`
+
+### 📝 Changed
+
+- Updated `init-project.prompt.md` to document `--prd` option usage
+- Updated `session-start.prompt.md` to reference PRD source for context
+- Updated `config.yaml` template with `prd_source` placeholder
+
+---
+
 ## [0.2.12] - 2025-12-08
 
 ### ✨ Added
