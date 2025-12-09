@@ -170,42 +170,60 @@ def build_prompt(
     """
     prompt_parts: list[str] = []
 
-    # Load and include the appropriate prompt template directly
-    # This avoids file path resolution issues when Copilot is launched in a worktree
     if worktree_info:
-        template_content = _load_prompt_template("worktree-session.prompt.md")
-        prompt_parts.append(template_content)
-        prompt_parts.append("")
-        prompt_parts.append("---")
-        prompt_parts.append("")
-        prompt_parts.append("## 🎯 Worktree Context - YOUR TASK")
-        prompt_parts.append("")
-        if worktree_info.feature_id:
-            prompt_parts.append(f"**Feature**: {worktree_info.feature_id}")
-        prompt_parts.append("")
-        prompt_parts.append("**Worktree Info**:")
-        prompt_parts.append(f"- Path: {worktree_info.worktree_path}")
-        prompt_parts.append(f"- Branch: {worktree_info.branch_name}")
-        prompt_parts.append(f"- Parent: {worktree_info.parent_branch}")
+        # ULTRA-DIRECT PROMPT for worktree mode
+        # Previous attempts: Copilot was doing "startup routine" instead of implementing
+        # This version: Feature implementation is THE ONLY GOAL
+
+        if focus_feature:
+            # Put the feature FIRST, make it the only thing that matters
+            prompt_parts.append(f"# IMPLEMENT: {focus_feature.id} - {focus_feature.description}")
+            prompt_parts.append("")
+            prompt_parts.append("Your ONLY task is to implement this feature. Nothing else.")
+            prompt_parts.append("")
+            if focus_feature.acceptance_criteria:
+                prompt_parts.append("## Requirements (implement ALL):")
+                for ac in focus_feature.acceptance_criteria:
+                    prompt_parts.append(f"- {ac}")
+                prompt_parts.append("")
+            prompt_parts.append("## Instructions")
+            prompt_parts.append("1. Read the codebase to understand the project structure")
+            prompt_parts.append("2. Write the code to implement this feature")
+            prompt_parts.append(
+                "3. Commit when done: git add -A && git commit -m 'feat(F0XX): description'"
+            )
+            prompt_parts.append("")
+            prompt_parts.append("You are in an isolated git worktree - safe to make changes.")
+            prompt_parts.append("")
+            prompt_parts.append("## What NOT to do")
+            prompt_parts.append(
+                "- Do NOT run `klondike status`, `klondike validate`, or `klondike session start`"
+            )
+            prompt_parts.append("- Do NOT do a 'startup routine' or 'orientation'")
+            prompt_parts.append("- Do NOT ask for permission - just implement")
+            prompt_parts.append("")
+            prompt_parts.append("## What you CAN do")
+            prompt_parts.append("- Read files, run the dev server, run tests/lints")
+            prompt_parts.append(
+                "- Use `klondike feature show` if you need more context on a feature"
+            )
+            prompt_parts.append("- Make commits as you work")
+        else:
+            # No feature specified - general worktree session
+            prompt_parts.append("# Worktree Session")
+            prompt_parts.append("")
+            prompt_parts.append("You are in an isolated git worktree.")
+            prompt_parts.append(
+                "Run `klondike status` to see available features, then implement one."
+            )
     else:
+        # Normal mode - use template
         template_content = _load_prompt_template("session-start.prompt.md")
         prompt_parts.append(template_content)
 
-    # Add feature implementation instruction if specified
-    if focus_feature:
-        prompt_parts.append("")
-        if worktree_info:
-            # For worktree mode, make it very prominent and action-oriented
-            prompt_parts.append(f"**Feature to Implement**: {focus_feature.id} - {focus_feature.description}")
+        # Add feature implementation instruction if specified
+        if focus_feature:
             prompt_parts.append("")
-            if focus_feature.acceptance_criteria:
-                prompt_parts.append("**Acceptance Criteria** (implement ALL of these):")
-                for ac in focus_feature.acceptance_criteria:
-                    prompt_parts.append(f"- {ac}")
-            prompt_parts.append("")
-            prompt_parts.append("**START IMPLEMENTING NOW. Do not wait for confirmation.**")
-        else:
-            # Normal mode - original behavior
             prompt_parts.append(
                 f"After completing the session start routine, implement feature {focus_feature.id}: {focus_feature.description}"
             )
