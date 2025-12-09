@@ -455,19 +455,33 @@ def list_worktrees(project_dir: Path) -> list[WorktreeInfo]:
     return worktrees
 
 
-def get_worktree_diff(worktree_path: Path, parent_branch: str) -> str:
+def get_worktree_diff(
+    worktree_path: Path,
+    parent_branch: str,
+    exclude_patterns: list[str] | None = None,
+) -> str:
     """Get the diff of changes in a worktree compared to parent branch.
 
     Args:
         worktree_path: Path to the worktree
         parent_branch: The parent branch to diff against
+        exclude_patterns: List of path patterns to exclude (e.g., [".klondike/"])
 
     Returns:
         Diff content as string
     """
+    # Default exclusions - klondike state files should not be patched
+    if exclude_patterns is None:
+        exclude_patterns = [".klondike/"]
+
     try:
+        cmd = ["git", "diff", parent_branch]
+        # Add exclusion patterns
+        for pattern in exclude_patterns:
+            cmd.extend(["--", f":!{pattern}"])
+
         result = subprocess.run(
-            ["git", "diff", parent_branch],
+            cmd,
             capture_output=True,
             text=True,
             cwd=worktree_path,
