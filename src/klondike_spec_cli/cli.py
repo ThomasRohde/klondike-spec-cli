@@ -2203,6 +2203,49 @@ def mcp(
         raise PithException(f"Unknown action: {action}. Use: serve, install, config")
 
 
+@app.command(pith="Show klondike version", priority=5)
+@app.intents(
+    "show version",
+    "version number",
+    "what version",
+    "current version",
+    "cli version",
+    "klondike version",
+    "check version",
+)
+def version(
+    json_output: bool = Option(False, "--json", pith="Output as JSON"),
+) -> None:
+    """Show the klondike CLI version.
+
+    Displays the version that would be published to PyPI/GitHub.
+    Uses dynamic versioning based on git tags via hatch-vcs.
+
+    Version format:
+        - On a tag (v0.3.0): Shows "0.3.0"
+        - After commits: Shows "0.3.1.dev3" (3 commits after 0.3.0)
+
+    Examples:
+        $ klondike version
+        $ klondike version --json
+
+    Related:
+        release - Create a new release
+        status - Show project status
+    """
+    from klondike_spec_cli import __version__
+
+    if json_output:
+        version_info = {
+            "version": __version__,
+            "package": "klondike-spec-cli",
+        }
+        echo(json.dumps(version_info, indent=2))
+        return
+
+    echo(f"klondike-spec-cli {__version__}")
+
+
 @app.command(pith="Generate AGENTS.md from configuration", priority=35)
 @app.intents(
     "generate agents",
