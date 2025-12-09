@@ -158,7 +158,10 @@ def build_prompt(
     instructions: str | None = None,
     worktree_info: WorktreeInfo | None = None,
 ) -> str:
-    """Build the prompt for Copilot.
+    """Build a brief prompt for Copilot.
+
+    Behavioral rules and project context come from .github/copilot-instructions.md
+    which Copilot CLI auto-loads. This function only needs to specify the task.
 
     Args:
         focus_feature: Optional feature to focus on
@@ -166,73 +169,49 @@ def build_prompt(
         worktree_info: Worktree information if running in worktree
 
     Returns:
-        The prompt string
+        The prompt string (brief task description)
     """
     prompt_parts: list[str] = []
 
     if worktree_info:
-        # ULTRA-DIRECT PROMPT for worktree mode
-        # Previous attempts: Copilot was doing "startup routine" instead of implementing
-        # This version: Feature implementation is THE ONLY GOAL
+        # Worktree mode - Copilot reads .github/copilot-instructions.md for rules
+        # We only need to specify WHAT to do, not HOW to behave
 
         if focus_feature:
-            # Put the feature FIRST, make it the only thing that matters
-            prompt_parts.append(f"# IMPLEMENT: {focus_feature.id} - {focus_feature.description}")
-            prompt_parts.append("")
-            prompt_parts.append("Your ONLY task is to implement this feature. Nothing else.")
+            # Feature implementation task
+            prompt_parts.append(f"Implement {focus_feature.id}: {focus_feature.description}")
             prompt_parts.append("")
             if focus_feature.acceptance_criteria:
-                prompt_parts.append("## Requirements (implement ALL):")
+                prompt_parts.append("Acceptance criteria:")
                 for ac in focus_feature.acceptance_criteria:
                     prompt_parts.append(f"- {ac}")
                 prompt_parts.append("")
-            prompt_parts.append("## Instructions")
-            prompt_parts.append("1. Read the codebase to understand the project structure")
-            prompt_parts.append("2. Write the code to implement this feature")
             prompt_parts.append(
-                "3. Commit when done: git add -A && git commit -m 'feat(F0XX): description'"
+                "You are in an isolated git worktree. Implement the feature and commit when done."
             )
-            prompt_parts.append("")
-            prompt_parts.append("You are in an isolated git worktree - safe to make changes.")
-            prompt_parts.append("")
-            prompt_parts.append("## What NOT to do")
-            prompt_parts.append(
-                "- Do NOT run `klondike status`, `klondike validate`, or `klondike session start`"
-            )
-            prompt_parts.append("- Do NOT do a 'startup routine' or 'orientation'")
-            prompt_parts.append("- Do NOT ask for permission - just implement")
-            prompt_parts.append("")
-            prompt_parts.append("## What you CAN do")
-            prompt_parts.append("- Read files, run the dev server, run tests/lints")
-            prompt_parts.append(
-                "- Use `klondike feature show` if you need more context on a feature"
-            )
-            prompt_parts.append("- Make commits as you work")
         else:
-            # No feature specified - general worktree session
-            prompt_parts.append("# Worktree Session")
-            prompt_parts.append("")
-            prompt_parts.append("You are in an isolated git worktree.")
+            # No feature specified - let Copilot pick based on klondike status
             prompt_parts.append(
-                "Run `klondike status` to see available features, then implement one."
+                "Run `klondike status` to see the project state and pick a feature to implement."
             )
+            prompt_parts.append("You are in an isolated git worktree.")
     else:
-        # Normal mode - use template
+        # Normal mode - use template for session startup
         template_content = _load_prompt_template("session-start.prompt.md")
         prompt_parts.append(template_content)
 
-        # Add feature implementation instruction if specified
+        # Add feature focus if specified
         if focus_feature:
             prompt_parts.append("")
             prompt_parts.append(
-                f"After completing the session start routine, implement feature {focus_feature.id}: {focus_feature.description}"
+                f"Focus on implementing {focus_feature.id}: {focus_feature.description}"
             )
             if focus_feature.acceptance_criteria:
                 prompt_parts.append("Acceptance criteria:")
                 for ac in focus_feature.acceptance_criteria:
-                    prompt_parts.append(f"  - {ac}")
+                    prompt_parts.append(f"- {ac}")
 
-    # Additional instructions
+    # Additional instructions from CLI
     if instructions:
         prompt_parts.append("")
         prompt_parts.append(instructions)
@@ -460,10 +439,18 @@ def _handle_worktree_cleanup(worktree_info: WorktreeInfo, config: CopilotConfig)
             try:
                 apply_worktree_changes(worktree_info)
                 echo("   ✅ Changes applied successfully")
+
+                # Auto-cleanup after successful apply (changes are now in main project)
+                echo("   🧹 Cleaning up worktree...")
+                try:
+                    cleanup_worktree(worktree_info, force=True)
+                    echo("   ✅ Worktree removed")
+                except WorktreeError as e:
+                    echo(f"   ⚠️  Failed to cleanup: {e}")
+                    echo("   💡 Run: klondike copilot cleanup --force")
             except WorktreeError as e:
                 raise PithException(f"Failed to apply changes: {e}") from e
-
-        if config.cleanup_after:
+        elif config.cleanup_after:
             echo("   🧹 Cleaning up worktree...")
             try:
                 cleanup_worktree(worktree_info, force=True)
@@ -474,7 +461,7 @@ def _handle_worktree_cleanup(worktree_info: WorktreeInfo, config: CopilotConfig)
             echo("")
             echo("💡 Worktree preserved. To manage:")
             echo(f"   cd {worktree_info.worktree_path}")
-            echo("   # Or cleanup with: klondike copilot cleanup")
+            echo("   # Or cleanup with: klondike copilot cleanup --force")
     else:
         echo("   ℹ️  No changes detected")
 
