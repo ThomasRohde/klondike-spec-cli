@@ -517,6 +517,8 @@ def apply_worktree_changes(
             text=True,
             cwd=target,
             timeout=30,
+            encoding="utf-8",
+            errors="replace",
         )
         if result.returncode != 0:
             raise WorktreeError("Failed to apply changes", result.stderr.strip())
