@@ -739,7 +739,8 @@ class TestCopilotCommand:
                 assert result.exit_code == 0
                 assert "Dry run - would execute" in result.output
                 assert "copilot" in result.output
-                assert "session-start.prompt.md" in result.output
+                # Verify template content is embedded (not file path reference)
+                assert "standardized startup routine" in result.output
             finally:
                 os.chdir(original_cwd)
 
@@ -896,8 +897,8 @@ class TestCopilotCommand:
             finally:
                 os.chdir(original_cwd)
 
-    def test_copilot_start_references_prompt_file(self) -> None:
-        """Test copilot start references the session-start prompt file."""
+    def test_copilot_start_embeds_prompt_template(self) -> None:
+        """Test copilot start embeds the session-start prompt template content."""
         runner = CliRunner()
         with TemporaryDirectory() as tmpdir:
             original_cwd = os.getcwd()
@@ -908,8 +909,10 @@ class TestCopilotCommand:
                 result = runner.invoke(app, ["copilot", "start", "--dry-run"])
 
                 assert result.exit_code == 0
-                assert "session-start.prompt.md" in result.output
                 assert "--prompt" in result.output
+                # Verify template content is embedded directly in the prompt
+                assert "standardized startup routine" in result.output
+                assert "klondike status" in result.output
             finally:
                 os.chdir(original_cwd)
 

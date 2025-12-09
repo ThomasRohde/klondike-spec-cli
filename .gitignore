@@ -81,3 +81,8 @@ src/klondike_spec_cli/_version.py
 # OS
 .DS_Store
 Thumbs.db
+
+# Worktrees
+klondike-worktrees
+# Klondike worktree directories (auto-generated)
+klondike-worktrees/

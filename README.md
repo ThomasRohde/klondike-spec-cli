@@ -60,6 +60,64 @@ AI agents can efficiently navigate the CLI surface, discovering exactly what the
 
 ---
 
+## 🌳 Isolated Worktree Sessions
+
+One of Klondike's most powerful features is the ability to run AI agents in **isolated git worktrees**. This provides a safe sandbox where agents can make changes without affecting your main project until you're ready.
+
+### Why Worktrees?
+
+- 🔒 **Isolation** — Changes are made in a separate directory, protecting your main branch
+- 🧪 **Experimentation** — Let the agent try risky changes without fear
+- 🔀 **Parallel work** — Run multiple agent sessions simultaneously on different features
+- ↩️ **Easy rollback** — Just delete the worktree if things go wrong
+
+### Worktree Commands
+
+```bash
+# Start Copilot in an isolated worktree
+klondike copilot start --worktree
+
+# Focus on a specific feature (creates branch like klondike/f001-abc123)
+klondike copilot start -w --feature F001
+
+# Custom session name
+klondike copilot start -w --name "refactor-auth"
+
+# Auto-cleanup worktree when session ends
+klondike copilot start -w --cleanup
+
+# Apply changes back to main project after session
+klondike copilot start -w --apply
+
+# List all active worktree sessions
+klondike copilot list
+
+# Remove all worktree sessions
+klondike copilot cleanup
+```
+
+### Worktree Directory Structure
+
+Worktrees are created in a centralized location outside your project:
+
+```
+~/klondike-worktrees/
+└── my-project/
+    ├── .klondike-project          # Marker linking to original project
+    ├── f001-abc123/               # Worktree for feature F001
+    │   └── <full project copy>
+    └── refactor-auth-def456/      # Named worktree session
+        └── <full project copy>
+```
+
+The agent works in the worktree with a dedicated branch (`klondike/f001-abc123`), commits freely, and when done you can:
+- Apply the changes with `--apply`
+- Cherry-pick specific commits
+- Merge the branch manually
+- Or just delete it with `klondike copilot cleanup`
+
+---
+
 ## 🚀 Installation
 
 ### Global Installation (Recommended)
@@ -213,6 +271,10 @@ Recent commits:
 | Command | Description |
 |---------|-------------|
 | `klondike copilot start` | Launch GitHub Copilot CLI with klondike context |
+| `klondike copilot start --worktree` | Launch Copilot in an isolated git worktree |
+| `klondike copilot start -w --feature F001` | Worktree session focused on a specific feature |
+| `klondike copilot list` | List active worktree sessions |
+| `klondike copilot cleanup` | Remove all worktree sessions |
 | `klondike mcp serve` | Start MCP server for AI agent integration |
 | `klondike mcp install` | Generate MCP server config for VS Code |
 | `klondike mcp config` | Output MCP configuration JSON |
@@ -333,10 +395,10 @@ uv build
 
 ### Project Stats
 
-- **40 features** — all verified with evidence
-- **142 tests** — comprehensive coverage
+- **40+ features** — all verified with evidence
+- **167 tests** — comprehensive coverage
 - **7 sessions** — iterative development
-- **4200+ lines** of well-structured Python
+- **4500+ lines** of well-structured Python
 
 ---
 

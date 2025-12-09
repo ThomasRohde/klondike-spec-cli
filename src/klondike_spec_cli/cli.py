@@ -883,7 +883,9 @@ def _feature_prompt(
         # Launch copilot with this prompt
         import subprocess
 
-        copilot_path = _find_copilot_executable()
+        from .copilot import find_copilot_executable
+
+        copilot_path = find_copilot_executable()
         if not copilot_path:
             raise PithException(
                 "GitHub Copilot CLI not found. Install with: npm install -g @github/copilot\n"
@@ -1882,9 +1884,11 @@ def import_features(
     "start ai",
     "copilot chat",
     "agent mode",
+    "worktree session",
+    "isolated session",
 )
 def copilot(
-    action: str = Argument(..., pith="Action: start"),
+    action: str = Argument(..., pith="Action: start, list, cleanup"),
     model: str | None = Option(
         None, "--model", "-m", pith="Model to use (e.g., claude-sonnet, gpt-4)"
     ),
@@ -1895,6 +1899,19 @@ def copilot(
         None, "--allow-tools", pith="Comma-separated list of allowed tools"
     ),
     dry_run: bool = Option(False, "--dry-run", pith="Show command without executing"),
+    # Worktree options
+    worktree: bool = Option(False, "--worktree", "-w", pith="Run in isolated git worktree"),
+    parent_branch: str | None = Option(
+        None, "--branch", "-b", pith="Parent branch for worktree (default: current)"
+    ),
+    session_name: str | None = Option(
+        None, "--name", "-n", pith="Custom session/branch name for worktree"
+    ),
+    cleanup_after: bool = Option(False, "--cleanup", pith="Remove worktree after session ends"),
+    apply_changes: bool = Option(
+        False, "--apply", pith="Apply worktree changes to main project after session"
+    ),
+    force: bool = Option(False, "--force", pith="Force cleanup of worktrees"),
 ) -> None:
     """Launch GitHub Copilot CLI with klondike project context.
 
@@ -1903,92 +1920,49 @@ def copilot(
     safe tool permissions for file operations and terminal commands.
 
     Actions:
-        start - Launch copilot with project context injected as initial message.
-                Includes project name, version, progress %, and workflow reminders.
-                If a feature is in-progress, its details and acceptance criteria
-                are included. Uses default safe tools: read_file, list_dir,
-                grep_search, file_search, run_in_terminal, create_file,
-                replace_string_in_file.
+        start   - Launch copilot with project context
+        list    - List active worktree sessions
+        cleanup - Remove all worktree sessions
+
+    Worktree Mode (--worktree):
+        Creates an isolated git worktree in ~/klondike-worktrees/<project>/
+        with a dedicated branch (klondike/<feature-or-session>-<uuid>).
+        Changes in the worktree do NOT affect the main project until
+        explicitly applied with --apply.
 
     Examples:
         $ klondike copilot start                      # Launch with project context
-        $ klondike copilot start --model claude-sonnet  # Specify model
-        $ klondike copilot start --feature F001       # Focus on specific feature
-        $ klondike copilot start --resume             # Resume previous session
-        $ klondike copilot start --dry-run            # Preview command
+        $ klondike copilot start --worktree           # Launch in isolated worktree
+        $ klondike copilot start -w --feature F001   # Worktree for feature F001
+        $ klondike copilot start -w --cleanup        # Auto-cleanup after session
+        $ klondike copilot start -w --apply          # Apply changes after session
+        $ klondike copilot list                       # List active worktrees
+        $ klondike copilot cleanup                    # Remove all worktrees
 
     Related:
         status - Check project status first
         feature start - Mark a feature as in-progress
     """
     if action == "start":
-        _copilot_start(model, resume, feature_id, instructions, allow_tools, dry_run)
+        _copilot_start(
+            model=model,
+            resume=resume,
+            feature_id=feature_id,
+            instructions=instructions,
+            allow_tools=allow_tools,
+            dry_run=dry_run,
+            use_worktree=worktree,
+            parent_branch=parent_branch,
+            session_name=session_name,
+            cleanup_after=cleanup_after,
+            apply_changes=apply_changes,
+        )
+    elif action == "list":
+        _copilot_list_worktrees()
+    elif action == "cleanup":
+        _copilot_cleanup_worktrees(force=force)
     else:
-        raise PithException(f"Unknown action: {action}. Use: start")
-
-
-def _find_copilot_executable() -> str | None:
-    """Find the real GitHub Copilot CLI executable.
-
-    On Windows, shutil.which("copilot") may find a PowerShell wrapper script
-    (copilot.ps1) instead of the actual executable. We need to find:
-    - Windows: copilot.cmd (npm batch wrapper) or node calling the JS directly
-    - Unix/WSL: copilot (shell script from npm)
-
-    Returns the path to the executable, or None if not found.
-    """
-    import os
-    import shutil
-
-    # First, try to find the npm-installed copilot
-    if sys.platform == "win32":
-        # On Windows, look for copilot.cmd specifically in npm global bin
-        # This avoids the VS Code PS1 wrapper that shutil.which might find first
-
-        # Method 1: Check npm global prefix
-        try:
-            result = subprocess.run(
-                ["npm", "config", "get", "prefix"],
-                capture_output=True,
-                text=True,
-                timeout=10,
-            )
-            if result.returncode == 0:
-                npm_prefix = result.stdout.strip()
-                copilot_cmd = Path(npm_prefix) / "copilot.cmd"
-                if copilot_cmd.exists():
-                    return str(copilot_cmd)
-        except (subprocess.TimeoutExpired, FileNotFoundError):
-            pass
-
-        # Method 2: Check common npm locations
-        common_paths = [
-            Path(os.environ.get("APPDATA", "")) / "npm" / "copilot.cmd",
-            Path(os.environ.get("LOCALAPPDATA", "")) / "npm" / "copilot.cmd",
-        ]
-        for path in common_paths:
-            if path.exists():
-                return str(path)
-
-        # Method 3: Fall back to shutil.which but verify it's not a PS1 file
-        copilot_path = shutil.which("copilot")
-        if copilot_path:
-            # If it's a .ps1 file, it won't work with subprocess.run directly
-            if not copilot_path.lower().endswith(".ps1"):
-                return copilot_path
-            # Try to find copilot.cmd in the same directory
-            copilot_dir = Path(copilot_path).parent
-            copilot_cmd = copilot_dir / "copilot.cmd"
-            if copilot_cmd.exists():
-                return str(copilot_cmd)
-
-    else:
-        # On Unix/Linux/WSL, shutil.which should work correctly
-        copilot_path = shutil.which("copilot")
-        if copilot_path:
-            return copilot_path
-
-    return None
+        raise PithException(f"Unknown action: {action}. Use: start, list, cleanup")
 
 
 def _copilot_start(
@@ -1998,99 +1972,88 @@ def _copilot_start(
     instructions: str | None,
     allow_tools: str | None,
     dry_run: bool,
+    use_worktree: bool = False,
+    parent_branch: str | None = None,
+    session_name: str | None = None,
+    cleanup_after: bool = False,
+    apply_changes: bool = False,
 ) -> None:
-    """Launch GitHub Copilot CLI with project context."""
-    import subprocess
+    """Launch GitHub Copilot CLI with project context.
 
-    # Check if copilot CLI is available
-    copilot_path = _find_copilot_executable()
-    if not copilot_path and not dry_run:
-        raise PithException(
-            "GitHub Copilot CLI not found. Install with: npm install -g @github/copilot\n"
-            "Or see: https://docs.github.com/en/copilot/github-copilot-in-the-cli"
-        )
+    Args:
+        model: Model to use (e.g., claude-sonnet, gpt-4)
+        resume: Resume previous session
+        feature_id: Focus on specific feature
+        instructions: Additional instructions
+        allow_tools: Comma-separated list of allowed tools
+        dry_run: Show command without executing
+        use_worktree: Run in isolated git worktree
+        parent_branch: Parent branch for worktree (default: current)
+        session_name: Custom session/branch name for worktree
+        cleanup_after: Remove worktree after session ends
+        apply_changes: Apply worktree changes to main project after session
+    """
+    from .copilot import CopilotConfig, launch_copilot
 
-    # Load project context for feature lookup
     registry = load_features()
 
-    # Determine focus feature
-    focus_feature = None
-    if feature_id:
-        validated_id = validate_feature_id(feature_id)
-        focus_feature = registry.get_feature(validated_id)
-        if not focus_feature:
-            raise PithException(f"Feature not found: {validated_id}")
+    config = CopilotConfig(
+        model=model,
+        resume=resume,
+        feature_id=feature_id,
+        instructions=instructions,
+        allow_tools=allow_tools,
+        dry_run=dry_run,
+        use_worktree=use_worktree,
+        parent_branch=parent_branch,
+        session_name=session_name,
+        cleanup_after=cleanup_after,
+        apply_changes=apply_changes,
+    )
 
-    # Build prompt - point to session-start prompt file
-    prompt_parts = ["Follow instructions in .github/prompts/session-start.prompt.md"]
+    launch_copilot(config, registry)
 
-    # Add feature implementation instruction if specified
-    if focus_feature:
-        prompt_parts.append("")
-        prompt_parts.append(
-            f"After completing the session start routine, implement feature {focus_feature.id}: {focus_feature.description}"
-        )
-        if focus_feature.acceptance_criteria:
-            prompt_parts.append("Acceptance criteria:")
-            for ac in focus_feature.acceptance_criteria:
-                prompt_parts.append(f"  - {ac}")
 
-    # Additional instructions
-    if instructions:
-        prompt_parts.append("")
-        prompt_parts.append(instructions)
+def _copilot_list_worktrees() -> None:
+    """List all copilot worktree sessions."""
+    from .copilot import list_copilot_worktrees
 
-    context_prompt = "\n".join(prompt_parts)
+    worktrees = list_copilot_worktrees()
 
-    # Build copilot command - use the found executable path
-    cmd = [copilot_path] if copilot_path else ["copilot"]
-
-    if resume:
-        cmd.append("--resume")
-
-    if model:
-        cmd.extend(["--model", model])
-
-    # Tool permissions - use allow-all-tools by default, or specific tools if provided
-    if allow_tools:
-        tools = allow_tools.split(",")
-        for tool in tools:
-            cmd.extend(["--allow-tool", tool.strip()])
-    else:
-        # Default to allowing all tools for non-interactive workflow
-        cmd.append("--allow-all-tools")
-
-    # Add the prompt for non-interactive execution
-    cmd.extend(["--prompt", context_prompt])
-
-    if dry_run:
-        echo("🔍 Dry run - would execute:")
+    if not worktrees:
+        echo("No active worktree sessions found.")
         echo("")
-        echo(f"  {' '.join(cmd)}")
-        echo("")
-        echo("📋 Context prompt:")
-        echo("---")
-        echo(context_prompt)
-        echo("---")
+        echo("💡 Start a worktree session with: klondike copilot start --worktree")
         return
 
-    # Show what we're doing
-    echo("🚀 Launching GitHub Copilot with klondike context...")
-    if focus_feature:
-        echo(f"   📋 Focus: {focus_feature.id} - {focus_feature.description}")
-    if model:
-        echo(f"   🤖 Model: {model}")
-    if resume:
-        echo("   🔄 Resuming previous session")
+    echo(f"🌳 Active Worktree Sessions ({len(worktrees)} total)")
     echo("")
 
-    # Launch copilot
-    try:
-        subprocess.run(cmd, check=True)
-    except subprocess.CalledProcessError as e:
-        raise PithException(f"Copilot exited with error code {e.returncode}") from e
-    except FileNotFoundError as e:
-        raise PithException("GitHub Copilot CLI not found in PATH") from e
+    for wt in worktrees:
+        echo(f"   📂 {wt.worktree_path}")
+        echo(f"      Branch: {wt.branch_name}")
+        if wt.feature_id:
+            echo(f"      Feature: {wt.feature_id}")
+        echo("")
+
+
+def _copilot_cleanup_worktrees(force: bool = False) -> None:
+    """Cleanup all copilot worktree sessions."""
+    from .copilot import cleanup_copilot_worktrees, list_copilot_worktrees
+
+    worktrees = list_copilot_worktrees()
+
+    if not worktrees:
+        echo("No active worktree sessions to clean up.")
+        return
+
+    echo(f"🧹 Cleaning up {len(worktrees)} worktree session(s)...")
+    echo("")
+
+    cleaned = cleanup_copilot_worktrees(force=force)
+
+    echo("")
+    echo(f"✅ Cleaned up {cleaned} worktree session(s)")
 
 
 @app.command(name="export-features", pith="Export features to YAML or JSON file", priority=76)
