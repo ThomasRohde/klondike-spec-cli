@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.14] - 2025-12-09
+
+### 🐛 Fixed
+
+- **Windows UTF-8 encoding** - Fixed encoding error when applying worktree diffs containing UTF-8 characters on Windows. Now explicitly uses UTF-8 encoding for `git apply` operations.
+- **Auto-cleanup after --apply** - Worktrees are now automatically cleaned up (with force) after successfully applying changes to the main project. Previously, worktrees with modified/untracked files would remain and require manual cleanup.
+- **Exclude .klondike/ from worktree diffs** - When the agent runs `klondike feature start/verify` commands inside a worktree, those state changes no longer conflict when applying code back to the main project. Only actual code changes are applied; the main project's `.klondike/` state remains authoritative.
+
+### 📝 Changed
+
+- Updated README documentation for worktree commands
+- `klondike copilot cleanup` now documented with `--force` option for worktrees with uncommitted changes
+
+---
+
 ## [0.2.13] - 2025-12-09
 
 ### ✨ Added

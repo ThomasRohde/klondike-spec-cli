@@ -86,14 +86,14 @@ klondike copilot start -w --name "refactor-auth"
 # Auto-cleanup worktree when session ends
 klondike copilot start -w --cleanup
 
-# Apply changes back to main project after session
+# Apply changes back to main project after session (auto-cleans up)
 klondike copilot start -w --apply
+
+# Force cleanup worktrees with uncommitted changes
+klondike copilot cleanup --force
 
 # List all active worktree sessions
 klondike copilot list
-
-# Remove all worktree sessions
-klondike copilot cleanup
 ```
 
 ### Worktree Directory Structure
@@ -111,10 +111,12 @@ Worktrees are created in a centralized location outside your project:
 ```
 
 The agent works in the worktree with a dedicated branch (`klondike/f001-abc123`), commits freely, and when done you can:
-- Apply the changes with `--apply`
+- Apply the changes with `--apply` (automatically cleans up the worktree)
 - Cherry-pick specific commits
 - Merge the branch manually
-- Or just delete it with `klondike copilot cleanup`
+- Or just delete it with `klondike copilot cleanup --force`
+
+> **Note**: When using `--apply`, klondike automatically excludes `.klondike/` state files from the diff, so only your code changes are applied. The klondike state in the main project remains authoritative.
 
 ---
 
