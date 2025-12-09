@@ -472,11 +472,13 @@ def get_worktree_diff(worktree_path: Path, parent_branch: str) -> str:
             text=True,
             cwd=worktree_path,
             timeout=30,
+            encoding="utf-8",
+            errors="replace",
         )
         if result.returncode == 0:
-            return result.stdout
+            return result.stdout or ""
         return ""
-    except (subprocess.TimeoutExpired, FileNotFoundError):
+    except (subprocess.TimeoutExpired, FileNotFoundError, UnicodeDecodeError):
         return ""
 
 

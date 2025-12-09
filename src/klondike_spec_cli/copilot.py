@@ -447,7 +447,7 @@ def _handle_worktree_cleanup(worktree_info: WorktreeInfo, config: CopilotConfig)
     echo("🌳 Copilot session ended in worktree")
 
     # Check if there are changes
-    diff = get_worktree_diff(worktree_info.worktree_path, worktree_info.parent_branch)
+    diff = get_worktree_diff(worktree_info.worktree_path, worktree_info.parent_branch) or ""
     has_changes = bool(diff.strip())
 
     if has_changes:
