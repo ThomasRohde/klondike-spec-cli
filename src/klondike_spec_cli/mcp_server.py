@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any
 
 from .models import (
+    Config,
     FeatureRegistry,
     FeatureStatus,
     PriorityFeatureRef,
@@ -48,6 +49,7 @@ except ImportError:
 KLONDIKE_DIR = ".klondike"
 FEATURES_FILE = "features.json"
 PROGRESS_FILE = "agent-progress.json"
+CONFIG_FILE = "config.yaml"
 PROGRESS_MD_FILE = "agent-progress.md"
 
 
@@ -104,13 +106,25 @@ def _save_progress(progress: ProgressLog, root: Path | None = None) -> None:
     progress.save(progress_path)
 
 
+def _load_config(root: Path | None = None) -> Config:
+    """Load the configuration file.
+
+    Returns default config if file doesn't exist.
+    """
+    if root is None:
+        root = _get_klondike_root()
+    config_path = root / KLONDIKE_DIR / CONFIG_FILE
+    return Config.load(config_path)
+
+
 def _regenerate_progress_md(root: Path | None = None) -> None:
     """Regenerate agent-progress.md from JSON."""
     if root is None:
         root = _get_klondike_root()
+    config = _load_config(root)
     progress = _load_progress(root)
     md_path = root / PROGRESS_MD_FILE
-    progress.save_markdown(md_path)
+    progress.save_markdown(md_path, prd_source=config.prd_source)
 
 
 def _update_quick_reference(progress: ProgressLog, registry: FeatureRegistry) -> None:

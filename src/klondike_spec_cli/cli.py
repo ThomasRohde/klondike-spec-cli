@@ -118,7 +118,7 @@ def regenerate_progress_md(root: Path | None = None) -> None:
     config = load_config(root)
     progress = load_progress(root)
     md_path = root / config.progress_output_path
-    progress.save_markdown(md_path)
+    progress.save_markdown(md_path, prd_source=config.prd_source)
 
 
 def load_config(root: Path | None = None) -> Config:
@@ -174,6 +174,7 @@ def init(
     project_name: str | None = Option(None, "--name", "-n", pith="Project name"),
     force: bool = Option(False, "--force", "-f", pith="Overwrite existing .klondike"),
     skip_github: bool = Option(False, "--skip-github", pith="Skip creating .github directory"),
+    prd_source: str | None = Option(None, "--prd", pith="Link to PRD document for agent context"),
 ) -> None:
     """Initialize a new Klondike Spec project.
 
@@ -191,6 +192,8 @@ def init(
         $ klondike init --name my-project
         $ klondike init --force
         $ klondike init --skip-github
+        $ klondike init --prd ./docs/prd.md
+        $ klondike init --prd https://example.com/prd.md
 
     Related:
         status - Check project status after init
@@ -238,9 +241,17 @@ def init(
         config_content = config_content.replace(var, value)
     (klondike_dir / CONFIG_FILE).write_text(config_content, encoding="utf-8")
 
+    # If PRD source provided, update config with it
+    if prd_source:
+        from klondike_spec_cli.models import Config
+
+        config = Config.load(klondike_dir / CONFIG_FILE)
+        config.prd_source = prd_source
+        config.save(klondike_dir / CONFIG_FILE)
+
     # Generate agent-progress.md from the JSON we just created
     progress = load_progress(root)
-    progress.save_markdown(root / PROGRESS_MD_FILE)
+    progress.save_markdown(root / PROGRESS_MD_FILE, prd_source=prd_source)
 
     # Extract .github templates unless skipped
     github_files_count = 0
@@ -260,6 +271,8 @@ def init(
     echo(f"   📝 Created {PROGRESS_FILE}")
     echo(f"   ⚙️  Created {CONFIG_FILE}")
     echo(f"   📄 Generated {PROGRESS_MD_FILE}")
+    if prd_source:
+        echo(f"   📑 PRD source: {prd_source}")
     if github_files_count > 0:
         echo(
             f"   🤖 Created .github/ with {github_files_count} files (Copilot instructions, prompts)"
@@ -1236,6 +1249,123 @@ def validate() -> None:
         echo("✅ All artifacts valid!")
         echo(f"   Features: {actual_total} total, {actual_passing} passing")
         echo(f"   Sessions: {len(progress.sessions)}")
+
+
+@app.command(pith="View or set project configuration", priority=52)
+@app.intents(
+    "view config",
+    "set config",
+    "configuration",
+    "project settings",
+    "set prd",
+    "prd source",
+    "config get",
+    "config set",
+)
+def config(
+    key: str | None = Argument(None, pith="Config key to get/set (e.g., prd_source)"),
+    value: str | None = Option(None, "--set", "-s", pith="Value to set"),
+) -> None:
+    """View or set project configuration.
+
+    Without arguments, displays all configuration values.
+    With a key, displays that specific value.
+    With --set, updates the configuration value.
+
+    Supported keys:
+    - prd_source: Link to PRD document for agent context
+    - default_category: Default category for new features
+    - default_priority: Default priority for new features (1-5)
+    - verified_by: Identifier for feature verification
+    - progress_output_path: Path for agent-progress.md
+
+    Examples:
+        $ klondike config                          # Show all config
+        $ klondike config prd_source               # Show PRD source
+        $ klondike config prd_source --set ./docs/prd.md  # Set PRD source
+        $ klondike config prd_source -s https://example.com/prd
+
+    Related:
+        init - Initialize project with --prd option
+        status - Show project status
+    """
+    root = Path.cwd()
+    cfg = load_config(root)
+    klondike_dir = get_klondike_dir(root)
+
+    if key is None:
+        # Show all config
+        echo("⚙️  Configuration:")
+        echo(
+            f"   default_category: {cfg.default_category.value if hasattr(cfg.default_category, 'value') else cfg.default_category}"
+        )
+        echo(f"   default_priority: {cfg.default_priority}")
+        echo(f"   verified_by: {cfg.verified_by}")
+        echo(f"   progress_output_path: {cfg.progress_output_path}")
+        echo(f"   auto_regenerate_progress: {cfg.auto_regenerate_progress}")
+        echo(f"   prd_source: {cfg.prd_source or '(not set)'}")
+        return
+
+    # Normalize key name
+    key = key.lower().replace("-", "_")
+
+    if value is not None:
+        # Set value
+        if key == "prd_source":
+            cfg.prd_source = value if value.lower() != "null" else None
+        elif key == "default_category":
+            from klondike_spec_cli.models import FeatureCategory
+
+            try:
+                cfg.default_category = FeatureCategory(value.lower())
+            except ValueError:
+                valid = ", ".join(c.value for c in FeatureCategory)
+                raise PithException(f"Invalid category: {value}. Valid: {valid}") from None
+        elif key == "default_priority":
+            try:
+                priority = int(value)
+                if not 1 <= priority <= 5:
+                    raise ValueError()
+                cfg.default_priority = priority
+            except ValueError:
+                raise PithException("Priority must be an integer 1-5") from None
+        elif key == "verified_by":
+            cfg.verified_by = value
+        elif key == "progress_output_path":
+            cfg.progress_output_path = value
+        elif key == "auto_regenerate_progress":
+            cfg.auto_regenerate_progress = value.lower() in ("true", "1", "yes")
+        else:
+            raise PithException(f"Unknown config key: {key}")
+
+        cfg.save(klondike_dir / CONFIG_FILE)
+        echo(f"✅ Set {key} = {value}")
+
+        # Regenerate progress.md if prd_source changed
+        if key == "prd_source":
+            regenerate_progress_md(root)
+            echo("   📄 Regenerated agent-progress.md")
+        return
+
+    # Get specific value
+    if key == "prd_source":
+        echo(cfg.prd_source or "(not set)")
+    elif key == "default_category":
+        echo(
+            cfg.default_category.value
+            if hasattr(cfg.default_category, "value")
+            else cfg.default_category
+        )
+    elif key == "default_priority":
+        echo(str(cfg.default_priority))
+    elif key == "verified_by":
+        echo(cfg.verified_by)
+    elif key == "progress_output_path":
+        echo(cfg.progress_output_path)
+    elif key == "auto_regenerate_progress":
+        echo(str(cfg.auto_regenerate_progress).lower())
+    else:
+        raise PithException(f"Unknown config key: {key}")
 
 
 @app.command(pith="Generate shell completion scripts", priority=55)

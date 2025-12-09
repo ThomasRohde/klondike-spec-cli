@@ -370,6 +370,44 @@ class TestProgressLog:
         assert "| F001 | Test feature |" in md
         assert "### Session 1 - 2025-01-01" in md
 
+    def test_to_markdown_with_prd_source(self) -> None:
+        """Test markdown generation includes PRD source when provided."""
+        progress = ProgressLog(
+            project_name="test-project",
+            started_at="2025-01-01T00:00:00Z",
+            current_status="Initialized",
+            sessions=[],
+            quick_reference=QuickReference(
+                run_command="klondike",
+                dev_server_port=None,
+                key_files=[],
+                priority_features=[],
+            ),
+        )
+
+        md = progress.to_markdown(prd_source="./docs/prd.md")
+
+        assert "## PRD Source: [./docs/prd.md](./docs/prd.md)" in md
+
+    def test_to_markdown_without_prd_source(self) -> None:
+        """Test markdown generation excludes PRD line when not provided."""
+        progress = ProgressLog(
+            project_name="test-project",
+            started_at="2025-01-01T00:00:00Z",
+            current_status="Initialized",
+            sessions=[],
+            quick_reference=QuickReference(
+                run_command="klondike",
+                dev_server_port=None,
+                key_files=[],
+                priority_features=[],
+            ),
+        )
+
+        md = progress.to_markdown()
+
+        assert "PRD Source" not in md
+
 
 class TestConfig:
     """Tests for Config model."""
@@ -383,6 +421,7 @@ class TestConfig:
         assert config.verified_by == "coding-agent"
         assert config.progress_output_path == "agent-progress.md"
         assert config.auto_regenerate_progress is True
+        assert config.prd_source is None
 
     def test_config_to_dict(self) -> None:
         """Test config serialization."""
@@ -401,6 +440,20 @@ class TestConfig:
         assert data["verified_by"] == "test-agent"
         assert data["progress_output_path"] == "docs/progress.md"
         assert data["auto_regenerate_progress"] is False
+        # prd_source should not be in dict when None
+        assert "prd_source" not in data
+
+    def test_config_to_dict_with_prd_source(self) -> None:
+        """Test config serialization includes prd_source when set."""
+        config = Config(
+            default_category=FeatureCategory.CORE,
+            default_priority=2,
+            prd_source="./docs/prd.md",
+        )
+
+        data = config.to_dict()
+
+        assert data["prd_source"] == "./docs/prd.md"
 
     def test_config_from_dict(self) -> None:
         """Test config deserialization."""
@@ -419,6 +472,18 @@ class TestConfig:
         assert config.verified_by == "my-agent"
         assert config.progress_output_path == "PROGRESS.md"
         assert config.auto_regenerate_progress is True
+        assert config.prd_source is None
+
+    def test_config_from_dict_with_prd_source(self) -> None:
+        """Test config deserialization with prd_source."""
+        data = {
+            "default_category": "core",
+            "prd_source": "https://example.com/prd.md",
+        }
+
+        config = Config.from_dict(data)
+
+        assert config.prd_source == "https://example.com/prd.md"
 
     def test_config_from_dict_with_invalid_category(self) -> None:
         """Test config with invalid category defaults to CORE."""
@@ -455,6 +520,24 @@ class TestConfig:
         finally:
             temp_path.unlink()
 
+    def test_config_save_and_load_with_prd_source(self) -> None:
+        """Test saving and loading config with prd_source."""
+        config = Config(
+            default_category=FeatureCategory.CORE,
+            prd_source="./docs/requirements.md",
+        )
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
+            temp_path = Path(f.name)
+
+        try:
+            config.save(temp_path)
+            loaded = Config.load(temp_path)
+
+            assert loaded.prd_source == "./docs/requirements.md"
+        finally:
+            temp_path.unlink()
+
     def test_config_load_nonexistent_returns_defaults(self) -> None:
         """Test loading nonexistent config returns defaults."""
         config = Config.load(Path("/nonexistent/path/config.yaml"))
@@ -462,6 +545,7 @@ class TestConfig:
         assert config.default_category == FeatureCategory.CORE
         assert config.default_priority == 2
         assert config.verified_by == "coding-agent"
+        assert config.prd_source is None
 
 
 class TestFeatureRegistryPerformance:

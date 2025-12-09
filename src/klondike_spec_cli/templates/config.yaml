@@ -15,3 +15,7 @@ progress_output_path: agent-progress.md
 
 # Whether to auto-regenerate agent-progress.md on changes
 auto_regenerate_progress: true
+
+# Link to Product Requirements Document for agent context
+# Set via: klondike init --prd <path-or-url>
+# prd_source: null

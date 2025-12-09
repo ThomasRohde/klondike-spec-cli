@@ -453,28 +453,41 @@ class ProgressLog:
             return max(s.session_number for s in self.sessions) + 1
         return 1
 
-    def to_markdown(self) -> str:
-        """Generate agent-progress.md content from this log."""
+    def to_markdown(self, prd_source: str | None = None) -> str:
+        """Generate agent-progress.md content from this log.
+
+        Args:
+            prd_source: Optional link to PRD document for agent context.
+        """
         lines = [
             "# Agent Progress Log",
             "",
             f"## Project: {self.project_name}",
             f"## Started: {self.started_at[:10]}",
             f"## Current Status: {self.current_status}",
-            "",
-            "---",
-            "",
-            "## Quick Reference",
-            "",
-            "### Running the Project",
-            "```bash",
-            f"{self.quick_reference.run_command}            # Show CLI help",
-            f"{self.quick_reference.run_command} status     # Show project status",
-            f"{self.quick_reference.run_command} feature list  # List all features",
-            "```",
-            "",
-            "### Key Files",
         ]
+
+        # Add PRD source if available
+        if prd_source:
+            lines.append(f"## PRD Source: [{prd_source}]({prd_source})")
+
+        lines.extend(
+            [
+                "",
+                "---",
+                "",
+                "## Quick Reference",
+                "",
+                "### Running the Project",
+                "```bash",
+                f"{self.quick_reference.run_command}            # Show CLI help",
+                f"{self.quick_reference.run_command} status     # Show project status",
+                f"{self.quick_reference.run_command} feature list  # List all features",
+                "```",
+                "",
+                "### Key Files",
+            ]
+        )
 
         for key_file in self.quick_reference.key_files:
             lines.append(f"- `{key_file}`")
@@ -517,10 +530,15 @@ class ProgressLog:
 
         return "\n".join(lines)
 
-    def save_markdown(self, path: Path) -> None:
-        """Save as markdown file."""
+    def save_markdown(self, path: Path, prd_source: str | None = None) -> None:
+        """Save as markdown file.
+
+        Args:
+            path: Path to save the markdown file.
+            prd_source: Optional link to PRD document for agent context.
+        """
         with open(path, "w", encoding="utf-8") as f:
-            f.write(self.to_markdown())
+            f.write(self.to_markdown(prd_source=prd_source))
 
 
 @dataclass
@@ -535,10 +553,11 @@ class Config:
     verified_by: str = "coding-agent"
     progress_output_path: str = "agent-progress.md"
     auto_regenerate_progress: bool = True
+    prd_source: str | None = None  # Link to PRD document for agent context
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for YAML serialization."""
-        return {
+        result = {
             "default_category": self.default_category.value
             if isinstance(self.default_category, FeatureCategory)
             else self.default_category,
@@ -547,6 +566,9 @@ class Config:
             "progress_output_path": self.progress_output_path,
             "auto_regenerate_progress": self.auto_regenerate_progress,
         }
+        if self.prd_source:
+            result["prd_source"] = self.prd_source
+        return result
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Config:
@@ -563,6 +585,7 @@ class Config:
             verified_by=data.get("verified_by", "coding-agent"),
             progress_output_path=data.get("progress_output_path", "agent-progress.md"),
             auto_regenerate_progress=data.get("auto_regenerate_progress", True),
+            prd_source=data.get("prd_source"),
         )
 
     @classmethod
@@ -597,8 +620,19 @@ class Config:
             "",
             "# Whether to auto-regenerate agent-progress.md on changes",
             f"auto_regenerate_progress: {str(self.auto_regenerate_progress).lower()}",
-            "",
         ]
+
+        # Add PRD source if set
+        if self.prd_source:
+            lines.extend(
+                [
+                    "",
+                    "# Link to Product Requirements Document for agent context",
+                    f"prd_source: {self.prd_source}",
+                ]
+            )
+
+        lines.append("")
 
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))

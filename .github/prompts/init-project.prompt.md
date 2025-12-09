@@ -33,6 +33,15 @@ Use the klondike CLI to initialize the project:
 klondike init <project-name>
 ```
 
+**If you have a PRD document**, include it for agent context:
+
+```bash
+klondike init <project-name> --prd ./docs/prd.md
+klondike init <project-name> --prd https://example.com/prd.md
+```
+
+The `--prd` flag stores the PRD link in the config and includes it in `agent-progress.md`, ensuring future coding sessions always have access to the original requirements.
+
 This creates the `.klondike/` directory with:
 - `features.json` - Feature registry
 - `agent-progress.json` - Session tracking data
