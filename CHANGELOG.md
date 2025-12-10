@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.15] - 2025-12-10
+
+### ✨ Added
+
+- **Pith Framework Integration** - Migrated to Pith (pypith) for agent-native CLI with semantic search and progressive discovery
+  - Enhanced feature start output with category, acceptance criteria, notes, and blocking status
+  - FeatureCategory now accepts any string value for flexibility
+  - Feature addition enhanced with implementation notes and guidance
+  - Added continuous-implementation prompt for autonomous feature loops
+  - Pre-commit verification instructions updated for Node.js test environment variable (`CI=true`)
+
+### 📝 Changed
+
+- **CI/CD Documentation** - Clarified that PyPI publishing is automated via CI/CD; manual `uv publish` is forbidden
+- **Category Flexibility** - FeatureCategory enum removed in favor of free-form string categories
+- **Test Commands** - Node.js test commands now include `CI` environment variable for non-interactive execution
+
+---
+
 ## [0.2.14] - 2025-12-09
 
 ### 🐛 Fixed
