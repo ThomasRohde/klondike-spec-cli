@@ -192,7 +192,7 @@ def create_mcp_server() -> FastMCP | None:
                     {
                         "id": f.id,
                         "description": f.description,
-                        "category": f.category.value,
+                        "category": f.category,
                         "priority": f.priority,
                         "status": f.status.value,
                         "passes": f.passes,
@@ -225,7 +225,7 @@ def create_mcp_server() -> FastMCP | None:
             return {
                 "id": feature.id,
                 "description": feature.description,
-                "category": feature.category.value,
+                "category": feature.category,
                 "priority": feature.priority,
                 "status": feature.status.value,
                 "passes": feature.passes,

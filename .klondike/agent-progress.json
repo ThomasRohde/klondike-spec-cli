@@ -170,13 +170,13 @@
         "status": "not-started"
       },
       {
-        "id": "F035",
-        "description": "Auto-delegate feature PRs via copilot",
+        "id": "F042",
+        "description": "Integration test",
         "status": "not-started"
       },
       {
-        "id": "F036",
-        "description": "Copilot session resume integration",
+        "id": "F043",
+        "description": "E2E test",
         "status": "not-started"
       }
     ]

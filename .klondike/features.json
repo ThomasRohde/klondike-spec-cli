@@ -1116,12 +1116,50 @@
       "blockedBy": null,
       "lastWorkedOn": "2025-12-08T06:51:31.020276",
       "notes": null
+    },
+    {
+      "id": "F042",
+      "category": "integration",
+      "priority": 2,
+      "description": "Integration test",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Feature works as described"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
+    },
+    {
+      "id": "F043",
+      "category": "e2e-testing",
+      "priority": 2,
+      "description": "E2E test",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Feature works as described"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": null
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-08T17:35:35.989776",
-    "totalFeatures": 41,
+    "lastUpdated": "2025-12-10T16:18:43.469770",
+    "totalFeatures": 43,
     "passingFeatures": 36
   }
 }

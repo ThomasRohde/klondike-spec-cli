@@ -34,7 +34,7 @@ class TestFeature:
 
         assert feature.id == "F001"
         assert feature.description == "Test feature"
-        assert feature.category == FeatureCategory.CORE
+        assert feature.category == "core"
         assert feature.priority == 1
         assert feature.passes is False
         assert feature.status == FeatureStatus.NOT_STARTED
@@ -71,9 +71,27 @@ class TestFeature:
         feature = Feature.from_dict(data)
 
         assert feature.id == "F001"
-        assert feature.category == FeatureCategory.CORE
+        assert feature.category == "core"
         assert feature.passes is True
         assert feature.status == FeatureStatus.VERIFIED
+
+    def test_feature_custom_category(self) -> None:
+        """Test feature with custom category."""
+        feature = Feature(
+            id="F002",
+            description="Integration test",
+            category="integration",  # Custom category
+            priority=2,
+            acceptance_criteria=["Test passes"],
+        )
+
+        assert feature.category == "integration"
+        data = feature.to_dict()
+        assert data["category"] == "integration"
+
+        # Test round-trip
+        feature2 = Feature.from_dict(data)
+        assert feature2.category == "integration"
 
 
 class TestFeatureRegistry:
@@ -416,7 +434,7 @@ class TestConfig:
         """Test config default values."""
         config = Config()
 
-        assert config.default_category == FeatureCategory.CORE
+        assert config.default_category == "core"
         assert config.default_priority == 2
         assert config.verified_by == "coding-agent"
         assert config.progress_output_path == "agent-progress.md"
@@ -467,7 +485,7 @@ class TestConfig:
 
         config = Config.from_dict(data)
 
-        assert config.default_category == FeatureCategory.INFRASTRUCTURE
+        assert config.default_category == "infrastructure"
         assert config.default_priority == 1
         assert config.verified_by == "my-agent"
         assert config.progress_output_path == "PROGRESS.md"
@@ -485,15 +503,15 @@ class TestConfig:
 
         assert config.prd_source == "https://example.com/prd.md"
 
-    def test_config_from_dict_with_invalid_category(self) -> None:
-        """Test config with invalid category defaults to CORE."""
+    def test_config_from_dict_with_custom_category(self) -> None:
+        """Test config accepts custom categories."""
         data = {
-            "default_category": "invalid-category",
+            "default_category": "integration",
         }
 
         config = Config.from_dict(data)
 
-        assert config.default_category == FeatureCategory.CORE
+        assert config.default_category == "integration"
 
     def test_config_save_and_load(self) -> None:
         """Test saving and loading config."""
@@ -512,7 +530,7 @@ class TestConfig:
             config.save(temp_path)
             loaded = Config.load(temp_path)
 
-            assert loaded.default_category == FeatureCategory.UI
+            assert loaded.default_category == "ui"
             assert loaded.default_priority == 4
             assert loaded.verified_by == "save-test-agent"
             assert loaded.progress_output_path == "output/progress.md"
@@ -542,7 +560,7 @@ class TestConfig:
         """Test loading nonexistent config returns defaults."""
         config = Config.load(Path("/nonexistent/path/config.yaml"))
 
-        assert config.default_category == FeatureCategory.CORE
+        assert config.default_category == "core"
         assert config.default_priority == 2
         assert config.verified_by == "coding-agent"
         assert config.prd_source is None

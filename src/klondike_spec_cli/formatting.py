@@ -156,7 +156,7 @@ def print_feature_table(
         row = [
             f.id,
             f.description[:50] + ("..." if len(f.description) > 50 else ""),
-            f.category.value,
+            f.category,
             f"P{f.priority}",
             colored_status(f.status),
         ]

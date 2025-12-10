@@ -23,9 +23,14 @@ class FeatureStatus(str, Enum):
     VERIFIED = "verified"
 
 
-class FeatureCategory(str, Enum):
-    """Category of a feature."""
+class FeatureCategory:
+    """Category of a feature.
 
+    Accepts any string value, but provides common predefined categories as constants.
+    This allows agents and users to create custom categories without breaking.
+    """
+
+    # Predefined common categories
     CORE = "core"
     UI = "ui"
     API = "api"
@@ -37,6 +42,22 @@ class FeatureCategory(str, Enum):
     SETUP = "setup"
     ASSETS = "assets"
 
+    @classmethod
+    def get_common_categories(cls) -> list[str]:
+        """Return list of common predefined categories."""
+        return [
+            cls.CORE,
+            cls.UI,
+            cls.API,
+            cls.TESTING,
+            cls.INFRASTRUCTURE,
+            cls.DOCS,
+            cls.SECURITY,
+            cls.PERFORMANCE,
+            cls.SETUP,
+            cls.ASSETS,
+        ]
+
 
 @dataclass
 class Feature:
@@ -44,7 +65,7 @@ class Feature:
 
     id: str
     description: str
-    category: FeatureCategory
+    category: str  # Any string allowed; see FeatureCategory for common values
     priority: int
     acceptance_criteria: list[str]
     passes: bool = False
@@ -62,9 +83,7 @@ class Feature:
         """Convert to dictionary for JSON serialization."""
         return {
             "id": self.id,
-            "category": self.category.value
-            if isinstance(self.category, FeatureCategory)
-            else self.category,
+            "category": self.category,
             "priority": self.priority,
             "description": self.description,
             "dependencies": self.dependencies,
@@ -86,7 +105,7 @@ class Feature:
         return cls(
             id=data["id"],
             description=data["description"],
-            category=FeatureCategory(data.get("category", "core")),
+            category=data.get("category", "core"),
             priority=data.get("priority", 2),
             acceptance_criteria=data.get("acceptanceCriteria", []),
             passes=data.get("passes", False),
@@ -548,7 +567,7 @@ class Config:
     Loaded from .klondike/config.yaml.
     """
 
-    default_category: FeatureCategory = FeatureCategory.CORE
+    default_category: str = FeatureCategory.CORE
     default_priority: int = 2
     verified_by: str = "coding-agent"
     progress_output_path: str = "agent-progress.md"
@@ -558,9 +577,7 @@ class Config:
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for YAML serialization."""
         result = {
-            "default_category": self.default_category.value
-            if isinstance(self.default_category, FeatureCategory)
-            else self.default_category,
+            "default_category": self.default_category,
             "default_priority": self.default_priority,
             "verified_by": self.verified_by,
             "progress_output_path": self.progress_output_path,
@@ -573,11 +590,7 @@ class Config:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Config:
         """Create Config from dictionary."""
-        category = data.get("default_category", "core")
-        try:
-            default_category = FeatureCategory(category)
-        except ValueError:
-            default_category = FeatureCategory.CORE
+        default_category = data.get("default_category", "core")
 
         return cls(
             default_category=default_category,
@@ -606,8 +619,8 @@ class Config:
         lines = [
             "# Klondike CLI Configuration",
             "",
-            "# Default category for new features",
-            f"default_category: {self.default_category.value if isinstance(self.default_category, FeatureCategory) else self.default_category}",
+            "# Default category for new features (any string allowed)",
+            f"default_category: {self.default_category}",
             "",
             "# Default priority for new features (1-5, 1=critical)",
             f"default_priority: {self.default_priority}",

@@ -27,7 +27,6 @@ from .git import (
 from .models import (
     Config,
     Feature,
-    FeatureCategory,
     FeatureRegistry,
     FeatureStatus,
     PriorityFeatureRef,
@@ -501,8 +500,8 @@ def _feature_add(
     config = load_config()
 
     feature_id = registry.next_feature_id()
-    # Use config defaults if not specified
-    cat = FeatureCategory(category) if category else config.default_category
+    # Use config defaults if not specified, accept any category string
+    cat = category if category else config.default_category
     # Ensure priority is an integer (CLI may pass as string)
     prio = int(priority) if priority is not None else config.default_priority
     acceptance = (
@@ -532,7 +531,7 @@ def _feature_add(
     regenerate_progress_md()
 
     echo(f"✅ Added feature {feature_id}: {description}")
-    echo(f"   Category: {cat.value}, Priority: {prio}")
+    echo(f"   Category: {cat}, Priority: {prio}")
 
 
 def _feature_list(status_filter: str | None, json_output: bool) -> None:
@@ -678,7 +677,7 @@ def _feature_show(feature_id: str | None, json_output: bool) -> None:
 
     echo(f"📋 Feature: {feature.id}")
     echo(f"   Description: {feature.description}")
-    echo(f"   Category: {feature.category.value}")
+    echo(f"   Category: {feature.category}")
     echo(f"   Priority: {feature.priority}")
     echo(f"   Status: {status_icon}")
     echo(f"   Passes: {'Yes' if feature.passes else 'No'}")
@@ -744,13 +743,9 @@ def _feature_edit(
         changes.append(f"added criteria: {', '.join(new_criteria)}")
 
     if category is not None:
-        try:
-            new_category = FeatureCategory(category)
-            feature.category = new_category
-            changes.append(f"category: {new_category.value}")
-        except ValueError as e:
-            valid_cats = ", ".join(c.value for c in FeatureCategory)
-            raise PithException(f"Invalid category: {category}. Use: {valid_cats}") from e
+        # Accept any category string
+        feature.category = category
+        changes.append(f"category: {category}")
 
     if priority is not None:
         # Ensure priority is an integer (CLI may pass as string)
@@ -803,7 +798,7 @@ def _feature_prompt(
         "",
         f"**Description:** {feature.description}",
         "",
-        f"**Category:** {feature.category.value}",
+        f"**Category:** {feature.category}",
         f"**Priority:** {feature.priority}",
         f"**Status:** {feature.status.value}",
         "",
@@ -1296,9 +1291,7 @@ def config(
     if key is None:
         # Show all config
         echo("⚙️  Configuration:")
-        echo(
-            f"   default_category: {cfg.default_category.value if hasattr(cfg.default_category, 'value') else cfg.default_category}"
-        )
+        echo(f"   default_category: {cfg.default_category}")
         echo(f"   default_priority: {cfg.default_priority}")
         echo(f"   verified_by: {cfg.verified_by}")
         echo(f"   progress_output_path: {cfg.progress_output_path}")
@@ -1314,13 +1307,8 @@ def config(
         if key == "prd_source":
             cfg.prd_source = value if value.lower() != "null" else None
         elif key == "default_category":
-            from klondike_spec_cli.models import FeatureCategory
-
-            try:
-                cfg.default_category = FeatureCategory(value.lower())
-            except ValueError:
-                valid = ", ".join(c.value for c in FeatureCategory)
-                raise PithException(f"Invalid category: {value}. Valid: {valid}") from None
+            # Accept any category string
+            cfg.default_category = value.lower()
         elif key == "default_priority":
             try:
                 priority = int(value)
@@ -1351,11 +1339,7 @@ def config(
     if key == "prd_source":
         echo(cfg.prd_source or "(not set)")
     elif key == "default_category":
-        echo(
-            cfg.default_category.value
-            if hasattr(cfg.default_category, "value")
-            else cfg.default_category
-        )
+        echo(cfg.default_category)
     elif key == "default_priority":
         echo(str(cfg.default_priority))
     elif key == "verified_by":
@@ -1942,11 +1926,8 @@ def import_features(
 
             # Parse optional fields with defaults
             cat_str = feat_data.get("category", "core")
-            try:
-                category = FeatureCategory(cat_str)
-            except ValueError:
-                errors.append(f"Feature {i + 1}: invalid category '{cat_str}'")
-                continue
+            # Accept any category string
+            category = cat_str
 
             priority = feat_data.get("priority", 3)
             if not isinstance(priority, int) or priority < 1 or priority > 5:
@@ -2245,7 +2226,7 @@ def export_features(
             feat_dict = {
                 "id": f.id,
                 "description": f.description,
-                "category": f.category.value,
+                "category": f.category,
                 "priority": f.priority,
                 "acceptance_criteria": f.acceptance_criteria,
             }
@@ -2415,7 +2396,7 @@ def agents(action: str = Argument(..., pith="Action: generate")) -> None:
     lines.append("```")
     lines.append("")
     lines.append("## Configuration")
-    lines.append(f"- default_category: {config.default_category.value}")
+    lines.append(f"- default_category: {config.default_category}")
     lines.append(f"- default_priority: {config.default_priority}")
     lines.append(f"- verified_by: {config.verified_by}")
     lines.append(f"- progress_output_path: {config.progress_output_path}")

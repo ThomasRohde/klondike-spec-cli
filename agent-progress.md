@@ -24,8 +24,8 @@ klondike feature list  # List all features
 | ID | Description | Status |
 |----|-------------|--------|
 | F039 | Local CI check command that detects and runs project CI checks | ⏳ Not started |
-| F035 | Auto-delegate feature PRs via copilot | ⏳ Not started |
-| F036 | Copilot session resume integration | ⏳ Not started |
+| F042 | Integration test | ⏳ Not started |
+| F043 | E2E test | ⏳ Not started |
 
 ---
 
