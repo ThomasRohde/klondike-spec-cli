@@ -92,7 +92,7 @@ git status
 
 # Run project tests
 # Python: uv run pytest
-# Node.js: npm test
+# Node.js: CI=true npm test  # Prevents interactive prompts
 
 # Run linting
 # Python: uv run ruff check src tests
@@ -329,7 +329,7 @@ klondike feature list --status not-started | head -5
 klondike copilot start -w --apply --feature F001
 
 # After it completes, verify and commit
-git status && npm test && git add -A && git commit -m "feat(F001): implement feature"
+git status && CI=true npm test && git add -A && git commit -m "feat(F001): implement feature"
 klondike feature verify F001 --evidence "tests pass"
 
 # Repeat for next feature

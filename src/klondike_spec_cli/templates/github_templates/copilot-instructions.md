@@ -105,8 +105,13 @@ Before running checks, detect available commands:
 |-------|-------------|--------------|---------|------|----|
 | Lint | `uv run ruff check src tests` | `ruff check` or `flake8` | `npm run lint` | `cargo clippy` | `golangci-lint` |
 | Format | `uv run ruff format --check src tests` | `ruff format --check` | `npm run format` | `cargo fmt --check` | `gofmt -l` |
-| Test | `uv run pytest` | `pytest` | `npm test` | `cargo test` | `go test` |
+| Test | `uv run pytest` | `pytest` | `CI=true npm test` (PowerShell: `$env:CI='true'; npm test`) | `cargo test` | `go test` |
 | Build | N/A (interpreted) | N/A | `npm run build` | `cargo build` | `go build` |
+
+**Note on CI environment variable:**
+- **Bash/Linux/macOS**: `CI=true npm test`
+- **PowerShell/Windows**: `$env:CI='true'; npm test`
+- Setting `CI=true` prevents interactive prompts in test runners like Jest
 
 ### Step 3: Record Results Before Commit
 
