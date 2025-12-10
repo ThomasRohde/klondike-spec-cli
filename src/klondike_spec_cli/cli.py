@@ -588,6 +588,26 @@ def _feature_start(feature_id: str | None) -> None:
     regenerate_progress_md()
 
     echo(f"🔄 Started: {validated_id} - {feature.description}")
+    echo(f"   Category: {feature.category}, Priority: {feature.priority}")
+    echo("")
+
+    # Show acceptance criteria
+    if feature.acceptance_criteria:
+        echo("   📋 Acceptance Criteria:")
+        for ac in feature.acceptance_criteria:
+            echo(f"      • {ac}")
+        echo("")
+
+    # Show notes if present
+    if feature.notes:
+        echo("   📝 Notes:")
+        echo(f"      {feature.notes}")
+        echo("")
+
+    # Show if previously blocked
+    if feature.blocked_by:
+        echo(f"   ⚠️  Previously blocked by: {feature.blocked_by}")
+        echo("")
 
 
 def _feature_verify(feature_id: str | None, evidence: str | None) -> None:
