@@ -44,9 +44,12 @@ Then add features using the CLI:
 klondike feature add "Short description" \
   --category core \
   --priority 1 \
-  --criteria "Specific testable criterion 1" \
-  --criteria "Specific testable criterion 2"
+  --criteria "Criterion 1,Criterion 2,Criterion 3" \
+  --notes "Implementation: <approach>. Edge cases: <cases>. Dependencies: <deps>. Gotchas: <pitfalls>."
 ```
+
+> **⚠️ IMPORTANT**: Always use `--notes` to provide implementation guidance.
+> A weaker agent will implement these features—give them the context they need to succeed.
 
 Generate **at least 20 features** covering:
 - Core functionality

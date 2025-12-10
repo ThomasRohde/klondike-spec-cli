@@ -443,8 +443,8 @@ def feature(
         prompt - Generate copilot-ready prompt for a feature (requires feature_id)
 
     Examples:
-        $ klondike feature add "User login" --category core
-        $ klondike feature add --description "User login" --category core
+        $ klondike feature add "User login" --category core --notes "Use JWT tokens. Handle: expired sessions, invalid creds."
+        $ klondike feature add --description "User login" --category core --criteria "Returns JWT,Handles invalid creds" --notes "Implementation: AuthService. Gotchas: Rate limit after 5 failures."
         $ klondike feature list --status not-started
         $ klondike feature start F001
         $ klondike feature verify F001 --evidence test-results/F001.png

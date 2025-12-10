@@ -50,11 +50,14 @@ klondike feature show F00X         # Detailed view of one feature
 **To modify feature state, use these commands:**
 
 ```bash
-klondike feature add "description" --category X --criteria "..."  # Add feature
+klondike feature add "description" --category X --criteria "..." --notes "Implementation guidance"  # Add feature
 klondike feature start F00X                                        # Mark in-progress
 klondike feature verify F00X --evidence "..."                      # Mark verified
 klondike feature block F00X --reason "..."                         # Mark blocked
 ```
+
+> **Note**: Always use `--notes` when adding features. Include implementation hints, edge cases,
+> dependencies, and gotchas. This helps weaker agents implement features correctly.
 
 > **⚠️ FORBIDDEN**: Do not read `.klondike/features.json` directly using file read tools.
 > Use `klondike feature list --json` if you need the raw JSON data.

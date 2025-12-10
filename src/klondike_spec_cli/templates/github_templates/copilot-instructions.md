@@ -167,12 +167,15 @@ When the user indicates they're done or switching tasks:
 ### .klondike/features.json - MANAGED BY CLI
 
 **Use these commands:**
-- `klondike feature add "description" --category X --priority N --criteria "..."` - Add feature
+- `klondike feature add "description" --category X --priority N --criteria "..." --notes "..."` - Add feature
 - `klondike feature start F00X` - Mark in-progress
 - `klondike feature verify F00X --evidence "..."` - Mark verified
 - `klondike feature block F00X --reason "..."` - Mark blocked
 - `klondike feature list` - List all features
 - `klondike feature show F00X` - Show feature details
+
+> **⚠️ Always use `--notes`** when adding features. Include: implementation approach,
+> edge cases, dependencies, and gotchas. A weaker agent will implement—give them context.
 
 **Forbidden:**
 - Manually editing `.klondike/features.json`
