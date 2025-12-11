@@ -1434,12 +1434,75 @@
       "blockedBy": null,
       "lastWorkedOn": null,
       "notes": "Implementation: After all command extractions are complete, cli.py should contain only: imports, Pith app definition, @app.command decorated functions that delegate to command modules, and main() entry point. Remove any orphaned helper functions. Run ruff to clean imports. Dependencies: F044-F053. This is the final cleanup step. Verify line count reduction from 3000+ to under 500."
+    },
+    {
+      "id": "F055",
+      "category": "infrastructure",
+      "priority": 4,
+      "description": "Remove unused imports in command modules",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "No unused imports in commands/init.py",
+        "No unused imports across all command modules",
+        "Ruff check passes with no import warnings"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Run ruff check --select F401 to find unused imports. Remove Option import from init.py (parameters are function args, not CLI decorators). Edge cases: Some imports may be used for type hints only. Context: Cleanup after cli.py refactoring. Gotchas: Ensure imports needed for TYPE_CHECKING blocks are preserved."
+    },
+    {
+      "id": "F056",
+      "category": "infrastructure",
+      "priority": 4,
+      "description": "Move progress bar utility to formatting.py module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "generate_progress_bar function exists in formatting.py",
+        "reporting.py imports from formatting module",
+        "All tests pass after move"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Move generate_progress_bar() from commands/reporting.py to formatting.py. Update import in reporting.py. Edge cases: Function is self-contained with no dependencies. Context: Consolidate display utilities in formatting.py for consistency. Gotchas: Ensure the function signature and behavior remain unchanged."
+    },
+    {
+      "id": "F057",
+      "category": "docs",
+      "priority": 5,
+      "description": "Remove duplicate docstrings between CLI decorators and command functions",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Command functions have concise implementation-focused docstrings",
+        "CLI decorator @app.command has user-facing documentation",
+        "No duplicate examples or usage info between layers"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Keep full docstrings on @app.command decorators (user-facing help). Reduce command function docstrings to brief implementation notes. Edge cases: init_command and upgrade_command in commands/init.py have full copies. Context: Docstring duplication makes maintenance harder. Gotchas: Ensure klondike --help and klondike pith still show correct documentation."
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-11T10:18:04.430440",
-    "totalFeatures": 54,
+    "lastUpdated": "2025-12-11T10:24:14.318199",
+    "totalFeatures": 57,
     "passingFeatures": 44
   }
 }
