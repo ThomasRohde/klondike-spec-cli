@@ -495,4 +495,3 @@ def feature_prompt(
     else:
         # Print to stdout
         print(prompt_content)
-
