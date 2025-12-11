@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F044 | Extract data access layer from cli.py into dedicated module | 🔄 In progress |
-| F045 | Extract feature command handlers from cli.py into features.py module | ⏳ Not started |
+| F045 | Extract feature command handlers from cli.py into features.py module | 🔄 In progress |
 | F046 | Extract session command handlers from cli.py into sessions.py module | ⏳ Not started |
+| F039 | Local CI check command that detects and runs project CI checks | ⏳ Not started |
 
 ---
 

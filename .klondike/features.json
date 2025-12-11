@@ -1168,11 +1168,15 @@
         "No circular import issues"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-11T09:45:02.602274",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Created data.py module with all data access functions",
+        "updated cli.py imports",
+        "all 181 tests passing"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-11T09:42:24.204764",
       "notes": "Implementation: Move lines 55-275 (constants, helper functions, load/save operations) to src/klondike_spec_cli/data.py. This is the foundational refactor that other modules will depend on. Keep get_klondike_dir, ensure_klondike_dir, load_features, save_features, load_progress, save_progress, load_config, regenerate_progress_md, update_quick_reference. Gotchas: Other modules may need to import from data.py, handle circular imports carefully. Dependencies: None - this is first."
@@ -1190,13 +1194,13 @@
         "All feature-related tests pass"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-11T09:45:06.371568",
       "notes": "Implementation: Create src/klondike_spec_cli/commands/features.py. Move _feature_add, _feature_list, _feature_start, _feature_verify, _feature_block, _feature_show, _feature_edit, _feature_prompt functions (lines 700-1100 approx). Keep the @app.command decorator in cli.py but delegate to the new module. Dependencies: F044 (data access layer). Edge cases: feature command dispatcher logic should stay in cli.py."
     },
     {
@@ -1402,8 +1406,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-11T09:38:14.219426",
+    "lastUpdated": "2025-12-11T09:45:02.602287",
     "totalFeatures": 54,
-    "passingFeatures": 36
+    "passingFeatures": 37
   }
 }

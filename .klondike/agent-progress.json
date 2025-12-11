@@ -207,18 +207,18 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F044",
-        "description": "Extract data access layer from cli.py into dedicated module",
-        "status": "in-progress"
-      },
-      {
         "id": "F045",
         "description": "Extract feature command handlers from cli.py into features.py module",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F046",
         "description": "Extract session command handlers from cli.py into sessions.py module",
+        "status": "not-started"
+      },
+      {
+        "id": "F039",
+        "description": "Local CI check command that detects and runs project CI checks",
         "status": "not-started"
       }
     ]
