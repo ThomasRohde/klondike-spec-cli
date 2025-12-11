@@ -1154,12 +1154,256 @@
       "blockedBy": null,
       "lastWorkedOn": null,
       "notes": null
+    },
+    {
+      "id": "F044",
+      "category": "infrastructure",
+      "priority": 1,
+      "description": "Extract data access layer from cli.py into dedicated module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create data.py with load_features/save_features/load_progress/save_progress/load_config functions",
+        "Update cli.py to import from data module",
+        "All existing tests continue to pass",
+        "No circular import issues"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Move lines 55-275 (constants, helper functions, load/save operations) to src/klondike_spec_cli/data.py. This is the foundational refactor that other modules will depend on. Keep get_klondike_dir, ensure_klondike_dir, load_features, save_features, load_progress, save_progress, load_config, regenerate_progress_md, update_quick_reference. Gotchas: Other modules may need to import from data.py, handle circular imports carefully. Dependencies: None - this is first."
+    },
+    {
+      "id": "F045",
+      "category": "infrastructure",
+      "priority": 1,
+      "description": "Extract feature command handlers from cli.py into features.py module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create commands/features.py with all _feature_* helper functions",
+        "Move feature command handler to new module",
+        "cli.py imports and delegates to features module",
+        "All feature-related tests pass"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Create src/klondike_spec_cli/commands/features.py. Move _feature_add, _feature_list, _feature_start, _feature_verify, _feature_block, _feature_show, _feature_edit, _feature_prompt functions (lines 700-1100 approx). Keep the @app.command decorator in cli.py but delegate to the new module. Dependencies: F044 (data access layer). Edge cases: feature command dispatcher logic should stay in cli.py."
+    },
+    {
+      "id": "F046",
+      "category": "infrastructure",
+      "priority": 1,
+      "description": "Extract session command handlers from cli.py into sessions.py module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create commands/sessions.py with _session_start and _session_end functions",
+        "Move session command handler to new module",
+        "cli.py imports and delegates to sessions module",
+        "All session-related tests pass"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Create src/klondike_spec_cli/commands/sessions.py. Move _session_start, _session_end functions (lines 1150-1300 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer). Small scope - good second command extraction."
+    },
+    {
+      "id": "F047",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Extract init/upgrade command handlers from cli.py into init.py module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create commands/init.py with init command logic and _upgrade_project function",
+        "Move _parse_agent_option helper to new module",
+        "cli.py imports and delegates to init module",
+        "All init/upgrade tests pass"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Create src/klondike_spec_cli/commands/init.py. Move init command body, upgrade command body, _upgrade_project helper, _parse_agent_option helper (lines 280-500 approx). Keep @app.command decorators in cli.py. Dependencies: F044 (data access layer). This is a larger extraction due to init complexity."
+    },
+    {
+      "id": "F048",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Extract report command handlers from cli.py into reporting.py module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create commands/reporting.py with report command logic and helper functions",
+        "Move _generate_markdown_report and _generate_plain_report and _generate_progress_bar functions",
+        "cli.py imports and delegates to reporting module",
+        "Report generation tests pass"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Create src/klondike_spec_cli/commands/reporting.py. Move report command logic, _generate_markdown_report, _generate_plain_report, _generate_progress_bar functions (lines 1520-1850 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer). Self-contained - good candidate for extraction."
+    },
+    {
+      "id": "F049",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Extract import/export command handlers from cli.py into io.py module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create commands/io.py with import_features and export_features command logic",
+        "cli.py imports and delegates to io module",
+        "Import/export functionality tests pass"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Create src/klondike_spec_cli/commands/io.py. Move import_features command logic (lines 1860-2020 approx) and export_features command logic (lines 2100-2180 approx). Keep @app.command decorators in cli.py. Dependencies: F044 (data access layer). Edge cases: YAML parsing error handling, file format validation."
+    },
+    {
+      "id": "F050",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Extract copilot command handlers from cli.py into copilot_cmd.py module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create commands/copilot_cmd.py with copilot command dispatch and helper functions",
+        "Move _copilot_start",
+        "_copilot_list_worktrees",
+        "_copilot_cleanup_worktrees functions",
+        "cli.py imports and delegates to copilot_cmd module",
+        "Copilot integration tests pass"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Create src/klondike_spec_cli/commands/copilot_cmd.py (name avoids conflict with existing copilot.py module). Move copilot command dispatch logic and _copilot_start, _copilot_list_worktrees, _copilot_cleanup_worktrees functions (lines 2015-2130 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer), existing copilot.py module."
+    },
+    {
+      "id": "F051",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Extract MCP command handlers from cli.py into mcp_cmd.py module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create commands/mcp_cmd.py with mcp command dispatch and helper functions",
+        "Move _mcp_serve",
+        "_mcp_install",
+        "_mcp_config functions",
+        "cli.py imports and delegates to mcp_cmd module",
+        "MCP-related tests pass"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Create src/klondike_spec_cli/commands/mcp_cmd.py (name avoids conflict with existing mcp_server.py). Move mcp command dispatch and _mcp_serve, _mcp_install, _mcp_config functions (lines 2410-2510 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer), existing mcp_server.py module."
+    },
+    {
+      "id": "F052",
+      "category": "infrastructure",
+      "priority": 2,
+      "description": "Extract release command from cli.py into release.py module",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create commands/release.py with release command logic and _bump_version helper",
+        "cli.py imports and delegates to release module",
+        "Release workflow tests pass"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Create src/klondike_spec_cli/commands/release.py. Move release command logic and _bump_version helper (lines 2520-2700 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer), git.py module. Self-contained release workflow logic."
+    },
+    {
+      "id": "F053",
+      "category": "infrastructure",
+      "priority": 3,
+      "description": "Create commands package with __init__.py exposing all command modules",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Create src/klondike_spec_cli/commands/__init__.py",
+        "Export all command handler functions from submodules",
+        "Update cli.py to import from commands package",
+        "Clean import structure with no circular dependencies"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Create commands/__init__.py that re-exports all command handlers from submodules. This creates a clean API: from klondike_spec_cli.commands import feature_add, session_start, etc. Should be done after individual command modules are extracted. Dependencies: F044-F052. This is the consolidation step."
+    },
+    {
+      "id": "F054",
+      "category": "infrastructure",
+      "priority": 3,
+      "description": "Final cli.py cleanup - remove dead code and optimize imports",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "cli.py reduced to under 500 lines",
+        "All command decorators and routing remain in cli.py",
+        "No unused imports",
+        "All tests pass with full coverage maintained"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: After all command extractions are complete, cli.py should contain only: imports, Pith app definition, @app.command decorated functions that delegate to command modules, and main() entry point. Remove any orphaned helper functions. Run ruff to clean imports. Dependencies: F044-F053. This is the final cleanup step. Verify line count reduction from 3000+ to under 500."
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-10T16:18:43.469770",
-    "totalFeatures": 43,
+    "lastUpdated": "2025-12-11T09:38:14.219426",
+    "totalFeatures": 54,
     "passingFeatures": 36
   }
 }
