@@ -28,7 +28,7 @@ uv run pytest
 
 # Example for Node.js:
 npm run build
-npm test
+CI=true npm test
 npm run lint
 ```
 

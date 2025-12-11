@@ -49,45 +49,6 @@ All layers matter, but **E2E tests are required for feature verification**.
 
 4. **Only then update features.json**
 
-### Example Verification Session
-
-```markdown
-## Verifying F005: Add new todo via input field
-
-### Acceptance Criteria
-1. Input field is visible on main page
-2. User can type todo text
-3. Pressing Enter adds the todo
-4. New todo appears in list
-5. Input clears after adding
-
-### Verification
-
-**Started server**: ./init.sh ✅
-
-**Criterion 1**: Navigated to http://localhost:3000
-- Input field visible at top of page ✅
-
-**Criterion 2**: Typed "Buy groceries"
-- Text appeared in input ✅
-
-**Criterion 3**: Pressed Enter
-- No page reload, todo added ✅
-
-**Criterion 4**: Checked list
-- "Buy groceries" appears as first item ✅
-
-**Criterion 5**: Checked input
-- Input is now empty ✅
-
-**Edge Cases Tested**:
-- Empty input: Shows validation message ✅
-- Very long text: Accepted, wraps properly ✅
-- Special characters: Works correctly ✅
-
-**VERDICT**: All criteria pass, marking feature complete.
-```
-
 ## Testing Web Applications
 
 ### Manual Testing

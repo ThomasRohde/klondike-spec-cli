@@ -161,43 +161,6 @@ klondike release --bump patch --skip-tests
 
 After pushing the tag, create a GitHub Release to publish to production.
 
-## CI/CD Integration
-
-### Auto-Generated Files
-
-When using dynamic versioning tools like `hatch-vcs`, add generated files to `.gitignore`:
-
-```gitignore
-# hatch-vcs generated version file
-src/package_name/_version.py
-```
-
-### Exclude Generated Files from Linting
-
-Auto-generated files may not pass linting. Exclude them:
-
-```toml
-# pyproject.toml
-[tool.ruff]
-exclude = ["src/package_name/_version.py"]
-```
-
-### Workflow Dependencies
-
-For publish-after-CI patterns, use `workflow_run` trigger:
-
-```yaml
-on:
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
-    branches: [master, main]
-
-jobs:
-  publish:
-    if: github.event.workflow_run.conclusion == 'success'
-```
-
 ## What to Never Commit
 
 - Secrets, API keys, passwords

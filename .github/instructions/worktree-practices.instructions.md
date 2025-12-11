@@ -77,7 +77,7 @@ Before ending a worktree session, always run tests:
 uv run pytest tests/ -v
 
 # Node.js projects  
-npm test
+CI=true npm test
 ```
 
 ### Verify Lint/Format

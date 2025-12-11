@@ -29,32 +29,6 @@ klondike progress                                     # Regenerate file
 
 **Do not manually edit** - changes will be overwritten by the CLI.
 
-### What Gets Generated
-
-```markdown
-### Session N - <Date>
-**Duration**: ~X hours
-**Focus**: <feature ID and name>
-
-#### Completed
-- <bullet list of accomplishments>
-
-#### Attempted But Incomplete
-- <what didn't work and why>
-
-#### Blockers Discovered
-- <any issues needing resolution>
-
-#### Recommended Next Steps
-1. <most important>
-2. <second priority>
-3. <third priority>
-
-#### Technical Notes
-- <non-obvious decisions>
-- <gotchas for next session>
-```
-
 ## .klondike/features.json
 
 ### Purpose
@@ -76,30 +50,17 @@ klondike feature show F00X         # Detailed view of one feature
 **To modify feature state, use these commands:**
 
 ```bash
-klondike feature add "description" --category X --criteria "..."  # Add feature
+klondike feature add "description" --category X --criteria "..." --notes "Implementation guidance"  # Add feature
 klondike feature start F00X                                        # Mark in-progress
 klondike feature verify F00X --evidence "..."                      # Mark verified
 klondike feature block F00X --reason "..."                         # Mark blocked
 ```
 
+> **Note**: Always use `--notes` when adding features. Include implementation hints, edge cases,
+> dependencies, and gotchas. This helps weaker agents implement features correctly.
+
 > **⚠️ FORBIDDEN**: Do not read `.klondike/features.json` directly using file read tools.
 > Use `klondike feature list --json` if you need the raw JSON data.
-
-### Schema Fields
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `id` | string | ✅ | Pattern `F\d{3}` (e.g., F001) |
-| `description` | string | ✅ | Feature description |
-| `acceptanceCriteria` | string[] | ✅ | Testable criteria (min 1) |
-| `passes` | boolean | ✅ | Whether feature is verified complete |
-| `status` | enum | ✅ | `not-started`, `in-progress`, `blocked`, `verified` |
-| `verifiedAt` | string/null | - | ISO timestamp of verification |
-| `verifiedBy` | string/null | - | Identifier of verifying agent/session |
-| `evidenceLinks` | string[] | - | Paths to verification evidence files |
-| `blockedBy` | string/string[] | - | Feature IDs or reason blocking progress |
-| `lastWorkedOn` | string | - | ISO timestamp of last work |
-| `notes` | string | - | Context, gotchas, or additional info |
 
 ### CLI Commands for State Changes
 
@@ -134,37 +95,7 @@ Before setting `passes: true` and `status: verified`:
 
 - Save evidence files to `test-results/` directory
 - Naming: `F00X-<description>.{png,log,txt}`
-- Add paths to `evidenceLinks` array in feature entry
-- Update `agent-progress.md` with verification record
-
-### Example Update
-
-```json
-// Before
-{
-  "id": "F003",
-  "description": "User can log in",
-  "status": "in-progress",
-  "passes": false,
-  "lastWorkedOn": "2024-01-14T10:00:00Z",
-  "notes": "Auth endpoint ready, need E2E test"
-}
-
-// After (only if verified with evidence)
-{
-  "id": "F003",
-  "description": "User can log in",
-  "status": "verified",
-  "passes": true,
-  "verifiedAt": "2024-01-15T14:30:00Z",
-  "verifiedBy": "coding-agent-session-5",
-  "evidenceLinks": [
-    "test-results/F003-login-success.png",
-    "test-results/F003-validation-error.png"
-  ],
-  "notes": "Tested Chrome/Firefox. Rate limiting works."
-}
-```
+- Add paths to `evidenceLinks` array via CLI command
 
 ## Why This Matters
 

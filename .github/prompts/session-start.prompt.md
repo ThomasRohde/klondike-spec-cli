@@ -36,8 +36,6 @@ klondike validate
 
 > ⚠️ **IMPORTANT**: Do NOT read `.klondike/features.json` or `agent-progress.md` directly. Always use klondike CLI commands.
 
-**Check for PRD source**: If `agent-progress.md` includes a **PRD Source** link, review the original requirements document to understand project goals and constraints.
-
 **Git history** - Recent changes:
 ```bash
 git log --oneline -15

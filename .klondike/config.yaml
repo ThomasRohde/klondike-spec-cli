@@ -1,7 +1,6 @@
 # Klondike CLI Configuration
-# This file configures the klondike-spec-cli behavior
 
-# Default category for new features
+# Default category for new features (any string allowed)
 default_category: core
 
 # Default priority for new features (1-5, 1=critical)
@@ -16,11 +15,5 @@ progress_output_path: agent-progress.md
 # Whether to auto-regenerate agent-progress.md on changes
 auto_regenerate_progress: true
 
-# Git integration settings
-git:
-  # Check for uncommitted changes on session start
-  check_uncommitted: true
-  # Warn about uncommitted changes on session end
-  warn_uncommitted: true
-  # Show recent commits in status
-  show_recent_commits: 5
+# Version of klondike-spec-cli that created/upgraded this config
+klondike_version: 0.2.14
