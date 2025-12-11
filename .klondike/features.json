@@ -1168,13 +1168,13 @@
         "No circular import issues"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-11T09:42:24.204764",
       "notes": "Implementation: Move lines 55-275 (constants, helper functions, load/save operations) to src/klondike_spec_cli/data.py. This is the foundational refactor that other modules will depend on. Keep get_klondike_dir, ensure_klondike_dir, load_features, save_features, load_progress, save_progress, load_config, regenerate_progress_md, update_quick_reference. Gotchas: Other modules may need to import from data.py, handle circular imports carefully. Dependencies: None - this is first."
     },
     {
