@@ -1246,13 +1246,19 @@
         "All init/upgrade tests pass"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-11T10:01:18.025606",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Created commands/init.py with init_command()",
+        "upgrade_command()",
+        "and upgrade_project() functions",
+        "cli.py delegates properly",
+        "all 181 tests passing"
+      ],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-11T09:57:04.512349",
       "notes": "Implementation: Create src/klondike_spec_cli/commands/init.py. Move init command body, upgrade command body, _upgrade_project helper, _parse_agent_option helper (lines 280-500 approx). Keep @app.command decorators in cli.py. Dependencies: F044 (data access layer). This is a larger extraction due to init complexity."
     },
     {
@@ -1414,8 +1420,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-11T09:55:50.189884",
+    "lastUpdated": "2025-12-11T10:01:18.025620",
     "totalFeatures": 54,
-    "passingFeatures": 39
+    "passingFeatures": 40
   }
 }
