@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F045 | Extract feature command handlers from cli.py into features.py module | 🔄 In progress |
-| F046 | Extract session command handlers from cli.py into sessions.py module | ⏳ Not started |
 | F039 | Local CI check command that detects and runs project CI checks | ⏳ Not started |
+| F042 | Integration test | ⏳ Not started |
+| F043 | E2E test | ⏳ Not started |
 
 ---
 
@@ -280,8 +280,31 @@ klondike feature list  # List all features
 
 ### Session 11 - 2025-12-11
 **Agent**: Coding Agent
+**Duration**: ~session
+**Focus**: Completed F044 and F045: extracted data layer and feature commands into separate modules
+
+#### Completed
+- None
+
+#### In Progress
+- None
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue with F046: extract session commands
+2. then run tests and push
+
+#### Technical Notes
+- None
+
+---
+
+### Session 12 - 2025-12-11
+**Agent**: Coding Agent
 **Duration**: (in progress)
-**Focus**: F044-F054 - CLI refactoring: extract commands into modules
+**Focus**: F046 - Extract session command handlers
 
 #### Completed
 - None

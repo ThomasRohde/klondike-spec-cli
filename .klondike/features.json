@@ -1194,11 +1194,15 @@
         "All feature-related tests pass"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-11T09:51:45.361334",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Created commands/features.py with all feature handlers",
+        "cli.py delegates properly",
+        "all 181 tests passing"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-11T09:45:06.371568",
       "notes": "Implementation: Create src/klondike_spec_cli/commands/features.py. Move _feature_add, _feature_list, _feature_start, _feature_verify, _feature_block, _feature_show, _feature_edit, _feature_prompt functions (lines 700-1100 approx). Keep the @app.command decorator in cli.py but delegate to the new module. Dependencies: F044 (data access layer). Edge cases: feature command dispatcher logic should stay in cli.py."
@@ -1216,13 +1220,17 @@
         "All session-related tests pass"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-11T09:55:50.189873",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Created commands/sessions.py with session_start() and session_end() functions",
+        "cli.py delegates properly",
+        "all 181 tests passing"
+      ],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-11T09:52:30.961333",
       "notes": "Implementation: Create src/klondike_spec_cli/commands/sessions.py. Move _session_start, _session_end functions (lines 1150-1300 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer). Small scope - good second command extraction."
     },
     {
@@ -1406,8 +1414,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-11T09:45:02.602287",
+    "lastUpdated": "2025-12-11T09:55:50.189884",
     "totalFeatures": 54,
-    "passingFeatures": 37
+    "passingFeatures": 39
   }
 }
