@@ -247,6 +247,9 @@ Recent commits:
 | `klondike init [name]` | Initialize .klondike directory and .github templates |
 | `klondike init --prd <path>` | Initialize with PRD link for agent context |
 | `klondike init --skip-github` | Initialize without .github scaffolding |
+| `klondike init --upgrade` | Upgrade templates while preserving user data |
+| `klondike init --force` | Wipe and reinitialize (requires confirmation) |
+| `klondike upgrade` | Alias for `init --upgrade` - refresh templates |
 | `klondike status` | Show project status, git info, and next priorities |
 | `klondike validate` | Check artifact integrity and consistency |
 | `klondike config` | View or set project configuration |

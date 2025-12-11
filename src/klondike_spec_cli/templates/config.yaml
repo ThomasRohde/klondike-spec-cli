@@ -19,3 +19,6 @@ auto_regenerate_progress: true
 # Link to Product Requirements Document for agent context
 # Set via: klondike init --prd <path-or-url>
 # prd_source: null
+
+# Version of klondike-spec-cli that created/upgraded this config
+# klondike_version: null

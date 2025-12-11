@@ -86,8 +86,8 @@ class TestInitCommand:
                 # First init
                 runner.invoke(app, ["init", "--name", "first"])
 
-                # Second init with --force
-                result = runner.invoke(app, ["init", "--force", "--name", "second"])
+                # Second init with --force (confirm with 'yes')
+                result = runner.invoke(app, ["init", "--force", "--name", "second"], input="yes\n")
 
                 assert result.exit_code == 0
 
@@ -96,6 +96,194 @@ class TestInitCommand:
                 with open(features_path) as f:
                     data = json.load(f)
                 assert data["projectName"] == "second"
+            finally:
+                os.chdir(original_cwd)
+
+    def test_init_force_requires_confirmation(self) -> None:
+        """Test that init --force requires user confirmation."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                # First init
+                runner.invoke(app, ["init"])
+
+                # Second init with --force but no confirmation (simulate "no")
+                result = runner.invoke(app, ["init", "--force"], input="no\n")
+
+                assert result.exit_code == 0
+                assert "Type 'yes' to continue" in result.output
+                assert "Aborted" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+    def test_init_suggests_upgrade_for_existing_project(self) -> None:
+        """Test that init suggests --upgrade when project exists."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                # First init
+                runner.invoke(app, ["init"])
+
+                # Second init without flags should suggest upgrade
+                result = runner.invoke(app, ["init"])
+
+                assert result.exit_code != 0
+                assert "already exists" in result.output
+                assert "--upgrade" in result.output
+            finally:
+                os.chdir(original_cwd)
+
+
+class TestUpgradeCommand:
+    """Integration tests for 'klondike upgrade' and 'klondike init --upgrade' commands."""
+
+    def test_upgrade_preserves_features(self) -> None:
+        """Test that upgrade preserves existing features."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                # Init and add feature
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Test feature"])
+
+                # Upgrade
+                result = runner.invoke(app, ["upgrade"])
+
+                assert result.exit_code == 0
+                assert "Upgrade complete" in result.output
+
+                # Verify feature still exists
+                features_path = Path(tmpdir) / ".klondike" / "features.json"
+                with open(features_path) as f:
+                    data = json.load(f)
+                assert len(data["features"]) == 1
+                assert data["features"][0]["description"] == "Test feature"
+            finally:
+                os.chdir(original_cwd)
+
+    def test_upgrade_preserves_session_history(self) -> None:
+        """Test that upgrade preserves session history."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                # Init and start session
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["session", "start", "--focus", "Testing"])
+
+                # Upgrade
+                result = runner.invoke(app, ["upgrade"])
+
+                assert result.exit_code == 0
+
+                # Verify session exists (init creates session #1, start creates #2)
+                progress_path = Path(tmpdir) / ".klondike" / "agent-progress.json"
+                with open(progress_path) as f:
+                    data = json.load(f)
+                assert len(data["sessions"]) == 2
+                assert data["sessions"][1]["focus"] == "Testing"
+            finally:
+                os.chdir(original_cwd)
+
+    def test_upgrade_updates_github_templates(self) -> None:
+        """Test that upgrade refreshes .github/ templates."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                # Init
+                runner.invoke(app, ["init"])
+
+                # Modify a template
+                copilot_path = Path(tmpdir) / ".github" / "copilot-instructions.md"
+                original_content = copilot_path.read_text(encoding="utf-8")
+                copilot_path.write_text("# MODIFIED", encoding="utf-8")
+
+                # Upgrade
+                result = runner.invoke(app, ["upgrade"])
+
+                assert result.exit_code == 0
+                assert "Refreshed .github/ templates" in result.output
+
+                # Verify template was restored (and backed up)
+                new_content = copilot_path.read_text(encoding="utf-8")
+                assert new_content != "# MODIFIED"
+                assert new_content == original_content
+
+                # Check backup was created
+                backup_dirs = list(Path(tmpdir).glob(".github.backup.*"))
+                assert len(backup_dirs) == 1
+            finally:
+                os.chdir(original_cwd)
+
+    def test_upgrade_updates_klondike_version(self) -> None:
+        """Test that upgrade updates klondike_version in config."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                # Init
+                runner.invoke(app, ["init"])
+
+                # Upgrade
+                result = runner.invoke(app, ["upgrade"])
+
+                assert result.exit_code == 0
+
+                # Verify version was updated in config
+                config_path = Path(tmpdir) / ".klondike" / "config.yaml"
+                config_text = config_path.read_text()
+                assert "klondike_version:" in config_text
+            finally:
+                os.chdir(original_cwd)
+
+    def test_init_upgrade_flag_works(self) -> None:
+        """Test that 'klondike init --upgrade' works as alias."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+                # Init
+                runner.invoke(app, ["init"])
+                runner.invoke(app, ["feature", "add", "--description", "Test"])
+
+                # Upgrade via init --upgrade
+                result = runner.invoke(app, ["init", "--upgrade"])
+
+                assert result.exit_code == 0
+                assert "Upgrade complete" in result.output
+
+                # Verify feature preserved
+                features_path = Path(tmpdir) / ".klondike" / "features.json"
+                with open(features_path) as f:
+                    data = json.load(f)
+                assert len(data["features"]) == 1
+            finally:
+                os.chdir(original_cwd)
+
+    def test_upgrade_fails_without_klondike_dir(self) -> None:
+        """Test that upgrade command fails if no .klondike directory exists."""
+        runner = CliRunner()
+        with TemporaryDirectory() as tmpdir:
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
+
+                # Try to upgrade without init
+                result = runner.invoke(app, ["upgrade"])
+
+                assert result.exit_code != 0
+                assert "not found" in result.output
             finally:
                 os.chdir(original_cwd)
 

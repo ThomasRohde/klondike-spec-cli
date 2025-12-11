@@ -573,6 +573,7 @@ class Config:
     progress_output_path: str = "agent-progress.md"
     auto_regenerate_progress: bool = True
     prd_source: str | None = None  # Link to PRD document for agent context
+    klondike_version: str | None = None  # Version of klondike-spec-cli that created this config
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for YAML serialization."""
@@ -585,6 +586,8 @@ class Config:
         }
         if self.prd_source:
             result["prd_source"] = self.prd_source
+        if self.klondike_version:
+            result["klondike_version"] = self.klondike_version
         return result
 
     @classmethod
@@ -599,6 +602,7 @@ class Config:
             progress_output_path=data.get("progress_output_path", "agent-progress.md"),
             auto_regenerate_progress=data.get("auto_regenerate_progress", True),
             prd_source=data.get("prd_source"),
+            klondike_version=data.get("klondike_version"),
         )
 
     @classmethod
@@ -642,6 +646,16 @@ class Config:
                     "",
                     "# Link to Product Requirements Document for agent context",
                     f"prd_source: {self.prd_source}",
+                ]
+            )
+
+        # Add klondike version if set
+        if self.klondike_version:
+            lines.extend(
+                [
+                    "",
+                    "# Version of klondike-spec-cli that created/upgraded this config",
+                    f"klondike_version: {self.klondike_version}",
                 ]
             )
 

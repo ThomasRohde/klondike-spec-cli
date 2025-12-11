@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### ✨ Added
+
+- **Intelligent Project Upgrade** - `klondike init` now supports existing projects with smart upgrade modes:
+  - `klondike init --upgrade` (or `klondike upgrade`) - Refresh .github/ templates while preserving user data
+  - `klondike init --force` - Complete wipe and reinit with confirmation prompt
+  - Automatic version detection suggests upgrade when templates are outdated
+  - Backup of .github/ directory before upgrade
+  - Version tracking in `config.yaml` via `klondike_version` field
+- **Upgrade Command** - New `klondike upgrade` command as convenient alias for `init --upgrade`
+
+### 📝 Changed
+
+- **Force Mode Confirmation** - `klondike init --force` now requires typing 'yes' to confirm destructive operation
+- **Smarter Init Behavior** - Detects existing projects and suggests `--upgrade` instead of erroring immediately
+- **Config Model** - Added `klondike_version` field to track which CLI version created/upgraded the project
+
+---
+
 ## [0.2.15] - 2025-12-10
 
 ### ✨ Added

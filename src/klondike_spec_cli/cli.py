@@ -78,6 +78,89 @@ def ensure_klondike_dir(root: Path | None = None) -> Path:
     return klondike_dir
 
 
+def _upgrade_project(
+    root: Path,
+    klondike_dir: Path,
+    skip_github: bool,
+    prd_source: str | None,
+) -> None:
+    """Upgrade an existing Klondike project by refreshing templates.
+
+    Preserves:
+        - features.json (all features and status)
+        - agent-progress.json (session history)
+        - config.yaml user preferences (merges with new fields)
+
+    Upgrades:
+        - All .github/ templates (instructions, prompts, copilot-instructions.md)
+        - Adds klondike_version to config.yaml
+    """
+    from klondike_spec_cli import __version__
+
+    echo("🔄 Upgrading Klondike project...")
+    echo("")
+
+    # Backup .github directory if it exists
+    github_dir = root / ".github"
+    if github_dir.exists() and not skip_github:
+        import shutil
+        from datetime import datetime
+
+        backup_name = f".github.backup.{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        backup_dir = root / backup_name
+        echo(f"📦 Backing up existing .github/ to {backup_name}/")
+        shutil.copytree(github_dir, backup_dir)
+
+    # Load existing config to preserve user preferences
+    config_path = klondike_dir / CONFIG_FILE
+    existing_config = Config.load(config_path) if config_path.exists() else Config()
+
+    # Update config with new version
+    existing_config.klondike_version = __version__
+    if prd_source:
+        existing_config.prd_source = prd_source
+
+    # Save updated config
+    existing_config.save(config_path)
+    echo(f"✅ Updated {CONFIG_FILE} (version: {__version__})")
+
+    # Refresh .github templates
+    github_files_count = 0
+    if not skip_github:
+        # Determine project name from existing config or directory
+        project_name = existing_config.__dict__.get("project_name", root.name)
+
+        # Get existing progress for metadata
+        progress_path = klondike_dir / PROGRESS_FILE
+        if progress_path.exists():
+            progress = ProgressLog.load(progress_path)
+            project_name = progress.project_name
+
+        # Prepare template variables
+        now = datetime.now().isoformat()
+        date_str = datetime.now().strftime("%Y-%m-%d")
+        template_vars = {
+            "{{PROJECT_NAME}}": project_name,
+            "{{CREATED_AT}}": now,
+            "{{DATE}}": date_str,
+        }
+
+        github_files = extract_github_templates(root, overwrite=True, template_vars=template_vars)
+        github_files_count = len(github_files)
+        echo(f"✅ Refreshed .github/ templates ({github_files_count} files)")
+
+    # Regenerate agent-progress.md
+    if (klondike_dir / PROGRESS_FILE).exists():
+        progress = ProgressLog.load(klondike_dir / PROGRESS_FILE)
+        progress.save_markdown(root / PROGRESS_MD_FILE, prd_source=existing_config.prd_source)
+        echo(f"✅ Regenerated {PROGRESS_MD_FILE}")
+
+    echo("")
+    echo("✨ Upgrade complete!")
+    echo("   Your features and session history have been preserved.")
+    echo(f"   .github/ templates updated to v{__version__}")
+
+
 def load_features(root: Path | None = None) -> FeatureRegistry:
     """Load the feature registry."""
     klondike_dir = ensure_klondike_dir(root)
@@ -171,11 +254,16 @@ app = Pith(
 )
 def init(
     project_name: str | None = Option(None, "--name", "-n", pith="Project name"),
-    force: bool = Option(False, "--force", "-f", pith="Overwrite existing .klondike"),
+    force: bool = Option(
+        False, "--force", "-f", pith="Wipe and reinitialize everything (requires confirmation)"
+    ),
+    upgrade: bool = Option(
+        False, "--upgrade", "-u", pith="Upgrade templates while preserving user data"
+    ),
     skip_github: bool = Option(False, "--skip-github", pith="Skip creating .github directory"),
     prd_source: str | None = Option(None, "--prd", pith="Link to PRD document for agent context"),
 ) -> None:
-    """Initialize a new Klondike Spec project.
+    """Initialize a new Klondike Spec project or upgrade an existing one.
 
     Creates the .klondike directory with features.json, agent-progress.json,
     and config.yaml. Also generates agent-progress.md in the project root.
@@ -186,26 +274,78 @@ def init(
     - prompts/ with reusable prompt templates
     - templates/ with init scripts and schemas
 
+    Upgrade Mode (--upgrade):
+        Refreshes all .github/ templates while preserving your:
+        - features.json (feature list and status)
+        - agent-progress.json (session history)
+        - config.yaml (user preferences like default_category)
+
+    Force Mode (--force):
+        Complete wipe and reinit. Requires confirmation. Use when:
+        - Project structure is corrupted
+        - You want to start completely fresh
+
     Examples:
-        $ klondike init
-        $ klondike init --name my-project
-        $ klondike init --force
-        $ klondike init --skip-github
+        $ klondike init                    # New project
+        $ klondike init --name my-project  # New project with custom name
+        $ klondike init --upgrade          # Upgrade templates in existing project
+        $ klondike init --force            # Wipe and reinit (with confirmation)
+        $ klondike init --skip-github      # Skip .github directory
         $ klondike init --prd ./docs/prd.md
-        $ klondike init --prd https://example.com/prd.md
 
     Related:
         status - Check project status after init
         feature add - Add features to the registry
+        upgrade - Alias for 'init --upgrade'
     """
+    from klondike_spec_cli import __version__
+
     root = Path.cwd()
     klondike_dir = get_klondike_dir(root)
 
-    if klondike_dir.exists() and not force:
+    # Check for conflicting flags
+    if force and upgrade:
+        raise PithException("Cannot use --force and --upgrade together. Choose one mode.")
+
+    # Handle existing project scenarios
+    exists = klondike_dir.exists()
+
+    if exists and force:
+        # Force mode: wipe and reinit with confirmation
+        echo("⚠️  WARNING: --force will DELETE all existing Klondike data:")
+        echo(f"   • {FEATURES_FILE} (all features and status)")
+        echo(f"   • {PROGRESS_FILE} (all session history)")
+        echo(f"   • {CONFIG_FILE} (user preferences)")
+        echo("   • .github/ templates (if not --skip-github)")
+        echo("")
+        response = input("Type 'yes' to continue: ")
+        if response.lower() != "yes":
+            echo("❌ Aborted")
+            return
+
+    elif exists and upgrade:
+        # Upgrade mode: preserve user data, refresh templates
+        _upgrade_project(root, klondike_dir, skip_github, prd_source)
+        return
+
+    elif exists and not force and not upgrade:
+        # Existing project, suggest upgrade
+        config_path = klondike_dir / CONFIG_FILE
+        if config_path.exists():
+            config = Config.load(config_path)
+            if config.klondike_version and config.klondike_version != __version__:
+                echo(f"📦 Existing project detected (v{config.klondike_version})")
+                echo(f"   Current CLI version: v{__version__}")
+                echo("")
+                echo("💡 Tip: Run 'klondike init --upgrade' to update .github/ templates")
+                echo("        while preserving your features and progress.")
+                echo("")
         raise PithException(
-            f"Klondike directory already exists: {klondike_dir}\nUse --force to reinitialize."
+            f"Klondike directory already exists: {klondike_dir}\\n"
+            "Use --upgrade to refresh templates or --force to wipe and reinit."
         )
 
+    # New project initialization
     # Determine project name
     if project_name is None:
         project_name = root.name
@@ -240,13 +380,12 @@ def init(
         config_content = config_content.replace(var, value)
     (klondike_dir / CONFIG_FILE).write_text(config_content, encoding="utf-8")
 
-    # If PRD source provided, update config with it
+    # Update config with version and PRD source
+    config = Config.load(klondike_dir / CONFIG_FILE)
+    config.klondike_version = __version__
     if prd_source:
-        from klondike_spec_cli.models import Config
-
-        config = Config.load(klondike_dir / CONFIG_FILE)
         config.prd_source = prd_source
-        config.save(klondike_dir / CONFIG_FILE)
+    config.save(klondike_dir / CONFIG_FILE)
 
     # Generate agent-progress.md from the JSON we just created
     progress = load_progress(root)
@@ -281,6 +420,48 @@ def init(
     echo("  1. Add features: klondike feature add --description 'My feature'")
     echo("  2. List features: klondike feature list")
     echo("  3. Check status: klondike status")
+
+
+@app.command(pith="Upgrade templates in existing Klondike project", priority=11)
+@app.intents(
+    "upgrade project",
+    "update templates",
+    "refresh github templates",
+    "update copilot instructions",
+    "upgrade klondike",
+)
+def upgrade(
+    skip_github: bool = Option(False, "--skip-github", pith="Skip updating .github directory"),
+    prd_source: str | None = Option(None, "--prd", pith="Link to PRD document for agent context"),
+) -> None:
+    """Upgrade an existing Klondike project (alias for 'init --upgrade').
+
+    Refreshes all .github/ templates to the latest version while preserving:
+    - features.json (all your features and their status)
+    - agent-progress.json (session history)
+    - config.yaml (your preferences like default_category)
+
+    This is safe to run - it backs up your .github/ directory before upgrading.
+
+    Examples:
+        $ klondike upgrade
+        $ klondike upgrade --skip-github
+        $ klondike upgrade --prd ./docs/prd.md
+
+    Related:
+        init - Initialize or upgrade a project
+        status - Check project status
+    """
+    root = Path.cwd()
+    klondike_dir = get_klondike_dir(root)
+
+    if not klondike_dir.exists():
+        raise PithException(
+            f"Klondike directory not found: {klondike_dir}\\n"
+            "Run 'klondike init' to initialize a new project first."
+        )
+
+    _upgrade_project(root, klondike_dir, skip_github, prd_source)
 
 
 @app.command(pith="Show project status and feature summary", priority=20)
