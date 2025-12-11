@@ -120,7 +120,7 @@ def _load_prompt_template(template_name: str) -> str:
 
     try:
         # Load from package templates
-        files = resources.files("klondike_spec_cli.templates.github_templates.prompts")
+        files = resources.files("klondike_spec_cli.templates.copilot_templates.prompts")
         template_path = files.joinpath(template_name)
         content = template_path.read_text(encoding="utf-8")
 

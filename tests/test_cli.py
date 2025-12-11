@@ -211,7 +211,7 @@ class TestUpgradeCommand:
                 result = runner.invoke(app, ["upgrade"])
 
                 assert result.exit_code == 0
-                assert "Refreshed .github/ templates" in result.output
+                assert "Refreshed GitHub Copilot templates" in result.output
 
                 # Verify template was restored (and backed up)
                 new_content = copilot_path.read_text(encoding="utf-8")

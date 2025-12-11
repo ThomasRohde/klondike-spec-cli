@@ -574,6 +574,9 @@ class Config:
     auto_regenerate_progress: bool = True
     prd_source: str | None = None  # Link to PRD document for agent context
     klondike_version: str | None = None  # Version of klondike-spec-cli that created this config
+    configured_agents: list[str] = field(
+        default_factory=lambda: ["copilot"]
+    )  # AI agents configured
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for YAML serialization."""
@@ -588,12 +591,19 @@ class Config:
             result["prd_source"] = self.prd_source
         if self.klondike_version:
             result["klondike_version"] = self.klondike_version
+        if self.configured_agents:
+            result["configured_agents"] = self.configured_agents
         return result
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Config:
         """Create Config from dictionary."""
         default_category = data.get("default_category", "core")
+
+        # Handle configured_agents - default to ["copilot"] for backward compatibility
+        configured_agents = data.get("configured_agents")
+        if configured_agents is None:
+            configured_agents = ["copilot"]
 
         return cls(
             default_category=default_category,
@@ -603,6 +613,7 @@ class Config:
             auto_regenerate_progress=data.get("auto_regenerate_progress", True),
             prd_source=data.get("prd_source"),
             klondike_version=data.get("klondike_version"),
+            configured_agents=configured_agents,
         )
 
     @classmethod
@@ -656,6 +667,17 @@ class Config:
                     "",
                     "# Version of klondike-spec-cli that created/upgraded this config",
                     f"klondike_version: {self.klondike_version}",
+                ]
+            )
+
+        # Add configured agents
+        if self.configured_agents:
+            agents_list = ", ".join(self.configured_agents)
+            lines.extend(
+                [
+                    "",
+                    "# AI coding agents configured for this project (copilot, claude)",
+                    f"configured_agents: [{agents_list}]",
                 ]
             )
 

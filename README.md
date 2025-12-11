@@ -60,6 +60,56 @@ AI agents can efficiently navigate the CLI surface, discovering exactly what the
 
 ---
 
+## 🤖 Multi-Agent Support
+
+Klondike Spec CLI supports multiple AI coding agents with a pluggable adapter system.
+
+### Supported Agents
+
+| Agent | Flag | Templates Created |
+|-------|------|-------------------|
+| **GitHub Copilot** (default) | `--agent copilot` | `.github/` directory with instructions, prompts, templates |
+| **Claude Code** | `--agent claude` | `CLAUDE.md` at root, `.claude/` with settings and commands |
+| **Both** | `--agent all` | All templates for both agents |
+
+### Initialize with Your Preferred Agent
+
+```bash
+# Default: GitHub Copilot
+klondike init my-project
+
+# Claude Code
+klondike init my-project --agent claude
+
+# Both agents
+klondike init my-project --agent all
+
+# Add Claude to existing Copilot project
+klondike upgrade --agent claude
+```
+
+### Claude Code Integration
+
+When using `--agent claude`, klondike creates:
+
+```
+your-project/
+├── CLAUDE.md              # Main instructions file (read by Claude Code)
+└── .claude/
+    ├── settings.json      # Permission presets for klondike commands
+    └── commands/          # Custom slash commands
+        ├── session-start.md
+        ├── session-end.md
+        ├── verify-feature.md
+        ├── progress-report.md
+        ├── add-features.md
+        └── recover-from-failure.md
+```
+
+Use the slash commands in Claude Code by typing `/project:command-name`.
+
+---
+
 ## 🌳 Isolated Worktree Sessions
 
 One of Klondike's most powerful features is the ability to run AI agents in **isolated git worktrees**. This provides a safe sandbox where agents can make changes without affecting your main project until you're ready.
@@ -244,9 +294,10 @@ Recent commits:
 
 | Command | Description |
 |---------|-------------|
-| `klondike init [name]` | Initialize .klondike directory and .github templates |
+| `klondike init [name]` | Initialize .klondike directory and agent templates |
+| `klondike init --agent <name>` | Select agent: `copilot` (default), `claude`, or `all` |
 | `klondike init --prd <path>` | Initialize with PRD link for agent context |
-| `klondike init --skip-github` | Initialize without .github scaffolding |
+| `klondike init --skip-github` | Initialize without agent template scaffolding |
 | `klondike init --upgrade` | Upgrade templates while preserving user data |
 | `klondike init --force` | Wipe and reinitialize (requires confirmation) |
 | `klondike upgrade` | Alias for `init --upgrade` - refresh templates |
@@ -315,6 +366,8 @@ klondike completion powershell >> $PROFILE
 
 After running `klondike init`, your project will have:
 
+### With GitHub Copilot (default)
+
 ```
 your-project/
 ├── .klondike/
@@ -325,24 +378,27 @@ your-project/
 └── .github/
     ├── copilot-instructions.md  # 🤖 Agent behavior rules
     ├── instructions/            # 📚 Workflow instruction files
-    │   ├── git-practices.instructions.md
-    │   ├── session-artifacts.instructions.md
-    │   └── testing-practices.instructions.md
     ├── prompts/                 # 💬 Reusable prompt templates
-    │   ├── add-features.prompt.md
-    │   ├── progress-report.prompt.md
-    │   ├── recover-from-failure.prompt.md
-    │   ├── session-end.prompt.md
-    │   ├── session-start.prompt.md
-    │   └── verify-feature.prompt.md
     └── templates/               # 📐 Init scripts and schemas
-        ├── agent-progress.template.md
-        ├── features.schema.json
-        ├── init.ps1
-        └── init.sh
 ```
 
-> **Tip**: Use `--skip-github` if your project already has a `.github` directory you want to preserve.
+### With Claude Code (`--agent claude`)
+
+```
+your-project/
+├── .klondike/                # Same as above
+├── agent-progress.md
+├── CLAUDE.md                 # 🤖 Main Claude instructions
+└── .claude/
+    ├── settings.json         # ⚙️ Permission presets
+    └── commands/             # 💬 Custom slash commands
+```
+
+### With Both (`--agent all`)
+
+Both `.github/` and `.claude/` + `CLAUDE.md` are created.
+
+> **Tip**: Use `--skip-github` to skip agent template creation entirely.
 
 ---
 

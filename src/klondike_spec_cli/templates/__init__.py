@@ -25,8 +25,12 @@ AVAILABLE_TEMPLATES = [
     CONFIG_TEMPLATE,
 ]
 
-# GitHub templates structure
-GITHUB_TEMPLATES_PACKAGE = "klondike_spec_cli.templates.github_templates"
+# Agent-specific templates packages
+COPILOT_TEMPLATES_PACKAGE = "klondike_spec_cli.templates.copilot_templates"
+CLAUDE_TEMPLATES_PACKAGE = "klondike_spec_cli.templates.claude_templates"
+
+# Backward compatibility alias
+GITHUB_TEMPLATES_PACKAGE = COPILOT_TEMPLATES_PACKAGE
 
 
 def get_template_path(template_name: str) -> Traversable:

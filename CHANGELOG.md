@@ -7,23 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [0.2.16] - 2025-12-11
 
 ### ✨ Added
 
+- **Claude Code Support** - Full support for Anthropic's Claude Code CLI as an alternative to GitHub Copilot:
+  - `klondike init --agent claude` - Initialize with Claude Code templates
+  - `klondike init --agent all` - Initialize with both Copilot and Claude templates
+  - `klondike upgrade --agent claude` - Add Claude support to existing projects
+  - Creates `CLAUDE.md` at project root with comprehensive agent instructions
+  - Creates `.claude/settings.json` with permission presets
+  - Creates `.claude/commands/` with custom slash commands:
+    - `session-start` - Start a coding session with context gathering
+    - `session-end` - End session with documentation and clean state
+    - `verify-feature` - Verify feature completion with evidence
+    - `progress-report` - Generate comprehensive progress report
+    - `add-features` - Add features with structured criteria
+    - `recover-from-failure` - Diagnose and recover from broken state
+- **Agent Adapter System** - New pluggable architecture for multi-agent support:
+  - Abstract `AgentAdapter` base class in `klondike_spec_cli.agents`
+  - `CopilotAdapter` for GitHub Copilot (default)
+  - `ClaudeAdapter` for Claude Code
+  - Extensible for future agent integrations
+- **Multi-Agent Projects** - Track which agents are configured per project:
+  - `configured_agents` list in `config.yaml`
+  - Upgrades target only configured agents by default
+
 - **Intelligent Project Upgrade** - `klondike init` now supports existing projects with smart upgrade modes:
-  - `klondike init --upgrade` (or `klondike upgrade`) - Refresh .github/ templates while preserving user data
+  - `klondike init --upgrade` (or `klondike upgrade`) - Refresh agent templates while preserving user data
   - `klondike init --force` - Complete wipe and reinit with confirmation prompt
   - Automatic version detection suggests upgrade when templates are outdated
-  - Backup of .github/ directory before upgrade
+  - Backup of agent directories before upgrade
   - Version tracking in `config.yaml` via `klondike_version` field
 - **Upgrade Command** - New `klondike upgrade` command as convenient alias for `init --upgrade`
 
 ### 📝 Changed
 
+- **Template Reorganization** - Templates moved from `github_templates` to `copilot_templates` for clarity
 - **Force Mode Confirmation** - `klondike init --force` now requires typing 'yes' to confirm destructive operation
 - **Smarter Init Behavior** - Detects existing projects and suggests `--upgrade` instead of erroring immediately
-- **Config Model** - Added `klondike_version` field to track which CLI version created/upgraded the project
+- **Config Model** - Added `klondike_version` and `configured_agents` fields to track project state
 
 ---
 
