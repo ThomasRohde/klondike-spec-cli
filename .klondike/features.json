@@ -1300,13 +1300,18 @@
         "Import/export functionality tests pass"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-11T10:08:45.145421",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Created commands/io.py with import/export commands",
+        "cli.py delegates",
+        "all 181 tests passing",
+        "cli.py now 1546 lines (down from 1737)"
+      ],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-11T10:06:41.909044",
       "notes": "Implementation: Create src/klondike_spec_cli/commands/io.py. Move import_features command logic (lines 1860-2020 approx) and export_features command logic (lines 2100-2180 approx). Keep @app.command decorators in cli.py. Dependencies: F044 (data access layer). Edge cases: YAML parsing error handling, file format validation."
     },
     {
@@ -1425,8 +1430,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-11T10:06:30.115065",
+    "lastUpdated": "2025-12-11T10:08:45.145441",
     "totalFeatures": 54,
-    "passingFeatures": 41
+    "passingFeatures": 42
   }
 }
