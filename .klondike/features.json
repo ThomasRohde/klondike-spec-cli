@@ -1329,13 +1329,17 @@
         "Copilot integration tests pass"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-11T10:17:57.351141",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Created commands/copilot_cmd.py with copilot_start",
+        "copilot_list_worktrees",
+        "copilot_cleanup_worktrees functions. Removed old _copilot_* functions from cli.py. All 181 tests passing. Commit: c6eb14d"
+      ],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-11T10:17:51.361692",
       "notes": "Implementation: Create src/klondike_spec_cli/commands/copilot_cmd.py (name avoids conflict with existing copilot.py module). Move copilot command dispatch logic and _copilot_start, _copilot_list_worktrees, _copilot_cleanup_worktrees functions (lines 2015-2130 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer), existing copilot.py module."
     },
     {
@@ -1353,13 +1357,17 @@
         "MCP-related tests pass"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-11T10:18:04.430428",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Created commands/mcp_cmd.py with mcp_serve",
+        "mcp_install",
+        "mcp_config functions. Removed old _mcp_* functions from cli.py. Fixed test to check exception message instead of stdout. All 181 tests passing. Commit: c6eb14d"
+      ],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-11T10:18:00.123116",
       "notes": "Implementation: Create src/klondike_spec_cli/commands/mcp_cmd.py (name avoids conflict with existing mcp_server.py). Move mcp command dispatch and _mcp_serve, _mcp_install, _mcp_config functions (lines 2410-2510 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer), existing mcp_server.py module."
     },
     {
@@ -1430,8 +1438,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-11T10:08:45.145441",
+    "lastUpdated": "2025-12-11T10:18:04.430440",
     "totalFeatures": 54,
-    "passingFeatures": 42
+    "passingFeatures": 44
   }
 }
