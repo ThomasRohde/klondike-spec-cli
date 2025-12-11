@@ -15,6 +15,11 @@ from pathlib import Path
 from pith import Argument, Option, Pith, PithException, echo
 
 from . import formatting
+from .commands.copilot_cmd import (
+    copilot_cleanup_worktrees,
+    copilot_list_worktrees,
+    copilot_start,
+)
 from .commands.features import (
     feature_add,
     feature_block,
@@ -27,6 +32,7 @@ from .commands.features import (
 )
 from .commands.init import init_command, upgrade_command
 from .commands.io import export_features_command, import_features_command
+from .commands.mcp_cmd import mcp_config, mcp_install, mcp_serve
 from .commands.reporting import report_command
 from .commands.sessions import session_end, session_start
 from .data import (
@@ -900,7 +906,7 @@ def copilot(
         feature start - Mark a feature as in-progress
     """
     if action == "start":
-        _copilot_start(
+        copilot_start(
             model=model,
             resume=resume,
             feature_id=feature_id,
@@ -914,102 +920,11 @@ def copilot(
             apply_changes=apply_changes,
         )
     elif action == "list":
-        _copilot_list_worktrees()
+        copilot_list_worktrees()
     elif action == "cleanup":
-        _copilot_cleanup_worktrees(force=force)
+        copilot_cleanup_worktrees(force=force)
     else:
         raise PithException(f"Unknown action: {action}. Use: start, list, cleanup")
-
-
-def _copilot_start(
-    model: str | None,
-    resume: bool,
-    feature_id: str | None,
-    instructions: str | None,
-    allow_tools: str | None,
-    dry_run: bool,
-    use_worktree: bool = False,
-    parent_branch: str | None = None,
-    session_name: str | None = None,
-    cleanup_after: bool = False,
-    apply_changes: bool = False,
-) -> None:
-    """Launch GitHub Copilot CLI with project context.
-
-    Args:
-        model: Model to use (e.g., claude-sonnet, gpt-4)
-        resume: Resume previous session
-        feature_id: Focus on specific feature
-        instructions: Additional instructions
-        allow_tools: Comma-separated list of allowed tools
-        dry_run: Show command without executing
-        use_worktree: Run in isolated git worktree
-        parent_branch: Parent branch for worktree (default: current)
-        session_name: Custom session/branch name for worktree
-        cleanup_after: Remove worktree after session ends
-        apply_changes: Apply worktree changes to main project after session
-    """
-    from .copilot import CopilotConfig, launch_copilot
-
-    registry = load_features()
-
-    config = CopilotConfig(
-        model=model,
-        resume=resume,
-        feature_id=feature_id,
-        instructions=instructions,
-        allow_tools=allow_tools,
-        dry_run=dry_run,
-        use_worktree=use_worktree,
-        parent_branch=parent_branch,
-        session_name=session_name,
-        cleanup_after=cleanup_after,
-        apply_changes=apply_changes,
-    )
-
-    launch_copilot(config, registry)
-
-
-def _copilot_list_worktrees() -> None:
-    """List all copilot worktree sessions."""
-    from .copilot import list_copilot_worktrees
-
-    worktrees = list_copilot_worktrees()
-
-    if not worktrees:
-        echo("No active worktree sessions found.")
-        echo("")
-        echo("💡 Start a worktree session with: klondike copilot start --worktree")
-        return
-
-    echo(f"🌳 Active Worktree Sessions ({len(worktrees)} total)")
-    echo("")
-
-    for wt in worktrees:
-        echo(f"   📂 {wt.worktree_path}")
-        echo(f"      Branch: {wt.branch_name}")
-        if wt.feature_id:
-            echo(f"      Feature: {wt.feature_id}")
-        echo("")
-
-
-def _copilot_cleanup_worktrees(force: bool = False) -> None:
-    """Cleanup all copilot worktree sessions."""
-    from .copilot import cleanup_copilot_worktrees, list_copilot_worktrees
-
-    worktrees = list_copilot_worktrees()
-
-    if not worktrees:
-        echo("No active worktree sessions to clean up.")
-        return
-
-    echo(f"🧹 Cleaning up {len(worktrees)} worktree session(s)...")
-    echo("")
-
-    cleaned = cleanup_copilot_worktrees(force=force)
-
-    echo("")
-    echo(f"✅ Cleaned up {cleaned} worktree session(s)")
 
 
 @app.command(name="export-features", pith="Export features to YAML or JSON file", priority=76)
@@ -1098,11 +1013,11 @@ def mcp(
         status - Check project status
     """
     if action == "serve":
-        _mcp_serve(transport)
+        mcp_serve(transport)
     elif action == "install":
-        _mcp_install(output)
+        mcp_install(output)
     elif action == "config":
-        _mcp_config(output)
+        mcp_config(output)
     else:
         raise PithException(f"Unknown action: {action}. Use: serve, install, config")
 
@@ -1201,77 +1116,6 @@ def agents(action: str = Argument(..., pith="Action: generate")) -> None:
     output_path = root / "AGENTS.md"
     output_path.write_text("\n".join(lines), encoding="utf-8")
     echo(f"✅ Generated {output_path}")
-
-
-def _mcp_serve(transport: str) -> None:
-    """Start the MCP server."""
-    import sys
-
-    from klondike_spec_cli.mcp_server import MCP_AVAILABLE, run_server
-
-    if not MCP_AVAILABLE:
-        # Write to stderr since stdout is reserved for MCP protocol in stdio mode
-        sys.stderr.write("Error: MCP SDK not installed.\n")
-        sys.stderr.write("Install with: pip install 'klondike-spec-cli[mcp]'\n")
-        sys.stderr.write("Or: pip install mcp\n")
-        raise PithException("MCP SDK not available")
-
-    if transport not in ["stdio", "streamable-http"]:
-        raise PithException(f"Invalid transport: {transport}. Use: stdio, streamable-http")
-
-    # For stdio transport, don't write anything to stdout - it's reserved for MCP protocol
-    # Write status messages to stderr instead
-    if transport == "stdio":
-        sys.stderr.write("Starting klondike MCP server (stdio)...\n")
-    else:
-        echo(f"🚀 Starting klondike MCP server (transport: {transport})...")
-        echo("   Press Ctrl+C to stop")
-        echo("")
-
-    try:
-        run_server(transport=transport)
-    except KeyboardInterrupt:
-        if transport != "stdio":
-            echo("")
-            echo("✅ MCP server stopped")
-
-
-def _mcp_install(output: str | None) -> None:
-    """Install MCP server configuration for VS Code workspace."""
-    from klondike_spec_cli.mcp_server import generate_vscode_mcp_config
-
-    # Default to .vscode/mcp.json in current workspace
-    if output:
-        output_path = Path(output)
-    else:
-        output_path = Path.cwd() / ".vscode" / "mcp.json"
-
-    config = generate_vscode_mcp_config(output_path)
-
-    echo("✅ MCP configuration installed")
-    echo(f"   📄 Config file: {output_path}")
-    echo("")
-    echo("📋 MCP Server Configuration:")
-    echo(json.dumps(config, indent=2))
-    echo("")
-    echo("💡 To use with GitHub Copilot:")
-    echo("   1. Reload VS Code window (Ctrl+Shift+P → 'Reload Window')")
-    echo("   2. The klondike MCP server will be available in Copilot Chat")
-    echo("")
-    echo("   Tools available: get_features, start_feature, verify_feature, etc.")
-
-
-def _mcp_config(output: str | None) -> None:
-    """Generate MCP configuration file."""
-    from klondike_spec_cli.mcp_server import generate_mcp_config
-
-    if output:
-        output_path = Path(output)
-        generate_mcp_config(output_path)
-        echo(f"✅ MCP config written to: {output_path}")
-    else:
-        config = generate_mcp_config()
-        echo(json.dumps(config, indent=2))
 
 
 # --- Release Command ---

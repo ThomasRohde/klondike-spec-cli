@@ -258,8 +258,9 @@ class TestMcpServeFallback:
                 result = runner.invoke(app, ["mcp", "serve"])
 
                 assert result.exit_code != 0
-                assert "MCP SDK not installed" in result.output
-                assert "pip install" in result.output
+                # Error message is in the exception, not stdout (since stderr is used for MCP stdio)
+                assert result.exception is not None
+                assert "MCP SDK not available" in str(result.exception)
             finally:
                 os.chdir(original_cwd)
                 mcp_server.MCP_AVAILABLE = original_mcp_available
