@@ -10,16 +10,17 @@ on:
   release:
     types: [published]
   push:
+    branches: [master, main]
     tags:
       - "v*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Only run if CI succeeded (for workflow_run trigger) or for tags/releases
+    # Only run if CI succeeded (for workflow_run trigger) or for tags/releases, skip regular branch pushes
     if: |
       github.event_name == 'release' ||
-      github.event_name == 'push' ||
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
       (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     steps:
       - uses: actions/checkout@v4
