@@ -1813,11 +1813,15 @@
         "One-click Start/Block/Verify actions with forms"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T11:17:55.906927",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Manual end-to-end testing completed successfully. TaskViewer displays all feature details including description/category/priority/criteria/notes. Acceptance criteria shown as checklist with pass indicators. Verification evidence and block reason displayed appropriately. Edit mode functional for all modifiable fields. Start/Block/Verify action buttons working with modal forms. Navigation from SpecExplorer works seamlessly. All UI components render correctly with proper styling. Build passed",
+        "linting clean",
+        "all 181 tests passing."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T11:14:14.520755",
       "notes": "Implementation: React component as detail panel or separate route. Use modals for block reason and verify evidence inputs. PUT to /api/features/{id} for edits, POST to status endpoints for actions. Context: Feature detail view per WEB_PRD.md Task Viewer section. Dependencies: F059, F061, F062."
@@ -2010,8 +2014,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T11:10:35.335387",
+    "lastUpdated": "2025-12-22T11:17:55.906955",
     "totalFeatures": 76,
-    "passingFeatures": 54
+    "passingFeatures": 55
   }
 }
