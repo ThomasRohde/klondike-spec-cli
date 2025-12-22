@@ -246,17 +246,17 @@
       {
         "id": "F039",
         "description": "Local CI check command that detects and runs project CI checks",
-        "status": "not-started"
+        "status": "blocked"
       },
       {
         "id": "F042",
         "description": "Integration test",
-        "status": "not-started"
+        "status": "blocked"
       },
       {
         "id": "F043",
         "description": "E2E test",
-        "status": "not-started"
+        "status": "blocked"
       }
     ]
   }

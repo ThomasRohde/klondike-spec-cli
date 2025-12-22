@@ -966,13 +966,13 @@
         "Shows link to created PR on completion"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:29.016254",
       "notes": null
     },
     {
@@ -988,13 +988,13 @@
         "Auto-suggests resume when starting new klondike session"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:29.445913",
       "notes": null
     },
     {
@@ -1011,13 +1011,13 @@
         "Stores gist URL in session record"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:29.863872",
       "notes": null
     },
     {
@@ -1034,13 +1034,13 @@
         "Supports --auto-add to directly add suggestions"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:30.266727",
       "notes": null
     },
     {
@@ -1053,13 +1053,13 @@
         "Reports pass/fail status"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:26.734280",
       "notes": null
     },
     {
@@ -1127,13 +1127,13 @@
         "Feature works as described"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:27.384741",
       "notes": null
     },
     {
@@ -1146,13 +1146,13 @@
         "Feature works as described"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:28.011166",
       "notes": null
     },
     {
@@ -1382,13 +1382,13 @@
         "Release workflow tests pass"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:28.567551",
       "notes": "Implementation: Create src/klondike_spec_cli/commands/release.py. Move release command logic and _bump_version helper (lines 2520-2700 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer), git.py module. Self-contained release workflow logic."
     },
     {
@@ -1404,13 +1404,13 @@
         "Clean import structure with no circular dependencies"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:30.661347",
       "notes": "Implementation: Create commands/__init__.py that re-exports all command handlers from submodules. This creates a clean API: from klondike_spec_cli.commands import feature_add, session_start, etc. Should be done after individual command modules are extracted. Dependencies: F044-F052. This is the consolidation step."
     },
     {
@@ -1426,13 +1426,13 @@
         "All tests pass with full coverage maintained"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:31.072021",
       "notes": "Implementation: After all command extractions are complete, cli.py should contain only: imports, Pith app definition, @app.command decorated functions that delegate to command modules, and main() entry point. Remove any orphaned helper functions. Run ruff to clean imports. Dependencies: F044-F053. This is the final cleanup step. Verify line count reduction from 3000+ to under 500."
     },
     {
@@ -1447,13 +1447,13 @@
         "Ruff check passes with no import warnings"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:31.542486",
       "notes": "Implementation: Run ruff check --select F401 to find unused imports. Remove Option import from init.py (parameters are function args, not CLI decorators). Edge cases: Some imports may be used for type hints only. Context: Cleanup after cli.py refactoring. Gotchas: Ensure imports needed for TYPE_CHECKING blocks are preserved."
     },
     {
@@ -1468,13 +1468,13 @@
         "All tests pass after move"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:31.932398",
       "notes": "Implementation: Move generate_progress_bar() from commands/reporting.py to formatting.py. Update import in reporting.py. Edge cases: Function is self-contained with no dependencies. Context: Consolidate display utilities in formatting.py for consistency. Gotchas: Ensure the function signature and behavior remain unchanged."
     },
     {
@@ -1489,13 +1489,13 @@
         "No duplicate examples or usage info between layers"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "blocked",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": null,
-      "lastWorkedOn": null,
+      "blockedBy": "Pausing work - blocked by user request",
+      "lastWorkedOn": "2025-12-22T07:03:35.273165",
       "notes": "Implementation: Keep full docstrings on @app.command decorators (user-facing help). Reduce command function docstrings to brief implementation notes. Edge cases: init_command and upgrade_command in commands/init.py have full copies. Context: Docstring duplication makes maintenance harder. Gotchas: Ensure klondike --help and klondike pith still show correct documentation."
     }
   ],

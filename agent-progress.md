@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F039 | Local CI check command that detects and runs project CI checks | ⏳ Not started |
-| F042 | Integration test | ⏳ Not started |
-| F043 | E2E test | ⏳ Not started |
+| F039 | Local CI check command that detects and runs project CI checks | 🚫 Blocked |
+| F042 | Integration test | 🚫 Blocked |
+| F043 | E2E test | 🚫 Blocked |
 
 ---
 
