@@ -36,7 +36,7 @@ from .models import (
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-# MCP SDK imports - these are optional dependencies
+# MCP SDK imports - core dependency, but use try/except for graceful error handling
 try:
     from mcp.server.fastmcp import FastMCP
 
@@ -714,7 +714,7 @@ def run_server(transport: str = "stdio") -> None:
     from typing import Literal, cast
 
     if not MCP_AVAILABLE:
-        logger.error("MCP SDK not installed. Install with: pip install 'klondike-spec-cli[mcp]'")
+        logger.error("MCP SDK import failed. Try reinstalling: pip install --force-reinstall klondike-spec-cli")
         raise ImportError("MCP SDK not available")
 
     mcp = create_mcp_server()

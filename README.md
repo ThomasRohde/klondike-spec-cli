@@ -340,6 +340,15 @@ Recent commits:
 | `klondike mcp install` | Generate MCP server config for VS Code |
 | `klondike mcp config` | Output MCP configuration JSON |
 
+### Web UI
+
+| Command | Description |
+|---------|-------------|
+| `klondike serve` | Start web UI for project management |
+| `klondike serve --port 3000` | Use custom port |
+| `klondike serve --host 0.0.0.0` | Allow external connections |
+| `klondike serve --open` | Auto-launch browser |
+
 ### Import/Export
 
 | Command | Description |

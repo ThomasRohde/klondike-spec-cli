@@ -1146,7 +1146,7 @@ def agents(action: str = Argument(..., pith="Action: generate")) -> None:
 )
 def serve(
     port: int = Option(8000, "--port", "-p", pith="Port to run server on"),
-    host: str = Option("127.0.0.1", "--host", "-h", pith="Host to bind server to"),
+    host: str = Option("127.0.0.1", "--host", pith="Host to bind server to"),
     open_browser: bool = Option(False, "--open", "-o", pith="Open browser automatically"),
 ) -> None:
     """Start FastAPI web server for Klondike Spec project management.
@@ -1170,8 +1170,8 @@ def serve(
         from fastapi.staticfiles import StaticFiles
     except ImportError as err:
         raise PithException(
-            "FastAPI and uvicorn are required for serve command.\n"
-            "Install with: pip install klondike-spec-cli[serve]"
+            f"FastAPI/uvicorn import failed: {err}\n"
+            "Try reinstalling: pip install --force-reinstall klondike-spec-cli"
         ) from err
 
     try:
@@ -1179,8 +1179,8 @@ def serve(
         from watchdog.observers import Observer
     except ImportError as err:
         raise PithException(
-            "watchdog is required for serve command.\n"
-            "Install with: pip install klondike-spec-cli[serve]"
+            f"watchdog import failed: {err}\n"
+            "Try reinstalling: pip install --force-reinstall klondike-spec-cli"
         ) from err
 
     # Verify .klondike directory exists

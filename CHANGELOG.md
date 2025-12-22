@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.18] - 2025-12-22
+
+### ✨ Added
+
+- **Web UI** - New `klondike serve` command launches a web-based project dashboard:
+  - Real-time feature management with live updates via WebSocket
+  - Session control panel for starting/ending sessions
+  - Activity log with live project events
+  - Configuration editor for project settings
+  - Spec explorer for browsing klondike templates
+  - Responsive design with Tailwind CSS
+  - Auto-open browser with `--open` flag
+  - Configurable host/port with `--host` and `--port` options
+
+- **REST API** - Full API for programmatic access:
+  - `GET /api/features` - List all features
+  - `POST /api/features` - Add new feature
+  - `PATCH /api/features/{id}` - Update feature status
+  - `GET /api/sessions` - List all sessions
+  - `POST /api/sessions/start` - Start new session
+  - `POST /api/sessions/end` - End current session
+  - `GET /api/config` - Get project configuration
+  - `PATCH /api/config` - Update configuration
+  - `GET /api/commits` - Get recent git commits
+  - `WebSocket /api/updates` - Real-time event stream
+
+### 📝 Changed
+
+- **All-in-one Install** - MCP server and web UI dependencies are now included by default:
+  - No more optional extras needed (`[mcp]`, `[serve]`, `[all]`)
+  - Single `pip install klondike-spec-cli` installs everything
+  - Simplified documentation and error messages
+
+- **CLI Fix** - Removed `-h` short option conflict on `serve` command (was conflicting with `--help`)
+
+---
+
 ## [0.2.16] - 2025-12-11
 
 ### ✨ Added
