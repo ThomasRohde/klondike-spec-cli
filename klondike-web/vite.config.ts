@@ -1,11 +1,11 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  build: {
-    outDir: '../src/klondike_spec_cli/static',
-    emptyOutDir: true,
-  },
-})
+    plugins: [react()],
+    build: {
+        outDir: "../src/klondike_spec_cli/static",
+        emptyOutDir: true,
+    },
+});
