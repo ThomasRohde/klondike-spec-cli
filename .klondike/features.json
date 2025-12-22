@@ -1910,13 +1910,13 @@
         "Success feedback with new feature ID"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T11:46:36.787779",
       "notes": "Implementation: React form component triggered from Spec Explorer. POST to /api/features. Parse criteria as comma-separated or line-separated. Show validation errors from API. Context: Feature creation per WEB_PRD.md Interactive Controls section. Dependencies: F059, F061."
     },
     {

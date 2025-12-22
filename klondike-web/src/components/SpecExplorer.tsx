@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon, PlusIcon } from '@heroicons/react/24/outline'
+import { AddFeatureForm } from './AddFeatureForm'
 
 interface Feature {
     id: string
@@ -45,6 +46,8 @@ export function SpecExplorer() {
     const [searchText, setSearchText] = useState('')
     const [statusFilter, setStatusFilter] = useState<string>('all')
     const [categoryFilter, setCategoryFilter] = useState<string>('all')
+    const [isAddFormOpen, setIsAddFormOpen] = useState(false)
+    const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
     // Extract unique categories from features
     const categories = Array.from(new Set(features.map(f => f.category))).sort()
@@ -90,6 +93,12 @@ export function SpecExplorer() {
         }
     }
 
+    function handleFeatureAdded(featureId: string) {
+        setSuccessMessage(`Feature ${featureId} created successfully!`)
+        fetchFeatures() // Refresh the list
+        setTimeout(() => setSuccessMessage(null), 5000) // Clear message after 5 seconds
+    }
+
     function StatusBadge({ status }: { status: Feature['status'] }) {
         const config = statusConfig[status]
         const Icon = config.icon
@@ -119,7 +128,23 @@ export function SpecExplorer() {
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Spec Explorer</h2>
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-gray-900">Spec Explorer</h2>
+                <button
+                    onClick={() => setIsAddFormOpen(true)}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                    <PlusIcon className="w-5 h-5" />
+                    Add Feature
+                </button>
+            </div>
+
+            {/* Success Message */}
+            {successMessage && (
+                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-6">
+                    {successMessage}
+                </div>
+            )}
 
             {/* Filters */}
             <div className="bg-white rounded-lg shadow mb-6 p-4">
@@ -241,6 +266,13 @@ export function SpecExplorer() {
                     </div>
                 )}
             </div>
+
+            {/* Add Feature Modal */}
+            <AddFeatureForm
+                isOpen={isAddFormOpen}
+                onClose={() => setIsAddFormOpen(false)}
+                onSuccess={handleFeatureAdded}
+            />
         </div>
     )
 }
