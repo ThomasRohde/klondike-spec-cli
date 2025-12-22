@@ -89,7 +89,11 @@ class Feature:
             "dependencies": self.dependencies,
             "acceptanceCriteria": self.acceptance_criteria,
             "estimatedEffort": self.estimated_effort,
-            "status": self.status.value if isinstance(self.status, FeatureStatus) else self.status,
+            "status": (
+                self.status.value
+                if isinstance(self.status, FeatureStatus)
+                else self.status
+            ),
             "passes": self.passes,
             "verifiedAt": self.verified_at,
             "verifiedBy": self.verified_by,
@@ -249,7 +253,8 @@ class FeatureRegistry:
     def get_priority_features(self, limit: int = 3) -> list[Feature]:
         """Get top priority incomplete features (excludes blocked features)."""
         incomplete = [
-            f for f in self.features
+            f
+            for f in self.features
             if not f.passes and f.status != FeatureStatus.BLOCKED
         ]
         sorted_features = sorted(incomplete, key=lambda f: (f.priority, f.id))
@@ -317,7 +322,8 @@ class QuickReference:
             dev_server_port=data.get("devServerPort"),
             key_files=data.get("keyFiles", []),
             priority_features=[
-                PriorityFeatureRef.from_dict(f) for f in data.get("priorityFeatures", [])
+                PriorityFeatureRef.from_dict(f)
+                for f in data.get("priorityFeatures", [])
             ],
         )
 
@@ -576,7 +582,9 @@ class Config:
     progress_output_path: str = "agent-progress.md"
     auto_regenerate_progress: bool = True
     prd_source: str | None = None  # Link to PRD document for agent context
-    klondike_version: str | None = None  # Version of klondike-spec-cli that created this config
+    klondike_version: str | None = (
+        None  # Version of klondike-spec-cli that created this config
+    )
     configured_agents: list[str] = field(
         default_factory=lambda: ["copilot"]
     )  # AI agents configured
