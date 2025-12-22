@@ -13,6 +13,7 @@ import {
     ChevronDoubleLeftIcon,
     ChevronDoubleRightIcon,
     CalendarDaysIcon,
+    ShareIcon,
 } from '@heroicons/react/24/outline'
 import { useWebSocket } from '../hooks/useWebSocket'
 import { getApiBaseUrl, getWebSocketUrl } from '../utils/api'
@@ -32,6 +33,7 @@ const navigation = [
     { name: 'Spec Explorer', href: '/specs', icon: DocumentTextIcon },
     { name: 'Kanban Board', href: '/kanban', icon: ViewColumnsIcon },
     { name: 'Timeline', href: '/timeline', icon: CalendarDaysIcon },
+    { name: 'Dependencies', href: '/dependencies', icon: ShareIcon },
     { name: 'Activity Log', href: '/activity', icon: ClockIcon },
     { name: 'Config', href: '/config', icon: Cog6ToothIcon },
 ]

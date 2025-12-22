@@ -2283,11 +2283,15 @@
         "Filter by date range"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T16:47:16.749907",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "FeatureTimeline.tsx with vertical timeline; TimelineEventCard with expandable details; DateRangeFilter component; groupEventsByDate utility; EventIcon color-coded by type; fetches from /api/features",
+        "/api/progress",
+        "/api/commits; route and nav link added; build success; 181 tests pass; commit dedfdb6"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T16:44:25.646748",
       "notes": "Implementation: Custom timeline component with flex layout. Query git commits and session history for events. Edge cases: Handle sparse timelines with few events. Dependencies: F075 (git history API). Context: Project retrospective and progress tracking. Gotchas: Performance with many events - virtualize or paginate."
@@ -2306,13 +2310,13 @@
         "Zoom and pan controls"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T16:47:25.545225",
       "notes": "Implementation: Use react-flow or d3-force for graph layout. Parse notes field for dependency mentions. Edge cases: Handle circular dependencies, orphan nodes. Dependencies: F068 (feature details). Context: Visualize complex project structure and blockers. Gotchas: Layout algorithm can be expensive - cache results, limit visible nodes."
     },
     {
@@ -2820,8 +2824,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T16:44:13.990072",
+    "lastUpdated": "2025-12-22T16:47:16.749920",
     "totalFeatures": 104,
-    "passingFeatures": 84
+    "passingFeatures": 85
   }
 }

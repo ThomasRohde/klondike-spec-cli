@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F084 | Feature timeline visualization showing project history | 🔄 In progress |
-| F085 | Feature dependency graph visualization | ⏳ Not started |
+| F085 | Feature dependency graph visualization | 🔄 In progress |
 | F088 | Real-time collaboration indicators showing active users | ⏳ Not started |
+| F090 | Customizable dashboard widgets with drag-drop layout | ⏳ Not started |
 
 ---
 
