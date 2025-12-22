@@ -2353,11 +2353,17 @@
         "Expands on hover option"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T16:30:45.698130",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "Layout.tsx with collapsible sidebar",
+        "ChevronDoubleLeft/Right icons",
+        "localStorage persistence",
+        "icon-only mode with tooltips",
+        "dynamic content padding; build success; 181 tests pass; commit f30f802"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T16:28:21.971681",
       "notes": "Implementation: Store collapsed state in localStorage. Use Tailwind w-64 vs w-16 with transition. Edge cases: Handle mobile where sidebar is overlay. Dependencies: F073 (navigation sidebar). Context: More screen real estate for content. Gotchas: Icons must be recognizable without labels, test with users."
@@ -2694,13 +2700,13 @@
         "Clear all filters button"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T16:30:50.486534",
       "notes": "Implementation: Combine existing filters with localStorage for saved queries. Add chips UI component. Edge cases: Handle very long saved query names. Dependencies: F067 (spec explorer). Context: Power users need fast access to specific features. Gotchas: Debounce search input to avoid excessive filtering."
     },
     {
@@ -2805,8 +2811,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T16:28:14.679340",
+    "lastUpdated": "2025-12-22T16:30:45.698142",
     "totalFeatures": 104,
-    "passingFeatures": 80
+    "passingFeatures": 81
   }
 }
