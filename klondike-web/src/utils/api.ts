@@ -1,4 +1,4 @@
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
 /**
  * API utility functions for constructing URLs based on current origin.
@@ -45,63 +45,63 @@ export function getWebSocketUrl(path: string): string {
 export async function apiCall<T>(
     promise: Promise<Response>,
     options?: {
-        successMessage?: string | ((data: T) => string)
-        errorMessage?: string
-        loadingMessage?: string
+        successMessage?: string | ((data: T) => string);
+        errorMessage?: string;
+        loadingMessage?: string;
     }
 ): Promise<T> {
-    const toastId = options?.loadingMessage
-        ? toast.loading(options.loadingMessage)
-        : undefined
+    const toastId = options?.loadingMessage ? toast.loading(options.loadingMessage) : undefined;
 
     try {
-        const response = await promise
+        const response = await promise;
 
         if (!response.ok) {
-            const errorText = await response.text()
-            let errorMessage = options?.errorMessage || 'Operation failed'
-            
+            const errorText = await response.text();
+            let errorMessage = options?.errorMessage || "Operation failed";
+
             try {
-                const errorJson = JSON.parse(errorText)
+                const errorJson = JSON.parse(errorText);
                 if (errorJson.detail) {
-                    errorMessage = errorJson.detail
+                    errorMessage = errorJson.detail;
                 }
             } catch {
                 // Not JSON, use default message
             }
 
-            if (toastId) toast.dismiss(toastId)
-            toast.error(errorMessage)
-            throw new Error(errorMessage)
+            if (toastId) toast.dismiss(toastId);
+            toast.error(errorMessage);
+            throw new Error(errorMessage);
         }
 
-        const data = await response.json()
+        const data = await response.json();
 
         if (toastId) {
-            const message = typeof options?.successMessage === 'function'
-                ? options.successMessage(data as T)
-                : options?.successMessage || 'Success'
-            toast.success(message, { id: toastId })
+            const message =
+                typeof options?.successMessage === "function"
+                    ? options.successMessage(data as T)
+                    : options?.successMessage || "Success";
+            toast.success(message, { id: toastId });
         } else if (options?.successMessage) {
-            const message = typeof options.successMessage === 'function'
-                ? options.successMessage(data as T)
-                : options.successMessage
-            toast.success(message)
+            const message =
+                typeof options.successMessage === "function"
+                    ? options.successMessage(data as T)
+                    : options.successMessage;
+            toast.success(message);
         }
 
-        return data as T
+        return data as T;
     } catch (error) {
-        if (toastId) toast.dismiss(toastId)
-        
+        if (toastId) toast.dismiss(toastId);
+
         if (error instanceof Error) {
             if (!options?.errorMessage) {
-                toast.error(error.message)
+                toast.error(error.message);
             }
-            throw error
+            throw error;
         }
-        
-        const message = options?.errorMessage || 'An unexpected error occurred'
-        toast.error(message)
-        throw new Error(message)
+
+        const message = options?.errorMessage || "An unexpected error occurred";
+        toast.error(message);
+        throw new Error(message);
     }
 }

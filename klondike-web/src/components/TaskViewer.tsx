@@ -113,7 +113,7 @@ export function TaskViewer() {
                 }
             )
             if (result.warning) {
-                toast.warning(result.warning)
+                toast(result.warning, { icon: '⚠️' })
             }
             setFeature(result.feature)
         } catch (err) {
