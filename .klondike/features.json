@@ -1511,11 +1511,17 @@
         "Auto-detection of .klondike folder or error if missing"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T07:35:21.894582",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Server starts successfully on configurable port",
+        "serves static index.html",
+        "/health endpoint works",
+        "handles Ctrl+C gracefully",
+        "detects .klondike directory. Tested via background job with curl validation. All tests pass (181/181)."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T07:09:35.233784",
       "notes": "Implementation: Use FastAPI with uvicorn for async/WebSocket support. Bundle React build in package static/ folder. Default port 8000, allow --port flag. Print clear URL message on start. Context: Foundation for all web UI features per WEB_PRD.md. Dependencies: React SPA build (F059). Gotchas: Ensure cross-platform compatibility (Windows/Mac/Linux), handle port-in-use errors gracefully."
@@ -1938,8 +1944,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T07:08:04.433801",
+    "lastUpdated": "2025-12-22T07:35:21.894609",
     "totalFeatures": 76,
-    "passingFeatures": 44
+    "passingFeatures": 45
   }
 }
