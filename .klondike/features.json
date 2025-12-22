@@ -1841,13 +1841,13 @@
         "Optionally shows recent git commits interwoven or separate"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T11:19:48.212614",
       "notes": "Implementation: React component with timeline or card layout. Fetch from GET /api/progress. Highlight active session with different styling. Consider expandable/collapsible session cards for long histories. Context: Session history view per WEB_PRD.md Activity Log section. Dependencies: F059, F063."
     },
     {
