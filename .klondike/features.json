@@ -1655,7 +1655,7 @@
         "Validates no active session on start if one already exists"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": true,
       "verifiedAt": "2025-12-22T09:08:59.961536",
       "verifiedBy": "coding-agent",
@@ -1664,7 +1664,7 @@
         "all endpoints respond correctly"
       ],
       "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T09:09:59.518398",
+      "lastWorkedOn": "2025-12-22T09:12:52.875362",
       "notes": "Implementation: Reuse ProgressLog from data.py and session start/end CLI logic. Auto-generate nextSteps from priority features if not provided. Context: Powers Activity Log and session controls per WEB_PRD.md. Dependencies: F058. Edge cases: No active session on end (error), artifact validation on start."
     },
     {

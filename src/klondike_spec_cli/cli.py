@@ -102,12 +102,8 @@ def init(
     upgrade: bool = Option(
         False, "--upgrade", "-u", pith="Upgrade templates while preserving user data"
     ),
-    skip_github: bool = Option(
-        False, "--skip-github", pith="Skip creating .github directory"
-    ),
-    prd_source: str | None = Option(
-        None, "--prd", pith="Link to PRD document for agent context"
-    ),
+    skip_github: bool = Option(False, "--skip-github", pith="Skip creating .github directory"),
+    prd_source: str | None = Option(None, "--prd", pith="Link to PRD document for agent context"),
     agent: str | None = Option(
         None,
         "--agent",
@@ -170,12 +166,8 @@ def init(
     "upgrade klondike",
 )
 def upgrade(
-    skip_github: bool = Option(
-        False, "--skip-github", pith="Skip updating agent templates"
-    ),
-    prd_source: str | None = Option(
-        None, "--prd", pith="Link to PRD document for agent context"
-    ),
+    skip_github: bool = Option(False, "--skip-github", pith="Skip updating agent templates"),
+    prd_source: str | None = Option(None, "--prd", pith="Link to PRD document for agent context"),
     agent: str | None = Option(
         None,
         "--agent",
@@ -253,9 +245,7 @@ def status(
             "passingFeatures": registry.metadata.passing_features,
             "progressPercent": (
                 round(
-                    registry.metadata.passing_features
-                    / registry.metadata.total_features
-                    * 100,
+                    registry.metadata.passing_features / registry.metadata.total_features * 100,
                     1,
                 )
                 if registry.metadata.total_features > 0
@@ -265,9 +255,7 @@ def status(
                 status.value: len(registry.get_features_by_status(status))
                 for status in FeatureStatus
             },
-            "currentSession": (
-                current_session.to_dict() if current_session is not None else None
-            ),
+            "currentSession": (current_session.to_dict() if current_session is not None else None),
         }
         echo(json.dumps(status_data, indent=2))
         return
@@ -277,16 +265,12 @@ def status(
     console = formatting.get_console()
 
     # Print status summary with colors
-    formatting.print_status_summary(
-        registry, f"{registry.project_name} v{registry.version}"
-    )
+    formatting.print_status_summary(registry, f"{registry.project_name} v{registry.version}")
 
     # Current session info
     current = progress.get_current_session()
     if current:
-        console.print(
-            f"[bold]📅 Last Session:[/bold] #{current.session_number} ({current.date})"
-        )
+        console.print(f"[bold]📅 Last Session:[/bold] #{current.session_number} ({current.date})")
         console.print(f"   [dim]Focus:[/dim] {current.focus}")
         console.print()
 
@@ -343,20 +327,14 @@ def status(
     "copilot prompt",
 )
 def feature(
-    action: str = Argument(
-        ..., pith="Action: add, list, start, verify, block, show, edit, prompt"
-    ),
+    action: str = Argument(..., pith="Action: add, list, start, verify, block, show, edit, prompt"),
     feature_id: str | None = Argument(
         None, pith="Feature ID (e.g., F001) or description for 'add'"
     ),
-    description: str | None = Option(
-        None, "--description", "-d", pith="Feature description"
-    ),
+    description: str | None = Option(None, "--description", "-d", pith="Feature description"),
     category: str | None = Option(None, "--category", "-c", pith="Feature category"),
     priority: int | None = Option(None, "--priority", "-p", pith="Priority (1-5)"),
-    criteria: str | None = Option(
-        None, "--criteria", pith="Acceptance criteria (comma-separated)"
-    ),
+    criteria: str | None = Option(None, "--criteria", pith="Acceptance criteria (comma-separated)"),
     add_criteria: str | None = Option(
         None, "--add-criteria", pith="Add acceptance criteria (comma-separated)"
     ),
@@ -367,12 +345,8 @@ def feature(
     status_filter: str | None = Option(None, "--status", "-s", pith="Filter by status"),
     json_output: bool = Option(False, "--json", pith="Output as JSON"),
     notes: str | None = Option(None, "--notes", pith="Additional notes"),
-    output: str | None = Option(
-        None, "--output", "-o", pith="Output file path for prompt"
-    ),
-    interactive: bool = Option(
-        False, "--interactive", "-i", pith="Launch copilot with prompt"
-    ),
+    output: str | None = Option(None, "--output", "-o", pith="Output file path for prompt"),
+    interactive: bool = Option(False, "--interactive", "-i", pith="Launch copilot with prompt"),
 ) -> None:
     """Manage features in the registry.
 
@@ -452,15 +426,9 @@ def session(
     completed: str | None = Option(
         None, "--completed", "-c", pith="Completed items (comma-separated)"
     ),
-    blockers: str | None = Option(
-        None, "--blockers", "-b", pith="Blockers encountered"
-    ),
-    next_steps: str | None = Option(
-        None, "--next", "-n", pith="Next steps (comma-separated)"
-    ),
-    auto_commit: bool = Option(
-        False, "--auto-commit", pith="Auto-commit changes on session end"
-    ),
+    blockers: str | None = Option(None, "--blockers", "-b", pith="Blockers encountered"),
+    next_steps: str | None = Option(None, "--next", "-n", pith="Next steps (comma-separated)"),
+    auto_commit: bool = Option(False, "--auto-commit", pith="Auto-commit changes on session end"),
 ) -> None:
     """Manage coding sessions.
 
@@ -812,13 +780,9 @@ def progress(
     "milestone report",
 )
 def report(
-    format_type: str = Option(
-        "markdown", "--format", "-f", pith="Output format: markdown, plain"
-    ),
+    format_type: str = Option("markdown", "--format", "-f", pith="Output format: markdown, plain"),
     output: str | None = Option(None, "--output", "-o", pith="Output file path"),
-    include_details: bool = Option(
-        False, "--details", "-d", pith="Include feature details"
-    ),
+    include_details: bool = Option(False, "--details", "-d", pith="Include feature details"),
 ) -> None:
     """Generate a stakeholder-friendly progress report.
 
@@ -837,9 +801,7 @@ def report(
     report_command(format_type, output, include_details)
 
 
-@app.command(
-    name="import-features", pith="Import features from YAML or JSON file", priority=75
-)
+@app.command(name="import-features", pith="Import features from YAML or JSON file", priority=75)
 @app.intents(
     "import features",
     "load features",
@@ -854,9 +816,7 @@ def report(
 )
 def import_features(
     file_path: str = Argument(..., pith="Path to YAML or JSON file with features"),
-    dry_run: bool = Option(
-        False, "--dry-run", pith="Preview import without making changes"
-    ),
+    dry_run: bool = Option(False, "--dry-run", pith="Preview import without making changes"),
 ) -> None:
     """Import features from a YAML or JSON file.
 
@@ -883,9 +843,7 @@ def import_features(
     import_features_command(file_path, dry_run)
 
 
-@app.command(
-    name="copilot", pith="Launch GitHub Copilot CLI with klondike context", priority=77
-)
+@app.command(name="copilot", pith="Launch GitHub Copilot CLI with klondike context", priority=77)
 @app.intents(
     "start copilot",
     "launch copilot",
@@ -907,29 +865,21 @@ def copilot(
         None, "--model", "-m", pith="Model to use (e.g., claude-sonnet, gpt-4)"
     ),
     resume: bool = Option(False, "--resume", "-r", pith="Resume previous session"),
-    feature_id: str | None = Option(
-        None, "--feature", "-f", pith="Focus on specific feature"
-    ),
-    instructions: str | None = Option(
-        None, "--instructions", "-i", pith="Additional instructions"
-    ),
+    feature_id: str | None = Option(None, "--feature", "-f", pith="Focus on specific feature"),
+    instructions: str | None = Option(None, "--instructions", "-i", pith="Additional instructions"),
     allow_tools: str | None = Option(
         None, "--allow-tools", pith="Comma-separated list of allowed tools"
     ),
     dry_run: bool = Option(False, "--dry-run", pith="Show command without executing"),
     # Worktree options
-    worktree: bool = Option(
-        False, "--worktree", "-w", pith="Run in isolated git worktree"
-    ),
+    worktree: bool = Option(False, "--worktree", "-w", pith="Run in isolated git worktree"),
     parent_branch: str | None = Option(
         None, "--branch", "-b", pith="Parent branch for worktree (default: current)"
     ),
     session_name: str | None = Option(
         None, "--name", "-n", pith="Custom session/branch name for worktree"
     ),
-    cleanup_after: bool = Option(
-        False, "--cleanup", pith="Remove worktree after session ends"
-    ),
+    cleanup_after: bool = Option(False, "--cleanup", pith="Remove worktree after session ends"),
     apply_changes: bool = Option(
         False, "--apply", pith="Apply worktree changes to main project after session"
     ),
@@ -987,9 +937,7 @@ def copilot(
         raise PithException(f"Unknown action: {action}. Use: start, list, cleanup")
 
 
-@app.command(
-    name="export-features", pith="Export features to YAML or JSON file", priority=76
-)
+@app.command(name="export-features", pith="Export features to YAML or JSON file", priority=76)
 @app.intents(
     "export features",
     "save features",
@@ -1004,9 +952,7 @@ def copilot(
 def export_features(
     output: str = Argument(..., pith="Output file path (.yaml, .yml, or .json)"),
     status_filter: str | None = Option(None, "--status", "-s", pith="Filter by status"),
-    include_all: bool = Option(
-        False, "--all", pith="Include all fields including internal ones"
-    ),
+    include_all: bool = Option(False, "--all", pith="Include all fields including internal ones"),
 ) -> None:
     """Export features to a YAML or JSON file.
 
@@ -1042,12 +988,8 @@ def export_features(
 )
 def mcp(
     action: str = Argument(..., pith="Action: serve, install, config"),
-    transport: str = Option(
-        "stdio", "--transport", "-t", pith="Transport: stdio, streamable-http"
-    ),
-    output: str | None = Option(
-        None, "--output", "-o", pith="Output path for config file"
-    ),
+    transport: str = Option("stdio", "--transport", "-t", pith="Transport: stdio, streamable-http"),
+    output: str | None = Option(None, "--output", "-o", pith="Output path for config file"),
 ) -> None:
     """Manage MCP (Model Context Protocol) server for AI agent integration.
 
@@ -1250,9 +1192,7 @@ def serve(
         )
 
     # Mount static files
-    app_instance.mount(
-        "/assets", StaticFiles(directory=str(static_dir / "assets")), name="assets"
-    )
+    app_instance.mount("/assets", StaticFiles(directory=str(static_dir / "assets")), name="assets")
 
     @app_instance.get("/health")
     async def health():
@@ -1289,9 +1229,7 @@ def serve(
             }
             for feature in registry.features:
                 status_key = (
-                    feature.status.value
-                    if hasattr(feature.status, "value")
-                    else feature.status
+                    feature.status.value if hasattr(feature.status, "value") else feature.status
                 )
                 if status_key in by_status:
                     by_status[status_key] += 1
@@ -1410,9 +1348,7 @@ def serve(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
             return feature.to_dict()
@@ -1529,9 +1465,7 @@ def serve(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
 
@@ -1541,9 +1475,7 @@ def serve(
             elif "description" in update_data and not update_data["description"]:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=400, detail="Description cannot be empty"
-                )
+                raise HTTPException(status_code=400, detail="Description cannot be empty")
 
             if "category" in update_data:
                 feature.category = update_data["category"]
@@ -1624,16 +1556,12 @@ def serve(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
 
             # Check for other in-progress features
-            in_progress = [
-                f for f in registry.features if f.status == FeatureStatus.IN_PROGRESS
-            ]
+            in_progress = [f for f in registry.features if f.status == FeatureStatus.IN_PROGRESS]
             warning = None
             if in_progress and feature_id not in [f.id for f in in_progress]:
                 warning = f"Other features are in-progress: {', '.join(f.id for f in in_progress)}"
@@ -1706,9 +1634,7 @@ def serve(
             if not evidence:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=400, detail="Evidence is required for verification"
-                )
+                raise HTTPException(status_code=400, detail="Evidence is required for verification")
 
             # Sanitize evidence
             evidence = sanitize_string(evidence)
@@ -1723,18 +1649,14 @@ def serve(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
             config = load_config(root)
 
             # Parse evidence paths
             evidence_paths = [
-                sanitize_string(p.strip()) or ""
-                for p in evidence.split(",")
-                if p.strip()
+                sanitize_string(p.strip()) or "" for p in evidence.split(",") if p.strip()
             ]
 
             # Update feature status
@@ -1802,9 +1724,7 @@ def serve(
             if not reason:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=400, detail="Reason is required for blocking"
-                )
+                raise HTTPException(status_code=400, detail="Reason is required for blocking")
 
             # Sanitize reason
             reason = sanitize_string(reason)
@@ -1819,9 +1739,7 @@ def serve(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
 
@@ -1852,6 +1770,224 @@ def serve(
                 "feature": feature.to_dict(),
                 "message": f"Blocked feature {feature_id}",
                 "reason": reason,
+            }
+        except Exception as e:
+            if hasattr(e, "status_code"):
+                raise
+            return {"error": str(e)}
+
+    @app_instance.get("/api/progress")
+    async def api_progress():
+        """Get all session history.
+
+        Returns:
+            ProgressLog with all session history.
+        """
+        from .data import load_progress
+
+        try:
+            progress = load_progress(root)
+            return {
+                "sessions": [s.to_dict() for s in progress.sessions],
+                "current_status": progress.current_status,
+                "total_sessions": len(progress.sessions),
+            }
+        except Exception as e:
+            return {"error": str(e)}
+
+    @app_instance.post("/api/session/start")
+    async def api_session_start(session_data: dict):
+        """Start a new session.
+
+        Request Body:
+            {
+                "focus": str (required) - Session focus/description
+            }
+
+        Returns:
+            Created session or validation error.
+        """
+        from datetime import datetime
+
+        from .data import (
+            load_features,
+            load_progress,
+            regenerate_progress_md,
+            save_features,
+            save_progress,
+        )
+        from .git import get_git_status
+        from .models import Session
+
+        try:
+            # Validate focus
+            focus = session_data.get("focus", "")
+            if not focus:
+                from fastapi import HTTPException
+
+                raise HTTPException(status_code=400, detail="Focus is required")
+
+            registry = load_features(root)
+            progress = load_progress(root)
+
+            # Check if there's already an active session
+            current = progress.get_current_session()
+            if current and progress.current_status == "In Progress":
+                from fastapi import HTTPException
+
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Session {current.session_number} is already active. End it first.",
+                )
+
+            # Validate artifact integrity
+            actual_total = len(registry.features)
+            actual_passing = sum(1 for f in registry.features if f.passes)
+
+            warnings = []
+            if registry.metadata.total_features != actual_total:
+                warnings.append(
+                    f"metadata.totalFeatures ({registry.metadata.total_features}) != actual ({actual_total})"
+                )
+                registry.metadata.total_features = actual_total
+
+            if registry.metadata.passing_features != actual_passing:
+                warnings.append(
+                    f"metadata.passingFeatures ({registry.metadata.passing_features}) != actual ({actual_passing})"
+                )
+                registry.metadata.passing_features = actual_passing
+
+            # Get git status
+            git_status = get_git_status(root)
+            git_info = None
+            if git_status.is_git_repo:
+                git_info = {
+                    "branch": git_status.current_branch,
+                    "has_uncommitted": git_status.has_uncommitted_changes,
+                }
+
+            # Create new session
+            session_num = progress.next_session_number()
+            new_session = Session(
+                session_number=session_num,
+                date=datetime.now().strftime("%Y-%m-%d"),
+                agent="Coding Agent",
+                duration="(in progress)",
+                focus=focus,
+                completed=[],
+                in_progress=["Session started"],
+                blockers=[],
+                next_steps=[],
+                technical_notes=[],
+            )
+
+            progress.add_session(new_session)
+            progress.current_status = "In Progress"
+
+            # Save changes
+            from .commands.features import update_quick_reference
+
+            update_quick_reference(progress, registry)
+            save_features(registry, root)
+            save_progress(progress, root)
+            regenerate_progress_md(root)
+
+            # Build response
+            result = {
+                "success": True,
+                "session": new_session.to_dict(),
+                "project_status": {
+                    "total": registry.metadata.total_features,
+                    "passing": registry.metadata.passing_features,
+                    "percent": round(
+                        registry.metadata.passing_features / registry.metadata.total_features * 100,
+                        1,
+                    )
+                    if registry.metadata.total_features > 0
+                    else 0,
+                },
+                "message": f"Session {session_num} started",
+            }
+
+            if warnings:
+                result["warnings"] = warnings
+            if git_info:
+                result["git"] = git_info
+
+            return result
+        except Exception as e:
+            if hasattr(e, "status_code"):
+                raise
+            return {"error": str(e)}
+
+    @app_instance.post("/api/session/end")
+    async def api_session_end(end_data: dict):
+        """End the current session.
+
+        Request Body:
+            {
+                "summary": str (optional) - Session summary
+                "completed": list[str] (optional) - Completed items
+                "blockers": list[str] (optional) - Blockers encountered
+                "nextSteps": list[str] (optional) - Next steps (auto-generated if not provided)
+            }
+
+        Returns:
+            Updated session or error if no active session.
+        """
+        from .data import (
+            load_features,
+            load_progress,
+            regenerate_progress_md,
+            save_progress,
+        )
+
+        try:
+            registry = load_features(root)
+            progress = load_progress(root)
+
+            current = progress.get_current_session()
+            if not current or progress.current_status != "In Progress":
+                from fastapi import HTTPException
+
+                raise HTTPException(
+                    status_code=400,
+                    detail="No active session found. Start a session first.",
+                )
+
+            # Update session
+            current.duration = "~session"  # TODO: Calculate actual duration
+            current.in_progress = []
+
+            if "summary" in end_data and end_data["summary"]:
+                current.focus = end_data["summary"]
+
+            if "completed" in end_data:
+                current.completed = end_data["completed"]
+
+            if "blockers" in end_data:
+                current.blockers = end_data["blockers"]
+
+            if "nextSteps" in end_data:
+                current.next_steps = end_data["nextSteps"]
+            else:
+                # Auto-generate next steps from priority features
+                priority = registry.get_priority_features(3)
+                current.next_steps = [f"Continue {f.id}: {f.description}" for f in priority]
+
+            progress.current_status = "Session Ended"
+
+            # Save changes
+            from .commands.features import update_quick_reference
+
+            update_quick_reference(progress, registry)
+            save_progress(progress, root)
+            regenerate_progress_md(root)
+
+            return {
+                "success": True,
+                "session": current.to_dict(),
+                "message": f"Session {current.session_number} ended",
             }
         except Exception as e:
             if hasattr(e, "status_code"):
@@ -2005,9 +2141,7 @@ def release(
 
     # Validate version format
     if not re.match(r"^\d+\.\d+\.\d+$", new_version):
-        raise PithException(
-            f"Invalid version format: {new_version}. Expected X.Y.Z (e.g., 0.3.0)"
-        )
+        raise PithException(f"Invalid version format: {new_version}. Expected X.Y.Z (e.g., 0.3.0)")
 
     tag_name = f"v{new_version}"
     release_msg = message or f"Release {tag_name}"
@@ -2125,9 +2259,7 @@ def release(
     echo("Next steps:")
     echo("  📦 TestPyPI: Publishing automatically (triggered by tag)")
     echo("  📦 PyPI: Create a GitHub Release from the tag:")
-    echo(
-        f"     https://github.com/ThomasRohde/klondike-spec-cli/releases/new?tag={tag_name}"
-    )
+    echo(f"     https://github.com/ThomasRohde/klondike-spec-cli/releases/new?tag={tag_name}")
 
 
 def _bump_version(version: str, bump_type: str) -> str:
@@ -2156,9 +2288,7 @@ def _bump_version(version: str, bump_type: str) -> str:
     elif bump_type == "patch":
         return f"{major}.{minor}.{patch + 1}"
     else:
-        raise PithException(
-            f"Invalid bump type: {bump_type}. Use major, minor, or patch"
-        )
+        raise PithException(f"Invalid bump type: {bump_type}. Use major, minor, or patch")
 
 
 # --- Entry Point ---
