@@ -2445,11 +2445,17 @@
         "Support for common markdown extensions"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T15:42:03.225492",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "MarkdownEditor.tsx with toolbar and preview; uses react-markdown",
+        "remark-gfm",
+        "rehype-highlight; integrated in TaskViewer; build passes",
+        "181 tests pass",
+        "commit 501c0d7"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T15:39:57.863546",
       "notes": "Implementation: Use react-markdown with remark-gfm for GFM support. Prism or highlight.js for code. Edge cases: Sanitize HTML to prevent XSS. Dependencies: F068 (task viewer). Context: Rich documentation for complex features. Gotchas: Performance with large documents - debounce preview updates."
@@ -2489,13 +2495,13 @@
         "Collapse button or click outside closes"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T15:42:11.040256",
       "notes": "Implementation: Animate height transition with framer-motion or CSS grid. Store checked criteria in feature verifiedBy field or separate. Edge cases: Very long criteria lists need scroll. Dependencies: F067 (spec explorer). Context: In-place editing reduces navigation. Gotchas: Handle keyboard navigation within expanded card."
     },
     {
@@ -2750,8 +2756,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T15:39:28.516402",
+    "lastUpdated": "2025-12-22T15:42:03.225514",
     "totalFeatures": 104,
-    "passingFeatures": 69
+    "passingFeatures": 70
   }
 }

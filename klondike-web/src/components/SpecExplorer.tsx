@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon, PlusIcon, PlayIcon, NoSymbolIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon, PlusIcon, PlayIcon, NoSymbolIcon, TableCellsIcon, Squares2X2Icon } from '@heroicons/react/24/outline'
 import { AddFeatureForm } from './AddFeatureForm'
+import { ExpandableFeatureCard } from './ExpandableFeatureCard'
 import { getApiBaseUrl, apiCall } from '../utils/api'
 import { FeatureListSkeleton, Skeleton } from './Skeleton'
 
@@ -50,6 +51,7 @@ export function SpecExplorer() {
     const [categoryFilter, setCategoryFilter] = useState<string>('all')
     const [isAddFormOpen, setIsAddFormOpen] = useState(false)
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
+    const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
 
     // Extract unique categories from features
     const categories = Array.from(new Set(features.map(f => f.category))).sort()
@@ -152,6 +154,61 @@ export function SpecExplorer() {
         }
     }
 
+    // Card view action handlers
+    async function handleCardStart(featureId: string) {
+        try {
+            await apiCall(
+                fetch(`${getApiBaseUrl()}/api/features/${featureId}/start`, { method: 'POST' }),
+                { successMessage: `${featureId} started!`, errorMessage: `Failed to start ${featureId}` }
+            )
+            fetchFeatures()
+        } catch {
+            // Error already toasted by apiCall
+        }
+    }
+
+    async function handleCardBlock(featureId: string) {
+        const reason = window.prompt('Enter block reason:')
+        if (!reason) return
+        try {
+            await apiCall(
+                fetch(`${getApiBaseUrl()}/api/features/${featureId}/block`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reason })
+                }),
+                { successMessage: `${featureId} blocked`, errorMessage: `Failed to block ${featureId}` }
+            )
+            fetchFeatures()
+        } catch {
+            // Error already toasted by apiCall
+        }
+    }
+
+    async function handleCardVerify(featureId: string, checkedCriteria: number[]) {
+        const feature = features.find(f => f.id === featureId)
+        if (!feature) return
+        
+        // Build evidence from checked criteria
+        const evidence = checkedCriteria.map(i => 
+            `✓ ${feature.acceptanceCriteria[i]}`
+        ).join('\n')
+        
+        try {
+            await apiCall(
+                fetch(`${getApiBaseUrl()}/api/features/${featureId}/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ evidence: evidence || 'All criteria met' })
+                }),
+                { successMessage: `${featureId} verified!`, errorMessage: `Failed to verify ${featureId}` }
+            )
+            fetchFeatures()
+        } catch {
+            // Error already toasted by apiCall
+        }
+    }
+
     function StatusBadge({ status }: { status: Feature['status'] }) {
         const config = statusConfig[status]
         const Icon = config.icon
@@ -197,13 +254,38 @@ export function SpecExplorer() {
         <div>
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Spec Explorer</h2>
-                <button
-                    onClick={() => setIsAddFormOpen(true)}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                    <PlusIcon className="w-5 h-5" />
-                    Add Feature
-                </button>
+                <div className="flex items-center gap-2">
+                    {/* View toggle */}
+                    <div className="flex rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden">
+                        <button
+                            onClick={() => setViewMode('table')}
+                            className={`p-2 ${viewMode === 'table' 
+                                ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300' 
+                                : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                            }`}
+                            title="Table view"
+                        >
+                            <TableCellsIcon className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={() => setViewMode('cards')}
+                            className={`p-2 ${viewMode === 'cards' 
+                                ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300' 
+                                : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                            }`}
+                            title="Card view"
+                        >
+                            <Squares2X2Icon className="w-5 h-5" />
+                        </button>
+                    </div>
+                    <button
+                        onClick={() => setIsAddFormOpen(true)}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                        <PlusIcon className="w-5 h-5" />
+                        Add Feature
+                    </button>
+                </div>
             </div>
 
             {/* Success Message */}
@@ -274,7 +356,8 @@ export function SpecExplorer() {
                 </div>
             </div>
 
-            {/* Features Table */}
+            {/* Features - Table View */}
+            {viewMode === 'table' && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -370,6 +453,28 @@ export function SpecExplorer() {
                     </div>
                 )}
             </div>
+            )}
+
+            {/* Features - Card View */}
+            {viewMode === 'cards' && (
+                <div className="space-y-3">
+                    {filteredFeatures.map((feature) => (
+                        <ExpandableFeatureCard
+                            key={feature.id}
+                            feature={feature}
+                            onStart={() => handleCardStart(feature.id)}
+                            onBlock={() => handleCardBlock(feature.id)}
+                            onVerify={(checkedCriteria) => handleCardVerify(feature.id, checkedCriteria)}
+                            onNavigate={() => navigate(`/task/${feature.id}`)}
+                        />
+                    ))}
+                    {filteredFeatures.length === 0 && (
+                        <div className="text-center py-12 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 rounded-lg shadow">
+                            No features match your filters
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Add Feature Modal */}
             <AddFeatureForm
