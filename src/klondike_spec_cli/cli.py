@@ -1217,6 +1217,7 @@ def serve(
     try:
         import uvicorn
         from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+        from fastapi.middleware.cors import CORSMiddleware
         from fastapi.responses import FileResponse, HTMLResponse
         from fastapi.staticfiles import StaticFiles
     except ImportError as err:
@@ -1226,8 +1227,8 @@ def serve(
         ) from err
 
     try:
-        from watchdog.observers import Observer
         from watchdog.events import FileSystemEventHandler
+        from watchdog.observers import Observer
     except ImportError as err:
         raise PithException(
             "watchdog is required for serve command.\n"
@@ -1250,6 +1251,15 @@ def serve(
         version=__version__,
     )
 
+    # Add CORS middleware to allow requests from Vite dev server
+    app_instance.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
     # WebSocket connection manager
     class ConnectionManager:
         """Manages WebSocket connections and broadcasts events."""
@@ -1267,14 +1277,18 @@ def serve(
 
         async def broadcast(self, event_type: str, data: dict):
             """Broadcast an event to all connected clients."""
-            message = {"type": event_type, "data": data, "timestamp": datetime.now().isoformat()}
+            message = {
+                "type": event_type,
+                "data": data,
+                "timestamp": datetime.now().isoformat(),
+            }
             disconnected = []
             for connection in self.active_connections:
                 try:
                     await connection.send_json(message)
                 except Exception:
                     disconnected.append(connection)
-            
+
             # Clean up disconnected clients
             for conn in disconnected:
                 self.disconnect(conn)
@@ -1294,6 +1308,7 @@ def serve(
         def _should_process_event(self, path: str) -> bool:
             """Debounce events - only process if > 100ms since last event for this file."""
             import time
+
             now = time.time()
             if path in self.last_event_time:
                 if now - self.last_event_time[path] < 0.1:
@@ -1304,11 +1319,11 @@ def serve(
         def on_modified(self, event):
             if event.is_directory:
                 return
-            
+
             path = Path(event.src_path)
             if not self._should_process_event(str(path)):
                 return
-            
+
             # Detect which file changed and emit appropriate event
             if path.name == "features.json":
                 self._emit_features_changed()
@@ -1321,9 +1336,11 @@ def serve(
             """Emit featureUpdated event."""
             try:
                 from .data import load_features
+
                 registry = load_features(self.root_path)
                 # Create task to run async broadcast
                 import asyncio
+
                 try:
                     loop = asyncio.get_event_loop()
                 except RuntimeError:
@@ -1335,7 +1352,7 @@ def serve(
                         {
                             "total": len(registry.features),
                             "passing": sum(1 for f in registry.features if f.passes),
-                        }
+                        },
                     )
                 )
             except Exception:
@@ -1345,8 +1362,10 @@ def serve(
             """Emit sessionUpdated event."""
             try:
                 from .data import load_progress
+
                 progress = load_progress(self.root_path)
                 import asyncio
+
                 try:
                     loop = asyncio.get_event_loop()
                 except RuntimeError:
@@ -1358,7 +1377,7 @@ def serve(
                         {
                             "status": progress.current_status,
                             "sessionCount": len(progress.sessions),
-                        }
+                        },
                     )
                 )
             except Exception:
@@ -1367,14 +1386,13 @@ def serve(
         def _emit_config_changed(self):
             """Emit configChanged event."""
             import asyncio
+
             try:
                 loop = asyncio.get_event_loop()
             except RuntimeError:
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
-            loop.create_task(
-                self.manager.broadcast("configChanged", {})
-            )
+            loop.create_task(self.manager.broadcast("configChanged", {}))
 
     # Start file watcher
     event_handler = KlondikeFileHandler(manager, root)
@@ -1403,7 +1421,7 @@ def serve(
     @app_instance.websocket("/api/updates")
     async def websocket_endpoint(websocket: WebSocket):
         """WebSocket endpoint for real-time updates.
-        
+
         Emits events:
         - featureAdded: When a new feature is added
         - featureUpdated: When features change (add/update/status)
@@ -1416,24 +1434,27 @@ def serve(
         try:
             # Send initial sync event
             from .data import load_features, load_progress
+
             registry = load_features(root)
             progress = load_progress(root)
-            
-            await websocket.send_json({
-                "type": "connected",
-                "data": {
-                    "features": {
-                        "total": len(registry.features),
-                        "passing": sum(1 for f in registry.features if f.passes),
+
+            await websocket.send_json(
+                {
+                    "type": "connected",
+                    "data": {
+                        "features": {
+                            "total": len(registry.features),
+                            "passing": sum(1 for f in registry.features if f.passes),
+                        },
+                        "session": {
+                            "status": progress.current_status,
+                            "sessionCount": len(progress.sessions),
+                        },
                     },
-                    "session": {
-                        "status": progress.current_status,
-                        "sessionCount": len(progress.sessions),
-                    }
-                },
-                "timestamp": datetime.now().isoformat()
-            })
-            
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
+
             # Keep connection alive and wait for disconnect
             while True:
                 # Wait for messages (though we don't expect any from client)
@@ -1689,7 +1710,7 @@ def serve(
                     "description": new_feature.description,
                     "category": new_feature.category,
                     "status": new_feature.status.value,
-                }
+                },
             )
 
             return {
@@ -1797,7 +1818,7 @@ def serve(
                     "description": feature.description,
                     "category": feature.category,
                     "status": feature.status.value,
-                }
+                },
             )
 
             return {
@@ -1861,7 +1882,7 @@ def serve(
                     "id": feature_id,
                     "status": "in-progress",
                     "action": "started",
-                }
+                },
             )
 
             # Update progress
@@ -1977,7 +1998,7 @@ def serve(
                     "status": "verified",
                     "action": "verified",
                     "passes": True,
-                }
+                },
             )
 
             # Update progress
@@ -2071,7 +2092,7 @@ def serve(
                     "status": "blocked",
                     "action": "blocked",
                     "reason": reason,
-                }
+                },
             )
 
             # Update progress
@@ -2252,7 +2273,7 @@ def serve(
                 "configChanged",
                 {
                     "updated": list(config_data.keys()),
-                }
+                },
             )
 
             return {
@@ -2369,7 +2390,7 @@ def serve(
                 {
                     "sessionNumber": new_session.session_number,
                     "focus": new_session.focus,
-                }
+                },
             )
 
             # Build response
@@ -2476,7 +2497,7 @@ def serve(
                 {
                     "sessionNumber": current.session_number,
                     "focus": current.focus,
-                }
+                },
             )
 
             return {

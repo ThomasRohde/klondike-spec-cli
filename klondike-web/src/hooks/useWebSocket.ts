@@ -1,17 +1,18 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 export interface WebSocketMessage {
     type: string;
-    payload: any;
+    payload: unknown;
 }
 
 export function useWebSocket(url: string) {
-    const [ws, setWs] = useState<WebSocket | null>(null);
+    const wsRef = useRef<WebSocket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
 
     useEffect(() => {
         const websocket = new WebSocket(url);
+        wsRef.current = websocket;
 
         websocket.onopen = () => {
             console.log("WebSocket connected");
@@ -20,7 +21,7 @@ export function useWebSocket(url: string) {
 
         websocket.onmessage = (event) => {
             try {
-                const message = JSON.parse(event.data);
+                const message = JSON.parse(event.data) as WebSocketMessage;
                 setLastMessage(message);
             } catch (error) {
                 console.error("Failed to parse WebSocket message:", error);
@@ -36,8 +37,6 @@ export function useWebSocket(url: string) {
             setIsConnected(false);
         };
 
-        setWs(websocket);
-
         return () => {
             websocket.close();
         };
@@ -45,13 +44,14 @@ export function useWebSocket(url: string) {
 
     const sendMessage = useCallback(
         (message: WebSocketMessage) => {
+            const ws = wsRef.current;
             if (ws && isConnected) {
                 ws.send(JSON.stringify(message));
             } else {
                 console.warn("WebSocket is not connected");
             }
         },
-        [ws, isConnected]
+        [isConnected]
     );
 
     return {
