@@ -2522,11 +2522,17 @@
         "Color is not only indicator"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T15:48:57.137516",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "accessibility.tsx with SkipLink",
+        "announce",
+        "focus trap; ARIA labels on Layout buttons; focus-visible CSS styles; live region announcements in api.ts; build passes",
+        "181 tests pass",
+        "commit 2f50052"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T15:45:46.427370",
       "notes": "Implementation: Add aria-label, aria-describedby, role attributes. Use focus-visible for focus rings. Edge cases: Test with actual screen readers (VoiceOver NVDA). Dependencies: None - applies across all components. Context: Inclusive design and legal compliance. Gotchas: Live regions for dynamic content updates."
@@ -2545,13 +2551,13 @@
         "Pull to refresh on lists"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T15:49:10.925047",
       "notes": "Implementation: Use touch event handlers or react-swipeable. Media queries for breakpoints. Edge cases: Hybrid touch/mouse devices. Dependencies: None - applies across components. Context: First-class mobile experience. Gotchas: Test on actual devices, not just responsive mode."
     },
     {
@@ -2760,8 +2766,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T15:45:38.219330",
+    "lastUpdated": "2025-12-22T15:48:57.137526",
     "totalFeatures": 104,
-    "passingFeatures": 71
+    "passingFeatures": 72
   }
 }

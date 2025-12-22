@@ -578,18 +578,18 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F094",
-        "description": "Accessibility improvements with ARIA labels and focus management",
-        "status": "in-progress"
-      },
-      {
         "id": "F095",
         "description": "Mobile-optimized touch gestures and responsive layout",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F097",
         "description": "Recent activity feed with live updates on dashboard",
+        "status": "not-started"
+      },
+      {
+        "id": "F101",
+        "description": "Confirmation dialogs with undo option for destructive actions",
         "status": "not-started"
       }
     ]

@@ -69,3 +69,76 @@ textarea:focus-visible,
         transform: none !important;
     }
 }
+
+/* Mobile touch gestures */
+
+/* Bottom sheet slide up animation */
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slide-up 0.3s ease-out forwards;
+}
+
+/* Touch manipulation for better touch responsiveness */
+.touch-manipulation {
+    touch-action: manipulation;
+}
+
+/* Ensure minimum touch targets on mobile */
+@media (pointer: coarse) {
+    button,
+    [role="button"],
+    a,
+    input,
+    select,
+    textarea {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Exception for inline elements */
+    button.inline,
+    a.inline {
+        min-height: auto;
+        min-width: auto;
+    }
+}
+
+/* Swipe action indicators */
+.swipe-action-left,
+.swipe-action-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.swipe-action-left {
+    left: 0;
+    background: linear-gradient(to right, theme('colors.green.500'), transparent);
+}
+
+.swipe-action-right {
+    right: 0;
+    background: linear-gradient(to left, theme('colors.red.500'), transparent);
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+    .safe-area-bottom {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    
+    .safe-area-top {
+        padding-top: max(1rem, env(safe-area-inset-top));
+    }
+}
