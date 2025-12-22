@@ -119,7 +119,7 @@ export function SpecExplorer() {
     return (
         <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Spec Explorer</h2>
-            
+
             {/* Filters */}
             <div className="bg-white rounded-lg shadow mb-6 p-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -175,7 +175,7 @@ export function SpecExplorer() {
                         </select>
                     </div>
                 </div>
-                
+
                 <div className="mt-3 text-sm text-gray-600">
                     Showing {filteredFeatures.length} of {features.length} features
                 </div>
