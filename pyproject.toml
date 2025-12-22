@@ -61,16 +61,39 @@ raw-options = { local_scheme = "no-local-version" }
 [tool.hatch.build.hooks.vcs]
 version-file = "src/klondike_spec_cli/_version.py"
 
+[tool.hatch.build.targets.sdist]
+# Include static web assets in source distribution
+include = [
+    "/src",
+    "/tests",
+    "/pyproject.toml",
+    "/README.md",
+    "/LICENSE",
+]
+# Treat static assets as artifacts so they're included despite not being .py files
+artifacts = [
+    "*.html",
+    "*.css", 
+    "*.js",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/klondike_spec_cli"]
+# Treat static assets as artifacts so they're included despite not being .py files
+artifacts = [
+    "*.html",
+    "*.css", 
+    "*.js",
+    "*.svg",
+    "*.json",
+    "*.yaml",
+    "*.md",
+    "*.sh",
+    "*.ps1",
+]
 
 [tool.hatch.build.targets.wheel.sources]
 "src" = ""
-
-[tool.hatch.build.targets.wheel.force-include]
-"src/klondike_spec_cli/static/index.html" = "klondike_spec_cli/static/index.html"
-"src/klondike_spec_cli/static/assets/index-BcfBK_Up.js" = "klondike_spec_cli/static/assets/index-BcfBK_Up.js"
-"src/klondike_spec_cli/static/assets/index-Bl_zfboV.css" = "klondike_spec_cli/static/assets/index-Bl_zfboV.css"
 
 # Include template files and static files in the package
 # - templates/ directory: Copilot/Claude templates  
