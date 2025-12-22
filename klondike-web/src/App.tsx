@@ -6,10 +6,15 @@ import { SpecExplorer } from './components/SpecExplorer'
 import { ActivityLog } from './components/ActivityLog'
 import { ConfigEditor } from './components/ConfigEditor'
 import { TaskViewer } from './components/TaskViewer'
+import { CommandPalette } from './components/CommandPalette'
+import { useCommandPalette } from './hooks/useCommandPalette'
 
 function App() {
+  const commandPalette = useCommandPalette();
+
   return (
     <BrowserRouter>
+      <CommandPalette isOpen={commandPalette.isOpen} onClose={commandPalette.close} />
       <Toaster
         position="top-right"
         toastOptions={{

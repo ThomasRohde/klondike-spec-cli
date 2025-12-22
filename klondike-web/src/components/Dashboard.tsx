@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { getApiBaseUrl, getWebSocketUrl } from '../utils/api';
+import { ProgressRing } from './ProgressRing';
 import { SessionControl } from './SessionControl';
+import { StatusChart } from './StatusChart';
 
 interface StatusData {
     project_name: string;
@@ -144,16 +146,57 @@ export function Dashboard() {
                 </div>
             </div>
 
-            {/* Progress bar */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Overall Progress</h3>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
-                    <div
-                        className="bg-indigo-600 h-4 rounded-full transition-all duration-500"
-                        style={{ width: `${status.completion_percentage}%` }}
-                    />
+            {/* Progress and Status Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                {/* Progress Ring */}
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Overall Progress</h3>
+                    <div className="flex items-center justify-center gap-8">
+                        <ProgressRing
+                            percentage={status.completion_percentage}
+                            size={160}
+                            strokeWidth={12}
+                        />
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {status.feature_counts.verified} of {status.feature_counts.total} features verified
+                            </p>
+                            <div className="flex flex-col gap-1 mt-2">
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                                    <span className="text-xs text-gray-600 dark:text-gray-400">{status.feature_counts.verified} Verified</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                                    <span className="text-xs text-gray-600 dark:text-gray-400">{status.feature_counts.in_progress} In Progress</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                                    <span className="text-xs text-gray-600 dark:text-gray-400">{status.feature_counts.blocked} Blocked</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{status.completion_percentage.toFixed(1)}% Complete</p>
+
+                {/* Status Distribution Chart */}
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Status Distribution</h3>
+                    <div className="flex items-center justify-center pb-8">
+                        <StatusChart
+                            verified={status.feature_counts.verified}
+                            inProgress={status.feature_counts.in_progress}
+                            blocked={status.feature_counts.blocked}
+                            notStarted={status.feature_counts.not_started}
+                            size={180}
+                            strokeWidth={35}
+                            onSegmentClick={(segmentStatus) => {
+                                // Navigate to features list filtered by status
+                                window.location.href = `/features?status=${segmentStatus}`;
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
 
             {/* Session Control */}
