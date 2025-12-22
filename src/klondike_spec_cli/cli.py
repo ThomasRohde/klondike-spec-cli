@@ -15,6 +15,12 @@ from pathlib import Path
 from pith import Argument, Option, Pith, PithException, echo
 
 from . import formatting
+
+try:
+    from ._version import __version__
+except ImportError:
+    __version__ = "0.0.0+unknown"
+
 from .commands.copilot_cmd import (
     copilot_cleanup_worktrees,
     copilot_list_worktrees,
@@ -1116,6 +1122,113 @@ def agents(action: str = Argument(..., pith="Action: generate")) -> None:
     output_path = root / "AGENTS.md"
     output_path.write_text("\n".join(lines), encoding="utf-8")
     echo(f"✅ Generated {output_path}")
+
+
+# --- Serve Command ---
+
+
+@app.command(pith="Start web UI server for project management", priority=79)
+@app.intents(
+    "start server",
+    "web ui",
+    "serve web",
+    "launch ui",
+    "start web server",
+)
+def serve(
+    port: int = Option(8000, "--port", "-p", pith="Port to run server on"),
+    host: str = Option("127.0.0.1", "--host", "-h", pith="Host to bind server to"),
+) -> None:
+    """Start FastAPI web server for Klondike Spec project management.
+
+    Launches a web UI for managing features, sessions, and project progress.
+    Requires .klondike directory in current directory.
+
+    Examples:
+        $ klondike serve                  # Start on http://127.0.0.1:8000
+        $ klondike serve --port 3000      # Use custom port
+        $ klondike serve --host 0.0.0.0   # Allow external connections
+
+    Related:
+        status - View project status (CLI alternative)
+    """
+    try:
+        import uvicorn
+        from fastapi import FastAPI
+        from fastapi.responses import FileResponse, HTMLResponse
+        from fastapi.staticfiles import StaticFiles
+    except ImportError as err:
+        raise PithException(
+            "FastAPI and uvicorn are required for serve command.\n"
+            "Install with: pip install klondike-spec-cli[serve]"
+        ) from err
+
+    # Verify .klondike directory exists
+    root = Path.cwd()
+    klondike_dir = get_klondike_dir(root)
+    if not klondike_dir:
+        raise PithException(
+            "No .klondike directory found in current directory.\n"
+            "Run 'klondike init' first to initialize a project."
+        )
+
+    # Initialize FastAPI app
+    app_instance = FastAPI(
+        title="Klondike Spec CLI",
+        description="Project management web UI for agent workflows",
+        version=__version__,
+    )
+
+    # Get static files directory from package
+    static_dir = Path(__file__).parent / "static"
+    if not static_dir.exists():
+        raise PithException(
+            f"Static files directory not found: {static_dir}\n"
+            "This may indicate a broken installation."
+        )
+
+    # Mount static files
+    app_instance.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+    @app_instance.get("/", response_class=HTMLResponse)
+    async def serve_index():
+        """Serve index.html."""
+        index_path = static_dir / "index.html"
+        if not index_path.exists():
+            return HTMLResponse(
+                content="<h1>Klondike Spec CLI</h1><p>Static files not found</p>",
+                status_code=500,
+            )
+        return FileResponse(index_path)
+
+    @app_instance.get("/health")
+    async def health():
+        """Health check endpoint."""
+        return {"status": "ok", "version": __version__}
+
+    # Print startup message
+    echo("")
+    echo("🚀 Starting Klondike Spec Web UI")
+    echo("=" * 50)
+    echo(f"   Project: {root.name}")
+    echo(f"   URL:     http://{host}:{port}")
+    echo(f"   Version: {__version__}")
+    echo("")
+    echo("Press Ctrl+C to stop the server")
+    echo("")
+
+    # Start server
+    try:
+        uvicorn.run(app_instance, host=host, port=port, log_level="info")
+    except OSError as err:
+        if "address already in use" in str(err).lower():
+            raise PithException(
+                f"Port {port} is already in use.\n"
+                f"Try a different port: klondike serve --port {port + 1}"
+            ) from err
+        raise
+    except KeyboardInterrupt:
+        echo("\n👋 Server stopped")
 
 
 # --- Release Command ---

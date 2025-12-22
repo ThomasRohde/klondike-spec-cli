@@ -1511,13 +1511,13 @@
         "Auto-detection of .klondike folder or error if missing"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T07:09:35.233784",
       "notes": "Implementation: Use FastAPI with uvicorn for async/WebSocket support. Bundle React build in package static/ folder. Default port 8000, allow --port flag. Print clear URL message on start. Context: Foundation for all web UI features per WEB_PRD.md. Dependencies: React SPA build (F059). Gotchas: Ensure cross-platform compatibility (Windows/Mac/Linux), handle port-in-use errors gracefully."
     },
     {

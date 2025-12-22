@@ -19,4 +19,5 @@ __all__ = [
     "Session",
     "app",
     "main",
+    "__version__",
 ]
