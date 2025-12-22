@@ -8,6 +8,7 @@ import { FeatureListSkeleton, Skeleton } from './Skeleton'
 import { EmptyFeaturesState, EmptySearchState } from './EmptyStates'
 import { BulkActionsToolbar, SelectAllCheckbox, SelectionCheckbox, clearSelection, useSelection } from './BulkActions'
 import { FeatureDndContext, SortableItem, SaveStatus, useFeatureOrdering } from './DragDropFeatures'
+import { PrintButton } from './PrintView'
 
 interface Feature {
     id: string
@@ -311,6 +312,10 @@ export function SpecExplorer() {
                             <Squares2X2Icon className="w-5 h-5" />
                         </button>
                     </div>
+                    
+                    {/* Print button */}
+                    <PrintButton />
+                    
                     <button
                         onClick={() => setIsAddFormOpen(true)}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"

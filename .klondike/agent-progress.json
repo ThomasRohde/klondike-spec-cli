@@ -578,14 +578,9 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F092",
-        "description": "Theme customization with color accent picker",
-        "status": "in-progress"
-      },
-      {
         "id": "F103",
         "description": "Print-friendly view for feature reports",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F104",

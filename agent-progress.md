@@ -23,8 +23,7 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F092 | Theme customization with color accent picker | 🔄 In progress |
-| F103 | Print-friendly view for feature reports | ⏳ Not started |
+| F103 | Print-friendly view for feature reports | 🔄 In progress |
 | F104 | Offline support with service worker caching | ⏳ Not started |
 
 ---
