@@ -2353,13 +2353,13 @@
         "Expands on hover option"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T16:28:21.971681",
       "notes": "Implementation: Store collapsed state in localStorage. Use Tailwind w-64 vs w-16 with transition. Edge cases: Handle mobile where sidebar is overlay. Dependencies: F073 (navigation sidebar). Context: More screen real estate for content. Gotchas: Icons must be recognizable without labels, test with users."
     },
     {
@@ -2744,11 +2744,15 @@
         "Updates on route change"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T16:28:14.679328",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "Breadcrumbs.tsx with route-aware hierarchy",
+        "CompactBreadcrumbs for mobile",
+        "PageHeader component; TaskViewer.tsx integration; build success; 181 tests pass; commit 8ee683e"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T16:26:32.867367",
       "notes": "Implementation: Parse current route and build breadcrumb array. Use react-router useLocation. Edge cases: Handle deep nesting (more than 3 levels). Dependencies: F073 (navigation). Context: Orientation in app structure. Gotchas: Don't show single breadcrumb (just current page)."
@@ -2801,8 +2805,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T16:26:28.542945",
+    "lastUpdated": "2025-12-22T16:28:14.679340",
     "totalFeatures": 104,
-    "passingFeatures": 79
+    "passingFeatures": 80
   }
 }

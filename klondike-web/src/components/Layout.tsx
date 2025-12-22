@@ -10,6 +10,8 @@ import {
     SunIcon,
     MoonIcon,
     ViewColumnsIcon,
+    ChevronDoubleLeftIcon,
+    ChevronDoubleRightIcon,
 } from '@heroicons/react/24/outline'
 import { useWebSocket } from '../hooks/useWebSocket'
 import { getApiBaseUrl, getWebSocketUrl } from '../utils/api'
@@ -60,8 +62,20 @@ function useTheme() {
 export function Layout() {
     const location = useLocation()
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem('klondike-sidebar-collapsed')
+            return stored === 'true'
+        }
+        return false
+    })
     const [darkMode, setDarkMode] = useTheme()
     const [activeSession, setActiveSession] = useState<ActiveSession | null>(null)
+
+    // Persist sidebar collapsed state
+    useEffect(() => {
+        localStorage.setItem('klondike-sidebar-collapsed', String(sidebarCollapsed))
+    }, [sidebarCollapsed])
 
     // Initialize session timer from active session data
     useSessionTimer(activeSession ? {
@@ -125,21 +139,39 @@ export function Layout() {
             {/* Sidebar */}
             <div
                 className={`
-                    fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg
-                    transform transition-transform duration-200 ease-in-out
+                    fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-800 shadow-lg
+                    transform transition-all duration-200 ease-in-out
                     ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
                     md:translate-x-0
+                    ${sidebarCollapsed ? 'md:w-16' : 'md:w-64'}
+                    w-64
                 `}
             >
-                {/* Header with project name and close button (mobile) */}
+                {/* Header with project name and close/collapse buttons */}
                 <div className="flex h-16 items-center justify-between border-b border-gray-200 dark:border-gray-700 px-4">
-                    <h1 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">🎯 Klondike</h1>
+                    {!sidebarCollapsed && (
+                        <h1 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">🎯 Klondike</h1>
+                    )}
+                    {sidebarCollapsed && (
+                        <span className="text-xl mx-auto">🎯</span>
+                    )}
                     <button
                         onClick={() => setSidebarOpen(false)}
                         aria-label="Close sidebar"
                         className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                         <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                    <button
+                        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                        aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                        className="hidden md:block p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        {sidebarCollapsed ? (
+                            <ChevronDoubleRightIcon className="h-5 w-5" aria-hidden="true" />
+                        ) : (
+                            <ChevronDoubleLeftIcon className="h-5 w-5" aria-hidden="true" />
+                        )}
                     </button>
                 </div>
 
@@ -153,42 +185,53 @@ export function Layout() {
                                 key={item.name}
                                 to={item.href}
                                 aria-current={isActive ? 'page' : undefined}
+                                title={sidebarCollapsed ? item.name : undefined}
                                 className={`
-                                    flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors
+                                    flex items-center gap-3 rounded-lg mb-2 transition-colors
+                                    ${sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'}
                                     ${isActive
                                         ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'
                                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                                     }
                                 `}
                             >
-                                <item.icon className="h-5 w-5" aria-hidden="true" />
-                                <span className="font-medium">{item.name}</span>
+                                <item.icon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                                {!sidebarCollapsed && (
+                                    <span className="font-medium">{item.name}</span>
+                                )}
                             </Link>
                         )
                     })}
                 </nav>
 
-                {/* Session timer widget */}
-                <div className="px-3 mt-4">
-                    <SessionTimerWidget variant="compact" />
-                </div>
+                {/* Session timer widget - only show when not collapsed */}
+                {!sidebarCollapsed && (
+                    <div className="px-3 mt-4">
+                        <SessionTimerWidget variant="compact" />
+                    </div>
+                )}
 
                 {/* Dark mode toggle */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                         onClick={() => setDarkMode(!darkMode)}
                         aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-                        className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        title={sidebarCollapsed ? (darkMode ? 'Light Mode' : 'Dark Mode') : undefined}
+                        className={`
+                            flex items-center gap-3 w-full rounded-lg text-gray-700 dark:text-gray-300 
+                            hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
+                            ${sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'}
+                        `}
                     >
                         {darkMode ? (
                             <>
-                                <SunIcon className="h-5 w-5" aria-hidden="true" />
-                                <span className="font-medium">Light Mode</span>
+                                <SunIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                                {!sidebarCollapsed && <span className="font-medium">Light Mode</span>}
                             </>
                         ) : (
                             <>
-                                <MoonIcon className="h-5 w-5" aria-hidden="true" />
-                                <span className="font-medium">Dark Mode</span>
+                                <MoonIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                                {!sidebarCollapsed && <span className="font-medium">Dark Mode</span>}
                             </>
                         )}
                     </button>
@@ -208,7 +251,7 @@ export function Layout() {
             </div>
 
             {/* Main content */}
-            <div className="md:pl-64 pt-16 md:pt-0">
+            <div className={`pt-16 md:pt-0 transition-all duration-200 ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-64'}`}>
                 {/* Active session banner */}
                 {activeSession && (
                     <SessionBanner
