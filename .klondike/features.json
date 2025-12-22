@@ -2394,11 +2394,17 @@
         "Horizontal scroll on mobile"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T15:39:28.516392",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "KanbanBoard.tsx with 4 status columns",
+        "quick actions",
+        "skeleton loading; route at /kanban; navigation in Layout.tsx and CommandPalette.tsx; build passes",
+        "181 tests pass",
+        "commit a83e1c0"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T15:35:36.723993",
       "notes": "Implementation: Reuse existing feature list data, render in column layout. Integrate with dnd-kit for drag-drop. Edge cases: Many features in one column - add scrolling. Dependencies: F081 (drag-drop), F067 (spec explorer). Context: Familiar Kanban UX from Trello/Jira. Gotchas: Keyboard accessibility for column navigation."
@@ -2439,13 +2445,13 @@
         "Support for common markdown extensions"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T15:39:57.863546",
       "notes": "Implementation: Use react-markdown with remark-gfm for GFM support. Prism or highlight.js for code. Edge cases: Sanitize HTML to prevent XSS. Dependencies: F068 (task viewer). Context: Rich documentation for complex features. Gotchas: Performance with large documents - debounce preview updates."
     },
     {
@@ -2744,8 +2750,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T15:35:16.905523",
+    "lastUpdated": "2025-12-22T15:39:28.516402",
     "totalFeatures": 104,
-    "passingFeatures": 68
+    "passingFeatures": 69
   }
 }

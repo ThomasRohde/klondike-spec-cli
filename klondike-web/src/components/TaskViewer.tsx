@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { apiCall, getApiBaseUrl } from '../utils/api'
+import { MarkdownEditor, MarkdownPreview } from './MarkdownEditor'
 import {
     CheckCircleIcon,
     XCircleIcon,
@@ -367,15 +368,14 @@ export function TaskViewer() {
                 <div className="bg-white rounded-lg shadow p-6 mb-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">Notes</h2>
                     {isEditing ? (
-                        <textarea
+                        <MarkdownEditor
                             value={editNotes}
-                            onChange={(e) => setEditNotes(e.target.value)}
-                            rows={4}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="Add implementation notes, dependencies, or gotchas..."
+                            onChange={setEditNotes}
+                            placeholder="Add implementation notes, dependencies, or gotchas... (Markdown supported)"
+                            minHeight="200px"
                         />
                     ) : (
-                        <p className="text-gray-700 whitespace-pre-wrap">{feature.notes}</p>
+                        <MarkdownPreview content={feature.notes || ''} />
                     )}
                 </div>
             )}

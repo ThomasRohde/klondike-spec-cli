@@ -578,18 +578,18 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F089",
-        "description": "Kanban board view for features by status",
-        "status": "in-progress"
-      },
-      {
         "id": "F091",
         "description": "Markdown preview and editor for feature notes",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F093",
         "description": "Feature card expanded view with acceptance criteria checklist",
+        "status": "not-started"
+      },
+      {
+        "id": "F094",
+        "description": "Accessibility improvements with ARIA labels and focus management",
         "status": "not-started"
       }
     ]

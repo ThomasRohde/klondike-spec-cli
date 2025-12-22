@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F089 | Kanban board view for features by status | 🔄 In progress |
-| F091 | Markdown preview and editor for feature notes | ⏳ Not started |
+| F091 | Markdown preview and editor for feature notes | 🔄 In progress |
 | F093 | Feature card expanded view with acceptance criteria checklist | ⏳ Not started |
+| F094 | Accessibility improvements with ARIA labels and focus management | ⏳ Not started |
 
 ---
 
