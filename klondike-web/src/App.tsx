@@ -12,6 +12,7 @@ import { useCommandPalette } from './hooks/useCommandPalette'
 import { ShortcutsHelpOverlay, ShortcutsHelpButton } from './components/ShortcutsHelp'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { QuickAddDialog } from './components/QuickAddDialog'
+import { FeatureTimeline } from './components/FeatureTimeline'
 
 function AppContent() {
   const commandPalette = useCommandPalette();
@@ -57,6 +58,7 @@ function AppContent() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="specs" element={<SpecExplorer />} />
           <Route path="kanban" element={<KanbanBoard />} />
+          <Route path="timeline" element={<FeatureTimeline />} />
           <Route path="task/:featureId" element={<TaskViewer />} />
           <Route path="activity" element={<ActivityLog />} />
           <Route path="config" element={<ConfigEditor />} />

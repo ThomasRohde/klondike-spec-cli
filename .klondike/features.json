@@ -2204,11 +2204,13 @@
         "Optimistic UI update with API sync"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T16:44:13.990029",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "DragDropFeatures.tsx with dnd-kit integration; SortableItem with drag handle; FeatureDndContext with keyboard support; POST /api/features/reorder endpoint in cli.py; toggle reorder mode in SpecExplorer; optimistic updates with SaveStatus; build success; 181 tests pass; commit 302795d"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T16:37:50.118065",
       "notes": "Implementation: Use dnd-kit or react-beautiful-dnd. Store order in features.json or separate ordering field. Edge cases: Handle concurrent edits, revert on API failure. Dependencies: F061 (feature CRUD API). Context: Visual project management like Trello. Gotchas: Accessibility - need keyboard alternatives for drag operations."
@@ -2281,13 +2283,13 @@
         "Filter by date range"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T16:44:25.646748",
       "notes": "Implementation: Custom timeline component with flex layout. Query git commits and session history for events. Edge cases: Handle sparse timelines with few events. Dependencies: F075 (git history API). Context: Project retrospective and progress tracking. Gotchas: Performance with many events - virtualize or paginate."
     },
     {
@@ -2818,8 +2820,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T16:37:44.735005",
+    "lastUpdated": "2025-12-22T16:44:13.990072",
     "totalFeatures": 104,
-    "passingFeatures": 83
+    "passingFeatures": 84
   }
 }

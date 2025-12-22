@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F081 | Drag-and-drop feature prioritization in Spec Explorer | 🔄 In progress |
-| F084 | Feature timeline visualization showing project history | ⏳ Not started |
+| F084 | Feature timeline visualization showing project history | 🔄 In progress |
 | F085 | Feature dependency graph visualization | ⏳ Not started |
+| F088 | Real-time collaboration indicators showing active users | ⏳ Not started |
 
 ---
 
