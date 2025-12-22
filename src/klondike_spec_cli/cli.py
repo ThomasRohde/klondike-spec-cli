@@ -1216,12 +1216,21 @@ def serve(
     """
     try:
         import uvicorn
-        from fastapi import FastAPI
+        from fastapi import FastAPI, WebSocket, WebSocketDisconnect
         from fastapi.responses import FileResponse, HTMLResponse
         from fastapi.staticfiles import StaticFiles
     except ImportError as err:
         raise PithException(
             "FastAPI and uvicorn are required for serve command.\n"
+            "Install with: pip install klondike-spec-cli[serve]"
+        ) from err
+
+    try:
+        from watchdog.observers import Observer
+        from watchdog.events import FileSystemEventHandler
+    except ImportError as err:
+        raise PithException(
+            "watchdog is required for serve command.\n"
             "Install with: pip install klondike-spec-cli[serve]"
         ) from err
 
@@ -1241,6 +1250,138 @@ def serve(
         version=__version__,
     )
 
+    # WebSocket connection manager
+    class ConnectionManager:
+        """Manages WebSocket connections and broadcasts events."""
+
+        def __init__(self):
+            self.active_connections: list[WebSocket] = []
+
+        async def connect(self, websocket: WebSocket):
+            await websocket.accept()
+            self.active_connections.append(websocket)
+
+        def disconnect(self, websocket: WebSocket):
+            if websocket in self.active_connections:
+                self.active_connections.remove(websocket)
+
+        async def broadcast(self, event_type: str, data: dict):
+            """Broadcast an event to all connected clients."""
+            message = {"type": event_type, "data": data, "timestamp": datetime.now().isoformat()}
+            disconnected = []
+            for connection in self.active_connections:
+                try:
+                    await connection.send_json(message)
+                except Exception:
+                    disconnected.append(connection)
+            
+            # Clean up disconnected clients
+            for conn in disconnected:
+                self.disconnect(conn)
+
+    manager = ConnectionManager()
+
+    # File watcher for detecting external CLI changes
+    class KlondikeFileHandler(FileSystemEventHandler):
+        """Watches .klondike directory for changes."""
+
+        def __init__(self, manager: ConnectionManager, root_path: Path):
+            self.manager = manager
+            self.root_path = root_path
+            self.last_event_time = {}
+            super().__init__()
+
+        def _should_process_event(self, path: str) -> bool:
+            """Debounce events - only process if > 100ms since last event for this file."""
+            import time
+            now = time.time()
+            if path in self.last_event_time:
+                if now - self.last_event_time[path] < 0.1:
+                    return False
+            self.last_event_time[path] = now
+            return True
+
+        def on_modified(self, event):
+            if event.is_directory:
+                return
+            
+            path = Path(event.src_path)
+            if not self._should_process_event(str(path)):
+                return
+            
+            # Detect which file changed and emit appropriate event
+            if path.name == "features.json":
+                self._emit_features_changed()
+            elif path.name == "agent-progress.json":
+                self._emit_session_changed()
+            elif path.name == "config.yaml":
+                self._emit_config_changed()
+
+        def _emit_features_changed(self):
+            """Emit featureUpdated event."""
+            try:
+                from .data import load_features
+                registry = load_features(self.root_path)
+                # Create task to run async broadcast
+                import asyncio
+                try:
+                    loop = asyncio.get_event_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                loop.create_task(
+                    self.manager.broadcast(
+                        "featureUpdated",
+                        {
+                            "total": len(registry.features),
+                            "passing": sum(1 for f in registry.features if f.passes),
+                        }
+                    )
+                )
+            except Exception:
+                pass  # Silently ignore errors in file watcher
+
+        def _emit_session_changed(self):
+            """Emit sessionUpdated event."""
+            try:
+                from .data import load_progress
+                progress = load_progress(self.root_path)
+                import asyncio
+                try:
+                    loop = asyncio.get_event_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                loop.create_task(
+                    self.manager.broadcast(
+                        "sessionUpdated",
+                        {
+                            "status": progress.current_status,
+                            "sessionCount": len(progress.sessions),
+                        }
+                    )
+                )
+            except Exception:
+                pass
+
+        def _emit_config_changed(self):
+            """Emit configChanged event."""
+            import asyncio
+            try:
+                loop = asyncio.get_event_loop()
+            except RuntimeError:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+            loop.create_task(
+                self.manager.broadcast("configChanged", {})
+            )
+
+    # Start file watcher
+    event_handler = KlondikeFileHandler(manager, root)
+    observer = Observer()
+    observer.schedule(event_handler, str(klondike_dir), recursive=False)
+    observer.start()
+
     # Get static files directory from package
     static_dir = Path(__file__).parent / "static"
     if not static_dir.exists():
@@ -1258,6 +1399,52 @@ def serve(
     async def health():
         """Health check endpoint."""
         return {"status": "ok", "version": __version__}
+
+    @app_instance.websocket("/api/updates")
+    async def websocket_endpoint(websocket: WebSocket):
+        """WebSocket endpoint for real-time updates.
+        
+        Emits events:
+        - featureAdded: When a new feature is added
+        - featureUpdated: When features change (add/update/status)
+        - sessionStarted: When a session starts
+        - sessionEnded: When a session ends
+        - sessionUpdated: When session data changes
+        - configChanged: When configuration is updated
+        """
+        await manager.connect(websocket)
+        try:
+            # Send initial sync event
+            from .data import load_features, load_progress
+            registry = load_features(root)
+            progress = load_progress(root)
+            
+            await websocket.send_json({
+                "type": "connected",
+                "data": {
+                    "features": {
+                        "total": len(registry.features),
+                        "passing": sum(1 for f in registry.features if f.passes),
+                    },
+                    "session": {
+                        "status": progress.current_status,
+                        "sessionCount": len(progress.sessions),
+                    }
+                },
+                "timestamp": datetime.now().isoformat()
+            })
+            
+            # Keep connection alive and wait for disconnect
+            while True:
+                # Wait for messages (though we don't expect any from client)
+                try:
+                    await websocket.receive_text()
+                except WebSocketDisconnect:
+                    break
+        except WebSocketDisconnect:
+            pass
+        finally:
+            manager.disconnect(websocket)
 
     @app_instance.get("/api/status")
     async def api_status():
@@ -1494,6 +1681,17 @@ def serve(
 
             save_features(registry, root)
 
+            # Broadcast event to WebSocket clients
+            await manager.broadcast(
+                "featureAdded",
+                {
+                    "id": feature_id,
+                    "description": new_feature.description,
+                    "category": new_feature.category,
+                    "status": new_feature.status.value,
+                }
+            )
+
             return {
                 "success": True,
                 "feature": new_feature.to_dict(),
@@ -1591,6 +1789,17 @@ def serve(
 
             save_features(registry, root)
 
+            # Broadcast event to WebSocket clients
+            await manager.broadcast(
+                "featureUpdated",
+                {
+                    "id": feature_id,
+                    "description": feature.description,
+                    "category": feature.category,
+                    "status": feature.status.value,
+                }
+            )
+
             return {
                 "success": True,
                 "feature": feature.to_dict(),
@@ -1644,6 +1853,16 @@ def serve(
             registry.metadata.last_updated = datetime.now().isoformat()
 
             save_features(registry, root)
+
+            # Broadcast event to WebSocket clients
+            await manager.broadcast(
+                "featureUpdated",
+                {
+                    "id": feature_id,
+                    "status": "in-progress",
+                    "action": "started",
+                }
+            )
 
             # Update progress
             try:
@@ -1750,6 +1969,17 @@ def serve(
 
             save_features(registry, root)
 
+            # Broadcast event to WebSocket clients
+            await manager.broadcast(
+                "featureUpdated",
+                {
+                    "id": feature_id,
+                    "status": "verified",
+                    "action": "verified",
+                    "passes": True,
+                }
+            )
+
             # Update progress
             try:
                 from .commands.features import (
@@ -1832,6 +2062,17 @@ def serve(
             registry.metadata.last_updated = datetime.now().isoformat()
 
             save_features(registry, root)
+
+            # Broadcast event to WebSocket clients
+            await manager.broadcast(
+                "featureUpdated",
+                {
+                    "id": feature_id,
+                    "status": "blocked",
+                    "action": "blocked",
+                    "reason": reason,
+                }
+            )
 
             # Update progress
             try:
@@ -2006,6 +2247,14 @@ def serve(
             config_path = klondike_dir / "config.yaml"
             config.save(config_path)
 
+            # Broadcast event to WebSocket clients
+            await manager.broadcast(
+                "configChanged",
+                {
+                    "updated": list(config_data.keys()),
+                }
+            )
+
             return {
                 "success": True,
                 "config": config.to_dict(),
@@ -2114,6 +2363,15 @@ def serve(
             save_progress(progress, root)
             regenerate_progress_md(root)
 
+            # Broadcast event to WebSocket clients
+            await manager.broadcast(
+                "sessionStarted",
+                {
+                    "sessionNumber": new_session.session_number,
+                    "focus": new_session.focus,
+                }
+            )
+
             # Build response
             result = {
                 "success": True,
@@ -2212,6 +2470,15 @@ def serve(
             save_progress(progress, root)
             regenerate_progress_md(root)
 
+            # Broadcast event to WebSocket clients
+            await manager.broadcast(
+                "sessionEnded",
+                {
+                    "sessionNumber": current.session_number,
+                    "focus": current.focus,
+                }
+            )
+
             return {
                 "success": True,
                 "session": current.to_dict(),
@@ -2262,6 +2529,10 @@ def serve(
         raise
     except KeyboardInterrupt:
         echo("\n👋 Server stopped")
+    finally:
+        # Cleanup file watcher
+        observer.stop()
+        observer.join()
 
 
 # --- Release Command ---

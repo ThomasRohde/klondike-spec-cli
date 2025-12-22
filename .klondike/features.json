@@ -1707,13 +1707,13 @@
         "File watcher detects external CLI changes"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T09:36:34.911155",
       "notes": "Implementation: Use FastAPI WebSocket support. Consider watchdog library for filesystem monitoring. Event types: featureAdded, featureUpdated, sessionStarted, sessionEnded, configChanged. Context: Ensures real-time sync per WEB_PRD.md. Dependencies: F058. Gotchas: Handle WebSocket reconnection, initial sync on connect."
     },
     {
