@@ -1681,13 +1681,13 @@
         "Persists changes to config.yaml"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T09:30:22.652911",
       "notes": "Implementation: Reuse KlondikeConfig from models.py. Validate field types and ranges. Include klondike_version and configured_agents in response. Context: Powers Config Editor per WEB_PRD.md. Dependencies: F058. Gotchas: Preserve YAML comments if possible, or rewrite in standard format."
     },
     {

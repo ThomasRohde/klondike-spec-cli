@@ -17,3 +17,6 @@ auto_regenerate_progress: true
 
 # Version of klondike-spec-cli that created/upgraded this config
 klondike_version: 0.2.14
+
+# AI coding agents configured for this project (copilot, claude)
+configured_agents: [copilot]
