@@ -14,6 +14,7 @@ import {
     ChevronDoubleRightIcon,
     CalendarDaysIcon,
     ShareIcon,
+    SwatchIcon,
 } from '@heroicons/react/24/outline'
 import { useWebSocket } from '../hooks/useWebSocket'
 import { getApiBaseUrl, getWebSocketUrl } from '../utils/api'
@@ -21,6 +22,10 @@ import { SessionBanner } from './SessionBanner'
 import { SkipLink } from '../utils/accessibility'
 import { SessionTimerWidget, useSessionTimer } from './SessionTimer'
 import { PresenceIndicator } from './PresenceIndicator'
+import { ThemeCustomizer, initializeTheme } from './ThemeCustomizer'
+
+// Initialize theme on module load
+initializeTheme();
 
 interface ActiveSession {
     id: number;
@@ -76,6 +81,7 @@ export function Layout() {
     })
     const [darkMode, setDarkMode] = useTheme()
     const [activeSession, setActiveSession] = useState<ActiveSession | null>(null)
+    const [showThemeCustomizer, setShowThemeCustomizer] = useState(false)
 
     // Persist sidebar collapsed state
     useEffect(() => {
@@ -216,8 +222,21 @@ export function Layout() {
                     </div>
                 )}
 
-                {/* Dark mode toggle */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
+                {/* Dark mode toggle and theme customizer */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+                    <button
+                        onClick={() => setShowThemeCustomizer(true)}
+                        aria-label="Customize theme"
+                        title={sidebarCollapsed ? 'Theme Settings' : undefined}
+                        className={`
+                            flex items-center gap-3 w-full rounded-lg text-gray-700 dark:text-gray-300 
+                            hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
+                            ${sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'}
+                        `}
+                    >
+                        <SwatchIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                        {!sidebarCollapsed && <span className="font-medium">Theme</span>}
+                    </button>
                     <button
                         onClick={() => setDarkMode(!darkMode)}
                         aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -277,6 +296,11 @@ export function Layout() {
                     <Outlet />
                 </main>
             </div>
+            
+            {/* Theme Customizer Modal */}
+            {showThemeCustomizer && (
+                <ThemeCustomizer onClose={() => setShowThemeCustomizer(false)} />
+            )}
         </div>
     )
 }

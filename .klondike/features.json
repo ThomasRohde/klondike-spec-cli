@@ -2446,11 +2446,17 @@
         "Default widgets: progress ring chart and priority features"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T17:06:43.270844",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "WidgetGrid.tsx with @dnd-kit sortable",
+        "useWidgetLayout hook",
+        "localStorage persistence",
+        "Dashboard.tsx integration",
+        "edit mode with controls; build succeeds; 181 tests pass; commit 0d646b3"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T17:02:22.676158",
       "notes": "Implementation: Use react-grid-layout for dashboard layout. Define widget registry with component and default size. Edge cases: Reset to default option if layout breaks. Dependencies: F077, F078 (charts). Context: Personalized workspace like Notion dashboards. Gotchas: Handle window resize and mobile layouts differently."
@@ -2497,13 +2503,13 @@
         "Theme saves to localStorage and syncs to config"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T17:06:47.448003",
       "notes": "Implementation: Use CSS custom properties (--primary, --accent). Create color palette generator from base color. Edge cases: Ensure contrast ratios meet WCAG AA. Dependencies: F070 (config editor). Context: Brand customization for different projects. Gotchas: Test readability with all color combinations."
     },
     {
@@ -2830,8 +2836,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T17:02:14.777710",
+    "lastUpdated": "2025-12-22T17:06:43.270857",
     "totalFeatures": 104,
-    "passingFeatures": 87
+    "passingFeatures": 88
   }
 }

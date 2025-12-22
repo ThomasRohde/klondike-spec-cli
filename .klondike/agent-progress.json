@@ -578,18 +578,18 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F090",
-        "description": "Customizable dashboard widgets with drag-drop layout",
-        "status": "in-progress"
-      },
-      {
         "id": "F092",
         "description": "Theme customization with color accent picker",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F103",
         "description": "Print-friendly view for feature reports",
+        "status": "not-started"
+      },
+      {
+        "id": "F104",
+        "description": "Offline support with service worker caching",
         "status": "not-started"
       }
     ]

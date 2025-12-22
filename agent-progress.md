@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F090 | Customizable dashboard widgets with drag-drop layout | 🔄 In progress |
-| F092 | Theme customization with color accent picker | ⏳ Not started |
+| F092 | Theme customization with color accent picker | 🔄 In progress |
 | F103 | Print-friendly view for feature reports | ⏳ Not started |
+| F104 | Offline support with service worker caching | ⏳ Not started |
 
 ---
 
