@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { apiCall, getApiBaseUrl } from '../utils/api'
 import { MarkdownEditor, MarkdownPreview } from './MarkdownEditor'
+import { Breadcrumbs } from './Breadcrumbs'
 import {
     CheckCircleIcon,
     XCircleIcon,
@@ -240,6 +241,9 @@ export function TaskViewer() {
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
+            {/* Breadcrumbs */}
+            <Breadcrumbs />
+            
             {/* Header */}
             <div className="mb-6 flex items-start justify-between">
                 <div className="flex-1">
