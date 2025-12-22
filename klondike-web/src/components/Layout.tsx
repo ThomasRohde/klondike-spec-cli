@@ -15,11 +15,13 @@ import { useWebSocket } from '../hooks/useWebSocket'
 import { getApiBaseUrl, getWebSocketUrl } from '../utils/api'
 import { SessionBanner } from './SessionBanner'
 import { SkipLink } from '../utils/accessibility'
+import { SessionTimerWidget, useSessionTimer } from './SessionTimer'
 
 interface ActiveSession {
     id: number;
     date: string;
     focus: string;
+    started_at?: string;
 }
 
 const navigation = [
@@ -60,6 +62,13 @@ export function Layout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [darkMode, setDarkMode] = useTheme()
     const [activeSession, setActiveSession] = useState<ActiveSession | null>(null)
+
+    // Initialize session timer from active session data
+    useSessionTimer(activeSession ? {
+        session_number: activeSession.id,
+        focus: activeSession.focus,
+        started_at: activeSession.started_at,
+    } : null)
 
     // WebSocket for live updates
     const { lastMessage } = useWebSocket(getWebSocketUrl('/api/updates'))
@@ -158,6 +167,11 @@ export function Layout() {
                         )
                     })}
                 </nav>
+
+                {/* Session timer widget */}
+                <div className="px-3 mt-4">
+                    <SessionTimerWidget variant="compact" />
+                </div>
 
                 {/* Dark mode toggle */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">

@@ -2178,11 +2178,15 @@
         "Shortcuts work globally except in inputs"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T16:11:36.023597",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "useKeyboardShortcuts.tsx with global shortcuts",
+        "ShortcutsHelp.tsx with overlay and button",
+        "App.tsx integration; build success; 181 tests pass; commit 52e7aad"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T16:09:11.404705",
       "notes": "Implementation: Use useHotkeys hook or custom event listener. Create KeyboardShortcutsProvider context. Edge cases: Disable shortcuts when modal open or input focused. Dependencies: F079 for consistent pattern. Context: Vim-style navigation for power users. Gotchas: Different shortcuts for Mac vs Windows, show correct modifier in UI."
@@ -2581,13 +2585,13 @@
         "Session summary on hover"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T16:11:39.327297",
       "notes": "Implementation: Use setInterval for timer, track last activity timestamp. Store in React context or Zustand. Edge cases: Browser tab hidden - use visibilitychange API. Dependencies: F072 (session control). Context: Time awareness for focused work sessions. Gotchas: Don't drain battery - reduce update frequency when hidden."
     },
     {
@@ -2783,8 +2787,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T15:57:17.895748",
+    "lastUpdated": "2025-12-22T16:11:36.023607",
     "totalFeatures": 104,
-    "passingFeatures": 75
+    "passingFeatures": 76
   }
 }
