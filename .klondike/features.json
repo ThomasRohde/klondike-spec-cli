@@ -1707,11 +1707,15 @@
         "File watcher detects external CLI changes"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T10:27:41.362732",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "tests/test_cli.py (181 tests passing)",
+        "src/klondike_spec_cli/cli.py (WebSocket endpoint implemented)",
+        "pyproject.toml (watchdog dependency added)"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T09:36:34.911155",
       "notes": "Implementation: Use FastAPI WebSocket support. Consider watchdog library for filesystem monitoring. Event types: featureAdded, featureUpdated, sessionStarted, sessionEnded, configChanged. Context: Ensures real-time sync per WEB_PRD.md. Dependencies: F058. Gotchas: Handle WebSocket reconnection, initial sync on connect."
@@ -1976,8 +1980,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T09:34:00.771091",
+    "lastUpdated": "2025-12-22T10:27:41.362745",
     "totalFeatures": 76,
-    "passingFeatures": 51
+    "passingFeatures": 52
   }
 }
