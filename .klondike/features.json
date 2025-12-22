@@ -2604,13 +2604,13 @@
         "Type icons distinguish activity types"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T15:53:48.152992",
       "notes": "Implementation: Aggregate from features and git commits APIs. Use WebSocket for push updates. Edge cases: Handle high activity volume - debounce or batch. Dependencies: F065 (WebSocket), F075 (commits API). Context: At-a-glance project pulse. Gotchas: Timezone handling for timestamps."
     },
     {
@@ -2694,11 +2694,17 @@
         "Keyboard accessible (Enter confirms and Escape cancels)"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T15:53:33.693538",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "ConfirmDialog.tsx with useConfirmWithUndo",
+        "UndoToast",
+        "useUndoableAction; keyboard a11y with Enter/Escape; 5-second undo countdown; danger/warning variants; build passes",
+        "181 tests pass",
+        "commit 083ec22"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T15:51:52.503581",
       "notes": "Implementation: Create ConfirmDialog component with timer for undo. Use optimistic updates with rollback. Edge cases: Handle multiple undo requests. Dependencies: F074 (toast system). Context: Prevent accidental data loss. Gotchas: Undo must actually work - queue the real deletion."
@@ -2773,8 +2779,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T15:51:40.340635",
+    "lastUpdated": "2025-12-22T15:53:33.693550",
     "totalFeatures": 104,
-    "passingFeatures": 73
+    "passingFeatures": 74
   }
 }

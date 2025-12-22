@@ -4,6 +4,7 @@ import { getApiBaseUrl, getWebSocketUrl } from '../utils/api';
 import { ProgressRing } from './ProgressRing';
 import { SessionControl } from './SessionControl';
 import { StatusChart } from './StatusChart';
+import { RecentActivityFeed } from './RecentActivityFeed';
 import { DashboardStatsSkeleton, ProgressRingSkeleton, Skeleton } from './Skeleton';
 
 interface StatusData {
@@ -263,34 +264,8 @@ export function Dashboard() {
                     </div>
                 </div>
 
-                {/* Recent commits */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Recent Commits</h3>
-                    <div className="space-y-3">
-                        {status.git_status.recent_commits.slice(0, 5).map((commit) => (
-                            <div key={commit.hash} className="border-l-2 border-gray-300 dark:border-gray-600 pl-4 py-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-xs font-mono text-gray-500 dark:text-gray-400">
-                                        {commit.hash.slice(0, 7)}
-                                    </span>
-                                    <span className="text-xs text-gray-500 dark:text-gray-400">{commit.date}</span>
-                                </div>
-                                <p className="text-sm text-gray-800 dark:text-gray-200">{commit.message}</p>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <div className="flex items-center gap-2">
-                            <span className={`text-sm font-medium ${status.git_status.is_clean ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'
-                                }`}>
-                                {status.git_status.is_clean ? '✓ Clean' : '⚠ Uncommitted changes'}
-                            </span>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
-                                on <span className="font-mono">{status.git_status.branch}</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                {/* Recent Activity Feed */}
+                <RecentActivityFeed maxItems={10} />
             </div>
         </div>
     );

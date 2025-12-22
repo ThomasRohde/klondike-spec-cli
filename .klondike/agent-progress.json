@@ -580,16 +580,16 @@
       {
         "id": "F097",
         "description": "Recent activity feed with live updates on dashboard",
-        "status": "not-started"
-      },
-      {
-        "id": "F101",
-        "description": "Confirmation dialogs with undo option for destructive actions",
         "status": "in-progress"
       },
       {
         "id": "F080",
         "description": "Keyboard shortcuts for common actions with help overlay",
+        "status": "not-started"
+      },
+      {
+        "id": "F081",
+        "description": "Drag-and-drop feature prioritization in Spec Explorer",
         "status": "not-started"
       }
     ]

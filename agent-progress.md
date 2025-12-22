@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F097 | Recent activity feed with live updates on dashboard | ⏳ Not started |
-| F101 | Confirmation dialogs with undo option for destructive actions | 🔄 In progress |
+| F097 | Recent activity feed with live updates on dashboard | 🔄 In progress |
 | F080 | Keyboard shortcuts for common actions with help overlay | ⏳ Not started |
+| F081 | Drag-and-drop feature prioritization in Spec Explorer | ⏳ Not started |
 
 ---
 
