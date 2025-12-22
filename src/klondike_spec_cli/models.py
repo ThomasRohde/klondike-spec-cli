@@ -247,8 +247,11 @@ class FeatureRegistry:
         return [f for f in self.features if f.status == status]
 
     def get_priority_features(self, limit: int = 3) -> list[Feature]:
-        """Get top priority incomplete features."""
-        incomplete = [f for f in self.features if not f.passes]
+        """Get top priority incomplete features (excludes blocked features)."""
+        incomplete = [
+            f for f in self.features
+            if not f.passes and f.status != FeatureStatus.BLOCKED
+        ]
         sorted_features = sorted(incomplete, key=lambda f: (f.priority, f.id))
         return sorted_features[:limit]
 
