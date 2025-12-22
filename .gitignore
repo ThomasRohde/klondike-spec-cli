@@ -86,3 +86,14 @@ Thumbs.db
 klondike-worktrees
 # Klondike worktree directories (auto-generated)
 klondike-worktrees/
+
+# Node.js / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Build outputs (generated from klondike-web)
+src/klondike_spec_cli/static/assets/
+src/klondike_spec_cli/static/index.html

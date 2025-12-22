@@ -1540,13 +1540,13 @@
         "Build output bundled into Python package"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T07:49:14.233639",
       "notes": "Implementation: Use Vite for fast builds. Structure: src/components for Dashboard, SpecExplorer, ActivityLog, ConfigEditor. Use HeroIcons for consistent iconography. Context: Frontend foundation per WEB_PRD.md UI Design section. Gotchas: Ensure build artifacts are included in Python package via pyproject.toml. Client-side routing needs server fallback to index.html."
     },
     {
