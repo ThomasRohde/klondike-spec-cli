@@ -2043,13 +2043,13 @@
         "Default is no auto-open"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T13:17:49.428488",
       "notes": "Implementation: Use webbrowser.open() from Python stdlib. Print URL regardless of flag. Context: Zero-config UX improvement per WEB_PRD.md Open Questions. Dependencies: F058."
     }
   ],
