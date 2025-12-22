@@ -1735,11 +1735,23 @@
         "Shows recent git commits"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T10:59:13.923745",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Implemented Dashboard UI component with all acceptance criteria:\n- Displays project name (klondike-spec-cli) and version (0.2.18.dev24)\n- Shows animated progress bar reflecting 68.4% completion\n- Displays feature counts by status with color-coded cards (Total: 76",
+        "Verified: 52",
+        "In Progress: 1",
+        "Blocked: 13)\n- Shows current session status (Session #22 with focus)\n- Lists priority features as actionable items with status badges\n- Shows recent 5 git commits with hash",
+        "date",
+        "and message\n- Real-time WebSocket connection indicator (green=connected)\n- Fetches data from GET /api/status endpoint\n- Auto-refreshes on WebSocket events (featureUpdated",
+        "sessionUpdated",
+        "etc.)\n- CORS middleware configured to allow dev server connections\n- Build completed successfully",
+        "all linting passes",
+        "all 181 tests pass\n- Manual verification: API responds with 200",
+        "server running on localhost:8000\n- React components render without errors in dev server"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T10:31:48.085999",
       "notes": "Implementation: React component using Tailwind. Fetch data from GET /api/status. Use useEffect for WebSocket subscription. Consider recharts or similar for progress visualization. Context: Main landing view per WEB_PRD.md Dashboard section. Dependencies: F059, F060."
@@ -1980,8 +1992,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T10:27:41.362745",
+    "lastUpdated": "2025-12-22T10:59:13.923778",
     "totalFeatures": 76,
-    "passingFeatures": 52
+    "passingFeatures": 53
   }
 }
