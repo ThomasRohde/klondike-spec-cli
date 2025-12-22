@@ -1628,13 +1628,13 @@
         "Returns warnings if multiple features in-progress"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T08:42:46.868278",
       "notes": "Implementation: Reuse logic from feature start/block/verify CLI commands. Validate evidence required for verify, reason required for block. Update last_worked_on timestamps. Context: Powers one-click status actions per WEB_PRD.md. Dependencies: F061. Gotchas: Multiple in-progress warning per CLI behavior."
     },
     {
@@ -1651,12 +1651,15 @@
       ],
       "estimatedEffort": null,
       "status": "not-started",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "passes": true,
+      "verifiedAt": "2025-12-22T09:08:59.961536",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "http://localhost:8001/api/progress tested",
+        "all endpoints respond correctly"
+      ],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T09:09:59.518398",
       "notes": "Implementation: Reuse ProgressLog from data.py and session start/end CLI logic. Auto-generate nextSteps from priority features if not provided. Context: Powers Activity Log and session controls per WEB_PRD.md. Dependencies: F058. Edge cases: No active session on end (error), artifact validation on start."
     },
     {
@@ -1964,8 +1967,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T08:38:19.761499",
+    "lastUpdated": "2025-12-22T09:09:59.518405",
     "totalFeatures": 76,
-    "passingFeatures": 48
+    "passingFeatures": 49
   }
 }
