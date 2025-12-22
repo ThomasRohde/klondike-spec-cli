@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon, PlusIcon, PlayIcon, NoSymbolIcon, TableCellsIcon, Squares2X2Icon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon, PlusIcon, PlayIcon, NoSymbolIcon, TableCellsIcon, Squares2X2Icon, ArrowsUpDownIcon } from '@heroicons/react/24/outline'
 import { AddFeatureForm } from './AddFeatureForm'
 import { ExpandableFeatureCard } from './ExpandableFeatureCard'
 import { getApiBaseUrl, apiCall } from '../utils/api'
 import { FeatureListSkeleton, Skeleton } from './Skeleton'
 import { EmptyFeaturesState, EmptySearchState } from './EmptyStates'
 import { BulkActionsToolbar, SelectAllCheckbox, SelectionCheckbox, clearSelection, useSelection } from './BulkActions'
+import { FeatureDndContext, SortableItem, SaveStatus, useFeatureOrdering } from './DragDropFeatures'
 
 interface Feature {
     id: string
@@ -54,10 +55,22 @@ export function SpecExplorer() {
     const [isAddFormOpen, setIsAddFormOpen] = useState(false)
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
     const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
+    const [reorderMode, setReorderMode] = useState(false)
     
     // Track selection
     const selectedIds = useSelection()
     const filteredIds = filteredFeatures.map(f => f.id)
+    
+    // Drag and drop ordering
+    const { orderedFeatures, isSaving, handleReorder } = useFeatureOrdering(
+        filteredFeatures.map(f => ({
+            id: f.id,
+            description: f.description,
+            priority: f.priority,
+            status: f.status,
+        })),
+        { onRefresh: fetchFeatures }
+    )
 
     // Extract unique categories from features
     const categories = Array.from(new Set(features.map(f => f.category))).sort()
@@ -263,6 +276,18 @@ export function SpecExplorer() {
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Spec Explorer</h2>
                 <div className="flex items-center gap-2">
+                    {/* Reorder toggle */}
+                    <button
+                        onClick={() => setReorderMode(!reorderMode)}
+                        className={`p-2 rounded-md border transition-colors ${reorderMode 
+                            ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700' 
+                            : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
+                        title={reorderMode ? 'Exit reorder mode' : 'Enable drag to reorder'}
+                    >
+                        <ArrowsUpDownIcon className="w-5 h-5" />
+                    </button>
+                    
                     {/* View toggle */}
                     <div className="flex rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden">
                         <button
@@ -477,26 +502,40 @@ export function SpecExplorer() {
 
             {/* Features - Card View */}
             {viewMode === 'cards' && (
-                <div className="space-y-3">
-                    {filteredFeatures.map((feature) => (
-                        <ExpandableFeatureCard
-                            key={feature.id}
-                            feature={feature}
-                            onStart={() => handleCardStart(feature.id)}
-                            onBlock={() => handleCardBlock(feature.id)}
-                            onVerify={(checkedCriteria) => handleCardVerify(feature.id, checkedCriteria)}
-                            onNavigate={() => navigate(`/task/${feature.id}`)}
-                        />
-                    ))}
-                    {filteredFeatures.length === 0 && features.length === 0 && (
-                        <EmptyFeaturesState onAdd={() => setIsAddFormOpen(true)} />
-                    )}
-                    
-                    {filteredFeatures.length === 0 && features.length > 0 && (
-                        <EmptySearchState query={searchText || statusFilter || categoryFilter || 'filters'} />
-                    )}
-                </div>
+                <FeatureDndContext 
+                    features={orderedFeatures} 
+                    onReorder={handleReorder}
+                    disabled={!reorderMode}
+                >
+                    <div className={`space-y-3 ${reorderMode ? 'pl-8' : ''}`}>
+                        {orderedFeatures.map((orderedFeature) => {
+                            const feature = filteredFeatures.find(f => f.id === orderedFeature.id);
+                            if (!feature) return null;
+                            return (
+                                <SortableItem key={feature.id} id={feature.id} disabled={!reorderMode}>
+                                    <ExpandableFeatureCard
+                                        feature={feature}
+                                        onStart={() => handleCardStart(feature.id)}
+                                        onBlock={() => handleCardBlock(feature.id)}
+                                        onVerify={(checkedCriteria) => handleCardVerify(feature.id, checkedCriteria)}
+                                        onNavigate={() => navigate(`/task/${feature.id}`)}
+                                    />
+                                </SortableItem>
+                            );
+                        })}
+                        {filteredFeatures.length === 0 && features.length === 0 && (
+                            <EmptyFeaturesState onAdd={() => setIsAddFormOpen(true)} />
+                        )}
+                        
+                        {filteredFeatures.length === 0 && features.length > 0 && (
+                            <EmptySearchState query={searchText || statusFilter || categoryFilter || 'filters'} />
+                        )}
+                    </div>
+                </FeatureDndContext>
             )}
+            
+            {/* Save status indicator */}
+            <SaveStatus isSaving={isSaving} />
 
             {/* Add Feature Modal */}
             <AddFeatureForm

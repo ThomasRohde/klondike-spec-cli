@@ -580,16 +580,16 @@
       {
         "id": "F081",
         "description": "Drag-and-drop feature prioritization in Spec Explorer",
-        "status": "not-started"
-      },
-      {
-        "id": "F082",
-        "description": "Bulk actions toolbar for multiple feature selection",
         "status": "in-progress"
       },
       {
         "id": "F084",
         "description": "Feature timeline visualization showing project history",
+        "status": "not-started"
+      },
+      {
+        "id": "F085",
+        "description": "Feature dependency graph visualization",
         "status": "not-started"
       }
     ]

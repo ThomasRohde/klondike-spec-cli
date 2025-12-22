@@ -2067,6 +2067,74 @@ def serve(
                 raise
             return {"error": str(e)}
 
+    @app_instance.post("/api/features/reorder")
+    async def api_features_reorder(reorder_data: dict):
+        """Reorder features by updating their priorities.
+
+        Request Body:
+            {
+                "order": [
+                    {"id": "F001", "priority": 1},
+                    {"id": "F002", "priority": 2},
+                    ...
+                ]
+            }
+
+        Returns:
+            Success status and count of updated features.
+        """
+        from datetime import datetime
+
+        from .data import load_features, save_features
+
+        try:
+            order = reorder_data.get("order", [])
+            if not order:
+                from fastapi import HTTPException
+
+                raise HTTPException(status_code=400, detail="Order list is required")
+
+            registry = load_features(root)
+            registry._build_index()
+
+            updated_count = 0
+            for item in order:
+                feature_id = item.get("id")
+                priority = item.get("priority")
+
+                if not feature_id or priority is None:
+                    continue
+
+                if feature_id in registry._feature_index:
+                    feature = registry._feature_index[feature_id]
+                    # Validate priority
+                    if isinstance(priority, int) and 1 <= priority <= 5:
+                        if feature.priority != priority:
+                            feature.priority = priority
+                            updated_count += 1
+
+            # Update metadata
+            registry.metadata.last_updated = datetime.now().isoformat()
+            save_features(registry, root)
+
+            # Broadcast event to WebSocket clients
+            await manager.broadcast(
+                "featuresReordered",
+                {
+                    "updated_count": updated_count,
+                },
+            )
+
+            return {
+                "success": True,
+                "message": f"Reordered {updated_count} features",
+                "updated_count": updated_count,
+            }
+        except Exception as e:
+            if hasattr(e, "status_code"):
+                raise
+            return {"error": str(e)}
+
     @app_instance.get("/api/progress")
     async def api_progress():
         """Get all session history.
