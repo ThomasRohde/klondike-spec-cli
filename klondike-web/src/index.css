@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+/* Microinteractions */
+
+/* Button press effect */
+.btn-press {
+    @apply transition-all duration-150 active:scale-95;
+}
+
+/* Button hover lift */
+.btn-lift {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md;
+}
+
+/* Card hover effect */
+.card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Status change animation */
+@keyframes status-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.status-changing {
+    animation: status-pulse 0.5s ease-in-out 2;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .btn-press,
+    .btn-lift,
+    .card-hover,
+    .status-changing {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+    }
+}

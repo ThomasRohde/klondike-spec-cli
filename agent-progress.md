@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F077 | Animated progress ring on dashboard with percentage and color transitions | 🔄 In progress |
-| F078 | Feature status distribution pie/donut chart on dashboard | 🔄 In progress |
-| F079 | Command palette (Cmd+K) for quick navigation and actions | 🔄 In progress |
+| F083 | Microinteractions and loading states with skeleton screens | 🔄 In progress |
+| F086 | Quick action buttons on feature cards (hover reveal) | 🔄 In progress |
+| F089 | Kanban board view for features by status | ⏳ Not started |
 
 ---
 

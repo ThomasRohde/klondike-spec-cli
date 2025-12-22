@@ -578,19 +578,19 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F077",
-        "description": "Animated progress ring on dashboard with percentage and color transitions",
+        "id": "F083",
+        "description": "Microinteractions and loading states with skeleton screens",
         "status": "in-progress"
       },
       {
-        "id": "F078",
-        "description": "Feature status distribution pie/donut chart on dashboard",
+        "id": "F086",
+        "description": "Quick action buttons on feature cards (hover reveal)",
         "status": "in-progress"
       },
       {
-        "id": "F079",
-        "description": "Command palette (Cmd+K) for quick navigation and actions",
-        "status": "in-progress"
+        "id": "F089",
+        "description": "Kanban board view for features by status",
+        "status": "not-started"
       }
     ]
   }

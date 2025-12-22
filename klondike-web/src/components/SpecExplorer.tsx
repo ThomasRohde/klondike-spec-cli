@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon, PlusIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon, PlusIcon, PlayIcon, NoSymbolIcon } from '@heroicons/react/24/outline'
 import { AddFeatureForm } from './AddFeatureForm'
-import { getApiBaseUrl } from '../utils/api'
+import { getApiBaseUrl, apiCall } from '../utils/api'
+import { FeatureListSkeleton, Skeleton } from './Skeleton'
 
 interface Feature {
     id: string
@@ -100,6 +101,57 @@ export function SpecExplorer() {
         setTimeout(() => setSuccessMessage(null), 5000) // Clear message after 5 seconds
     }
 
+    async function handleQuickStart(e: React.MouseEvent, featureId: string) {
+        e.stopPropagation() // Prevent row click navigation
+        try {
+            await apiCall(
+                fetch(`${getApiBaseUrl()}/api/features/${featureId}/start`, { method: 'POST' }),
+                { successMessage: `${featureId} started!`, errorMessage: `Failed to start ${featureId}` }
+            )
+            fetchFeatures()
+        } catch {
+            // Error already toasted by apiCall
+        }
+    }
+
+    async function handleQuickVerify(e: React.MouseEvent, featureId: string) {
+        e.stopPropagation()
+        const evidence = window.prompt('Enter verification evidence:')
+        if (!evidence) return
+        try {
+            await apiCall(
+                fetch(`${getApiBaseUrl()}/api/features/${featureId}/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ evidence })
+                }),
+                { successMessage: `${featureId} verified!`, errorMessage: `Failed to verify ${featureId}` }
+            )
+            fetchFeatures()
+        } catch {
+            // Error already toasted by apiCall
+        }
+    }
+
+    async function handleQuickBlock(e: React.MouseEvent, featureId: string) {
+        e.stopPropagation()
+        const reason = window.prompt('Enter block reason:')
+        if (!reason) return
+        try {
+            await apiCall(
+                fetch(`${getApiBaseUrl()}/api/features/${featureId}/block`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reason })
+                }),
+                { successMessage: `${featureId} blocked`, errorMessage: `Failed to block ${featureId}` }
+            )
+            fetchFeatures()
+        } catch {
+            // Error already toasted by apiCall
+        }
+    }
+
     function StatusBadge({ status }: { status: Feature['status'] }) {
         const config = statusConfig[status]
         const Icon = config.icon
@@ -121,8 +173,22 @@ export function SpecExplorer() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-gray-500 dark:text-gray-400">Loading features...</div>
+            <div className="space-y-6">
+                {/* Header skeleton */}
+                <div className="flex justify-between items-center">
+                    <Skeleton height={32} className="w-48" />
+                    <Skeleton width={140} height={40} rounded="lg" />
+                </div>
+                
+                {/* Filter bar skeleton */}
+                <div className="flex gap-4">
+                    <Skeleton className="flex-1" height={40} />
+                    <Skeleton width={120} height={40} />
+                    <Skeleton width={120} height={40} />
+                </div>
+                
+                {/* Feature list skeleton */}
+                <FeatureListSkeleton count={5} />
             </div>
         )
     }
@@ -229,6 +295,9 @@ export function SpecExplorer() {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Status
                                 </th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -236,7 +305,7 @@ export function SpecExplorer() {
                                 <tr
                                     key={feature.id}
                                     onClick={() => navigate(`/task/${feature.id}`)}
-                                    className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                                    className="group hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                                 >
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                         {feature.id}
@@ -254,6 +323,40 @@ export function SpecExplorer() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                         <StatusBadge status={feature.status} />
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
+                                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            {/* Show Start button for not-started features */}
+                                            {feature.status === 'not-started' && (
+                                                <button
+                                                    onClick={(e) => handleQuickStart(e, feature.id)}
+                                                    className="p-1.5 rounded-md bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors btn-press"
+                                                    title="Start feature"
+                                                >
+                                                    <PlayIcon className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                            {/* Show Verify button for in-progress features */}
+                                            {feature.status === 'in-progress' && (
+                                                <button
+                                                    onClick={(e) => handleQuickVerify(e, feature.id)}
+                                                    className="p-1.5 rounded-md bg-green-50 dark:bg-green-900/50 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900 transition-colors btn-press"
+                                                    title="Verify feature"
+                                                >
+                                                    <CheckCircleIcon className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                            {/* Show Block button for not-started and in-progress features */}
+                                            {(feature.status === 'not-started' || feature.status === 'in-progress') && (
+                                                <button
+                                                    onClick={(e) => handleQuickBlock(e, feature.id)}
+                                                    className="p-1.5 rounded-md bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition-colors btn-press"
+                                                    title="Block feature"
+                                                >
+                                                    <NoSymbolIcon className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

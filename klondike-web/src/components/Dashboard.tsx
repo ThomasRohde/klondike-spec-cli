@@ -4,6 +4,7 @@ import { getApiBaseUrl, getWebSocketUrl } from '../utils/api';
 import { ProgressRing } from './ProgressRing';
 import { SessionControl } from './SessionControl';
 import { StatusChart } from './StatusChart';
+import { DashboardStatsSkeleton, ProgressRingSkeleton, Skeleton } from './Skeleton';
 
 interface StatusData {
     project_name: string;
@@ -84,8 +85,24 @@ export function Dashboard() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-lg text-gray-600 dark:text-gray-400">Loading...</div>
+            <div className="space-y-8">
+                {/* Header skeleton */}
+                <div className="flex justify-between items-center">
+                    <div>
+                        <Skeleton height={36} className="w-48 mb-2" />
+                        <Skeleton height={16} className="w-16" />
+                    </div>
+                    <Skeleton width={100} height={20} />
+                </div>
+                
+                {/* Stats skeleton */}
+                <DashboardStatsSkeleton />
+                
+                {/* Progress ring skeleton */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <ProgressRingSkeleton />
+                    <ProgressRingSkeleton />
+                </div>
             </div>
         );
     }
@@ -96,7 +113,7 @@ export function Dashboard() {
                 <p className="text-red-800 dark:text-red-400">Error: {error}</p>
                 <button
                     onClick={fetchStatus}
-                    className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                 >
                     Retry
                 </button>
