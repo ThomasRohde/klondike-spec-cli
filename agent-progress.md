@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F093 | Feature card expanded view with acceptance criteria checklist | 🔄 In progress |
-| F094 | Accessibility improvements with ARIA labels and focus management | ⏳ Not started |
+| F094 | Accessibility improvements with ARIA labels and focus management | 🔄 In progress |
 | F095 | Mobile-optimized touch gestures and responsive layout | ⏳ Not started |
+| F097 | Recent activity feed with live updates on dashboard | ⏳ Not started |
 
 ---
 

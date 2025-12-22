@@ -14,6 +14,7 @@ import {
 import { useWebSocket } from '../hooks/useWebSocket'
 import { getApiBaseUrl, getWebSocketUrl } from '../utils/api'
 import { SessionBanner } from './SessionBanner'
+import { SkipLink } from '../utils/accessibility'
 
 interface ActiveSession {
     id: number;
@@ -101,6 +102,9 @@ export function Layout() {
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+            {/* Skip link for keyboard navigation */}
+            <SkipLink targetId="main-content" />
+
             {/* Mobile sidebar backdrop */}
             {sidebarOpen && (
                 <div
@@ -123,14 +127,15 @@ export function Layout() {
                     <h1 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">🎯 Klondike</h1>
                     <button
                         onClick={() => setSidebarOpen(false)}
+                        aria-label="Close sidebar"
                         className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
-                        <XMarkIcon className="h-5 w-5" />
+                        <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                     </button>
                 </div>
 
                 {/* Navigation */}
-                <nav className="mt-6 px-3 flex-1">
+                <nav className="mt-6 px-3 flex-1" aria-label="Main navigation">
                     {navigation.map((item) => {
                         const isActive = location.pathname === item.href ||
                             (item.href === '/specs' && location.pathname.startsWith('/task/'))
@@ -138,6 +143,7 @@ export function Layout() {
                             <Link
                                 key={item.name}
                                 to={item.href}
+                                aria-current={isActive ? 'page' : undefined}
                                 className={`
                                     flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors
                                     ${isActive
@@ -146,7 +152,7 @@ export function Layout() {
                                     }
                                 `}
                             >
-                                <item.icon className="h-5 w-5" />
+                                <item.icon className="h-5 w-5" aria-hidden="true" />
                                 <span className="font-medium">{item.name}</span>
                             </Link>
                         )
@@ -157,16 +163,17 @@ export function Layout() {
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                         onClick={() => setDarkMode(!darkMode)}
+                        aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                         className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
                         {darkMode ? (
                             <>
-                                <SunIcon className="h-5 w-5" />
+                                <SunIcon className="h-5 w-5" aria-hidden="true" />
                                 <span className="font-medium">Light Mode</span>
                             </>
                         ) : (
                             <>
-                                <MoonIcon className="h-5 w-5" />
+                                <MoonIcon className="h-5 w-5" aria-hidden="true" />
                                 <span className="font-medium">Dark Mode</span>
                             </>
                         )}
@@ -178,9 +185,10 @@ export function Layout() {
             <div className="fixed top-0 left-0 right-0 z-30 h-16 bg-white dark:bg-gray-800 shadow-sm md:hidden flex items-center px-4">
                 <button
                     onClick={() => setSidebarOpen(true)}
+                    aria-label="Open navigation menu"
                     className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
-                    <Bars3Icon className="h-6 w-6" />
+                    <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                 </button>
                 <h1 className="ml-3 text-lg font-bold text-indigo-600 dark:text-indigo-400">🎯 Klondike</h1>
             </div>
@@ -195,7 +203,7 @@ export function Layout() {
                         date={activeSession.date}
                     />
                 )}
-                <main className="p-4 md:p-8">
+                <main id="main-content" className="p-4 md:p-8" role="main" tabIndex={-1}>
                     <Outlet />
                 </main>
             </div>

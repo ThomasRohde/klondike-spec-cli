@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import { announce } from "./accessibility";
 
 /**
  * API utility functions for constructing URLs based on current origin.
@@ -81,12 +82,16 @@ export async function apiCall<T>(
                     ? options.successMessage(data as T)
                     : options?.successMessage || "Success";
             toast.success(message, { id: toastId });
+            // Announce to screen readers
+            announce(message);
         } else if (options?.successMessage) {
             const message =
                 typeof options.successMessage === "function"
                     ? options.successMessage(data as T)
                     : options.successMessage;
             toast.success(message);
+            // Announce to screen readers
+            announce(message);
         }
 
         return data as T;
@@ -96,12 +101,16 @@ export async function apiCall<T>(
         if (error instanceof Error) {
             if (!options?.errorMessage) {
                 toast.error(error.message);
+                // Announce errors assertively to screen readers
+                announce(error.message, 'assertive');
             }
             throw error;
         }
 
         const message = options?.errorMessage || "An unexpected error occurred";
         toast.error(message);
+        // Announce errors assertively to screen readers
+        announce(message, 'assertive');
         throw new Error(message);
     }
 }

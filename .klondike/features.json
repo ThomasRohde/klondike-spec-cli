@@ -2495,11 +2495,15 @@
         "Collapse button or click outside closes"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T15:45:38.219320",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "ExpandableFeatureCard.tsx with expand/collapse and criteria checklist; view toggle in SpecExplorer; verify button enabled when all criteria checked; build passes",
+        "181 tests pass",
+        "commit 3ba0215"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T15:42:11.040256",
       "notes": "Implementation: Animate height transition with framer-motion or CSS grid. Store checked criteria in feature verifiedBy field or separate. Edge cases: Very long criteria lists need scroll. Dependencies: F067 (spec explorer). Context: In-place editing reduces navigation. Gotchas: Handle keyboard navigation within expanded card."
@@ -2518,13 +2522,13 @@
         "Color is not only indicator"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T15:45:46.427370",
       "notes": "Implementation: Add aria-label, aria-describedby, role attributes. Use focus-visible for focus rings. Edge cases: Test with actual screen readers (VoiceOver NVDA). Dependencies: None - applies across all components. Context: Inclusive design and legal compliance. Gotchas: Live regions for dynamic content updates."
     },
     {
@@ -2756,8 +2760,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T15:42:03.225514",
+    "lastUpdated": "2025-12-22T15:45:38.219330",
     "totalFeatures": 104,
-    "passingFeatures": 70
+    "passingFeatures": 71
   }
 }
