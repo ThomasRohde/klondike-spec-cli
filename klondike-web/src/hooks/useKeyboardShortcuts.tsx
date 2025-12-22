@@ -4,6 +4,7 @@
 
 import { useEffect, useSyncExternalStore } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { openQuickAdd } from '../components/QuickAddDialog';
 
 export interface ShortcutAction {
     key: string;
@@ -146,7 +147,7 @@ export function useKeyboardShortcuts() {
             modifiers: ['ctrl', 'shift'],
             description: 'Add New Feature',
             category: 'Actions',
-            action: () => navigate('/spec?action=add'),
+            action: openQuickAdd,
         }));
         
         unsubscribers.push(registerShortcut({

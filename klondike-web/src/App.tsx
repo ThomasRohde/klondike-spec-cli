@@ -11,6 +11,7 @@ import { CommandPalette } from './components/CommandPalette'
 import { useCommandPalette } from './hooks/useCommandPalette'
 import { ShortcutsHelpOverlay, ShortcutsHelpButton } from './components/ShortcutsHelp'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
+import { QuickAddDialog } from './components/QuickAddDialog'
 
 function AppContent() {
   const commandPalette = useCommandPalette();
@@ -22,6 +23,7 @@ function AppContent() {
       <CommandPalette isOpen={commandPalette.isOpen} onClose={commandPalette.close} />
       <ShortcutsHelpOverlay />
       <ShortcutsHelpButton />
+      <QuickAddDialog />
       <Toaster
         position="top-right"
         toastOptions={{
