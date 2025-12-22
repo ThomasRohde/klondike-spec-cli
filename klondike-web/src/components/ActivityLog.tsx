@@ -35,7 +35,7 @@ export function ActivityLog() {
     const [expandedSessions, setExpandedSessions] = useState<Set<number>>(new Set([1])); // Expand first session by default
 
     // WebSocket for live updates
-    const { lastMessage, isConnected } = useWebSocket('ws://localhost:8000/ws');
+    const { lastMessage, isConnected } = useWebSocket('ws://localhost:8000/api/updates');
 
     // Fetch initial progress data
     useEffect(() => {

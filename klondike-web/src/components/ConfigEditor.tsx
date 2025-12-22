@@ -32,7 +32,7 @@ export function ConfigEditor() {
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
     const [formData, setFormData] = useState<Partial<Config>>({})
 
-    const { lastMessage } = useWebSocket('ws://localhost:8765/ws')
+    const { lastMessage } = useWebSocket('ws://localhost:8000/api/updates')
 
     // Load config on mount
     useEffect(() => {

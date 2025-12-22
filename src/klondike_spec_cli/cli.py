@@ -11,8 +11,12 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from pith import Argument, Option, Pith, PithException, echo
+
+if TYPE_CHECKING:
+    from fastapi import WebSocket
 
 from . import formatting
 
@@ -1207,13 +1211,13 @@ def serve(
         """Manages WebSocket connections and broadcasts events."""
 
         def __init__(self):
-            self.active_connections: list[WebSocket] = []
+            self.active_connections: list["WebSocket"] = []
 
-        async def connect(self, websocket: WebSocket):
+        async def connect(self, websocket: "WebSocket"):
             await websocket.accept()
             self.active_connections.append(websocket)
 
-        def disconnect(self, websocket: WebSocket):
+        def disconnect(self, websocket: "WebSocket"):
             if websocket in self.active_connections:
                 self.active_connections.remove(websocket)
 
@@ -1359,7 +1363,7 @@ def serve(
         return {"status": "ok", "version": __version__}
 
     @app_instance.websocket("/api/updates")
-    async def websocket_endpoint(websocket: WebSocket):
+    async def websocket_endpoint(websocket: "WebSocket"):
         """WebSocket endpoint for real-time updates.
 
         Emits events:

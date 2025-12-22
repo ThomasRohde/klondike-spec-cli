@@ -40,7 +40,7 @@ export function Dashboard() {
     const [error, setError] = useState<string | null>(null);
 
     // WebSocket for live updates
-    const { lastMessage, isConnected } = useWebSocket('ws://localhost:8000/ws');
+    const { lastMessage, isConnected } = useWebSocket('ws://localhost:8000/api/updates');
 
     // Fetch initial status data
     useEffect(() => {
