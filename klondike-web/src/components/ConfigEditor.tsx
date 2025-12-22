@@ -50,7 +50,7 @@ export function ConfigEditor() {
         try {
             const response = await fetch('/api/config')
             const data = await response.json()
-            
+
             if (data.error) {
                 setMessage({ type: 'error', text: data.error })
             } else {
@@ -119,7 +119,7 @@ export function ConfigEditor() {
     return (
         <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Configuration</h2>
-            
+
             <div className="bg-white rounded-lg shadow">
                 <div className="p-6 space-y-6">
                     {/* Message Banner */}
@@ -297,11 +297,10 @@ export function ConfigEditor() {
                         <button
                             onClick={handleSave}
                             disabled={saving}
-                            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-                                saving
+                            className={`px-6 py-2 rounded-lg font-medium transition-colors ${saving
                                     ? 'bg-gray-400 cursor-not-allowed'
                                     : 'bg-blue-600 hover:bg-blue-700 text-white'
-                            }`}
+                                }`}
                         >
                             {saving ? 'Saving...' : 'Save Configuration'}
                         </button>
