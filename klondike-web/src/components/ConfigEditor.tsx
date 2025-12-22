@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { useWebSocket } from '../hooks/useWebSocket'
-import { getWebSocketUrl } from '../utils/api'
+import { getWebSocketUrl, getApiBaseUrl, apiCall } from '../utils/api'
 
 interface Config {
     default_category: string
@@ -30,7 +31,6 @@ export function ConfigEditor() {
     const [config, setConfig] = useState<Config | null>(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
-    const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
     const [formData, setFormData] = useState<Partial<Config>>({})
 
     const { lastMessage } = useWebSocket(getWebSocketUrl('/api/updates'))
@@ -49,17 +49,17 @@ export function ConfigEditor() {
 
     const loadConfig = async () => {
         try {
-            const response = await fetch('/api/config')
+            const response = await fetch(`${getApiBaseUrl()}/api/config`)
             const data = await response.json()
 
             if (data.error) {
-                setMessage({ type: 'error', text: data.error })
+                toast.error(data.error)
             } else {
                 setConfig(data)
                 setFormData(data)
             }
         } catch (error) {
-            setMessage({ type: 'error', text: `Failed to load config: ${error}` })
+            toast.error(`Failed to load config: ${error}`)
         } finally {
             setLoading(false)
         }
@@ -67,26 +67,27 @@ export function ConfigEditor() {
 
     const handleSave = async () => {
         setSaving(true)
-        setMessage(null)
 
         try {
-            const response = await fetch('/api/config', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            })
+            const result = await apiCall<{ success: boolean; config: Config; message?: string }>(
+                fetch(`${getApiBaseUrl()}/api/config`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                }),
+                {
+                    loadingMessage: 'Saving configuration...',
+                    successMessage: (data) => data.message || 'Configuration saved successfully!',
+                    errorMessage: 'Failed to save configuration'
+                }
+            )
 
-            const result = await response.json()
-
-            if (response.ok && result.success) {
+            if (result.success) {
                 setConfig(result.config)
                 setFormData(result.config)
-                setMessage({ type: 'success', text: result.message || 'Configuration saved successfully!' })
-            } else {
-                setMessage({ type: 'error', text: result.detail || result.error || 'Failed to save configuration' })
             }
         } catch (error) {
-            setMessage({ type: 'error', text: `Save failed: ${error}` })
+            // Error already toasted by apiCall
         } finally {
             setSaving(false)
         }
@@ -123,13 +124,6 @@ export function ConfigEditor() {
 
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
                 <div className="p-6 space-y-6">
-                    {/* Message Banner */}
-                    {message && (
-                        <div className={`p-4 rounded-lg ${message.type === 'success' ? 'bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-400' : 'bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-400'}`}>
-                            <p className="text-sm font-medium">{message.text}</p>
-                        </div>
-                    )}
-
                     {/* Feature Defaults Section */}
                     <div>
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Feature Defaults</h3>

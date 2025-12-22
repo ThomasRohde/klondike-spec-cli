@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 import { Layout } from './components/Layout'
 import { Dashboard } from './components/Dashboard'
 import { SpecExplorer } from './components/SpecExplorer'
@@ -9,6 +10,33 @@ import { TaskViewer } from './components/TaskViewer'
 function App() {
   return (
     <BrowserRouter>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          // Default options
+          duration: 4000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          // Success
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+          },
+          // Error
+          error: {
+            duration: 5000,
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />

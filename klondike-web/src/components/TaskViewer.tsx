@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
+import { apiCall, getApiBaseUrl } from '../utils/api'
 import {
     CheckCircleIcon,
     XCircleIcon,
@@ -81,14 +83,16 @@ export function TaskViewer() {
         try {
             setLoading(true)
             setError(null)
-            const response = await fetch(`http://127.0.0.1:8000/api/features/${id}`)
+            const response = await fetch(`${getApiBaseUrl()}/api/features/${id}`)
             if (!response.ok) {
                 throw new Error('Feature not found')
             }
             const data = await response.json()
             setFeature(data)
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to load feature')
+            const message = err instanceof Error ? err.message : 'Failed to load feature'
+            setError(message)
+            toast.error(message)
         } finally {
             setLoading(false)
         }
@@ -98,19 +102,22 @@ export function TaskViewer() {
         if (!feature) return
         try {
             setActionLoading(true)
-            const response = await fetch(`http://127.0.0.1:8000/api/features/${feature.id}/start`, {
-                method: 'POST',
-            })
-            if (!response.ok) {
-                throw new Error('Failed to start feature')
-            }
-            const result = await response.json()
+            const result = await apiCall<{ feature: Feature; warning?: string }>(
+                fetch(`${getApiBaseUrl()}/api/features/${feature.id}/start`, {
+                    method: 'POST',
+                }),
+                {
+                    loadingMessage: `Starting ${feature.id}...`,
+                    successMessage: `${feature.id} started`,
+                    errorMessage: 'Failed to start feature'
+                }
+            )
             if (result.warning) {
-                alert(`Warning: ${result.warning}`)
+                toast.warning(result.warning)
             }
             setFeature(result.feature)
         } catch (err) {
-            alert(err instanceof Error ? err.message : 'Failed to start feature')
+            // Error already toasted by apiCall
         } finally {
             setActionLoading(false)
         }
@@ -118,25 +125,28 @@ export function TaskViewer() {
 
     async function handleBlock() {
         if (!feature || !blockReason.trim()) {
-            alert('Please provide a reason for blocking')
+            toast.error('Please provide a reason for blocking')
             return
         }
         try {
             setActionLoading(true)
-            const response = await fetch(`http://127.0.0.1:8000/api/features/${feature.id}/block`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ reason: blockReason })
-            })
-            if (!response.ok) {
-                throw new Error('Failed to block feature')
-            }
-            const result = await response.json()
+            const result = await apiCall<{ feature: Feature }>(
+                fetch(`${getApiBaseUrl()}/api/features/${feature.id}/block`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reason: blockReason })
+                }),
+                {
+                    loadingMessage: `Blocking ${feature.id}...`,
+                    successMessage: `${feature.id} marked as blocked`,
+                    errorMessage: 'Failed to block feature'
+                }
+            )
             setFeature(result.feature)
             setShowBlockModal(false)
             setBlockReason('')
         } catch (err) {
-            alert(err instanceof Error ? err.message : 'Failed to block feature')
+            // Error already toasted by apiCall
         } finally {
             setActionLoading(false)
         }
@@ -144,25 +154,28 @@ export function TaskViewer() {
 
     async function handleVerify() {
         if (!feature || !evidence.trim()) {
-            alert('Please provide evidence for verification')
+            toast.error('Please provide evidence for verification')
             return
         }
         try {
             setActionLoading(true)
-            const response = await fetch(`http://127.0.0.1:8000/api/features/${feature.id}/verify`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ evidence })
-            })
-            if (!response.ok) {
-                throw new Error('Failed to verify feature')
-            }
-            const result = await response.json()
+            const result = await apiCall<{ feature: Feature }>(
+                fetch(`${getApiBaseUrl()}/api/features/${feature.id}/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ evidence })
+                }),
+                {
+                    loadingMessage: `Verifying ${feature.id}...`,
+                    successMessage: `✅ ${feature.id} verified!`,
+                    errorMessage: 'Failed to verify feature'
+                }
+            )
             setFeature(result.feature)
             setShowVerifyModal(false)
             setEvidence('')
         } catch (err) {
-            alert(err instanceof Error ? err.message : 'Failed to verify feature')
+            // Error already toasted by apiCall
         } finally {
             setActionLoading(false)
         }
@@ -172,24 +185,27 @@ export function TaskViewer() {
         if (!feature) return
         try {
             setActionLoading(true)
-            const response = await fetch(`http://127.0.0.1:8000/api/features/${feature.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    description: editDescription,
-                    notes: editNotes || null,
-                    category: editCategory,
-                    priority: editPriority
-                })
-            })
-            if (!response.ok) {
-                throw new Error('Failed to update feature')
-            }
-            const result = await response.json()
+            const result = await apiCall<{ feature: Feature }>(
+                fetch(`${getApiBaseUrl()}/api/features/${feature.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        description: editDescription,
+                        notes: editNotes || null,
+                        category: editCategory,
+                        priority: editPriority
+                    })
+                }),
+                {
+                    loadingMessage: 'Updating feature...',
+                    successMessage: `${feature.id} updated`,
+                    errorMessage: 'Failed to update feature'
+                }
+            )
             setFeature(result.feature)
             setIsEditing(false)
         } catch (err) {
-            alert(err instanceof Error ? err.message : 'Failed to update feature')
+            // Error already toasted by apiCall
         } finally {
             setActionLoading(false)
         }

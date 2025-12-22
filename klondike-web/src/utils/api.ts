@@ -1,3 +1,5 @@
+import toast from 'react-hot-toast'
+
 /**
  * API utility functions for constructing URLs based on current origin.
  * This ensures the frontend works whether accessed via localhost or 127.0.0.1.
@@ -34,4 +36,72 @@ export function getWebSocketUrl(path: string): string {
 
     // In production, use the same host
     return `${protocol}//${host}${path}`;
+}
+
+/**
+ * Wrapper for API calls that automatically shows toast notifications
+ * for success and error states.
+ */
+export async function apiCall<T>(
+    promise: Promise<Response>,
+    options?: {
+        successMessage?: string | ((data: T) => string)
+        errorMessage?: string
+        loadingMessage?: string
+    }
+): Promise<T> {
+    const toastId = options?.loadingMessage
+        ? toast.loading(options.loadingMessage)
+        : undefined
+
+    try {
+        const response = await promise
+
+        if (!response.ok) {
+            const errorText = await response.text()
+            let errorMessage = options?.errorMessage || 'Operation failed'
+            
+            try {
+                const errorJson = JSON.parse(errorText)
+                if (errorJson.detail) {
+                    errorMessage = errorJson.detail
+                }
+            } catch {
+                // Not JSON, use default message
+            }
+
+            if (toastId) toast.dismiss(toastId)
+            toast.error(errorMessage)
+            throw new Error(errorMessage)
+        }
+
+        const data = await response.json()
+
+        if (toastId) {
+            const message = typeof options?.successMessage === 'function'
+                ? options.successMessage(data as T)
+                : options?.successMessage || 'Success'
+            toast.success(message, { id: toastId })
+        } else if (options?.successMessage) {
+            const message = typeof options.successMessage === 'function'
+                ? options.successMessage(data as T)
+                : options.successMessage
+            toast.success(message)
+        }
+
+        return data as T
+    } catch (error) {
+        if (toastId) toast.dismiss(toastId)
+        
+        if (error instanceof Error) {
+            if (!options?.errorMessage) {
+                toast.error(error.message)
+            }
+            throw error
+        }
+        
+        const message = options?.errorMessage || 'An unexpected error occurred'
+        toast.error(message)
+        throw new Error(message)
+    }
 }

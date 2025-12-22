@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { apiCall, getApiBaseUrl } from '../utils/api'
 
 interface AddFeatureFormProps {
     isOpen: boolean
@@ -54,19 +55,20 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
                 notes: formData.notes.trim() || undefined
             }
 
-            const response = await fetch('/api/features', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body)
-            })
-
-            const data = await response.json()
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Failed to create feature')
-            }
+            const data = await apiCall<{ id: string }>(
+                fetch(`${getApiBaseUrl()}/api/features`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body)
+                }),
+                {
+                    loadingMessage: 'Creating feature...',
+                    successMessage: `Feature ${body.description} created successfully`,
+                    errorMessage: 'Failed to create feature'
+                }
+            )
 
             // Success!
             onSuccess(data.id)
