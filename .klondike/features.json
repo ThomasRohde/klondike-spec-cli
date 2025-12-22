@@ -2310,11 +2310,13 @@
         "Zoom and pan controls"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T16:50:44.260440",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "DependencyGraph.tsx using @xyflow/react; FeatureNode custom node with status colors; layoutNodes algorithm for layered layout; parseDependencies from notes; zoom/pan/minimap controls; fullscreen toggle; GraphFilters and GraphLegend components; route and nav link; build success; 181 tests pass; commit 5eddf14"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T16:47:25.545225",
       "notes": "Implementation: Use react-flow or d3-force for graph layout. Parse notes field for dependency mentions. Edge cases: Handle circular dependencies, orphan nodes. Dependencies: F068 (feature details). Context: Visualize complex project structure and blockers. Gotchas: Layout algorithm can be expensive - cache results, limit visible nodes."
@@ -2389,13 +2391,13 @@
         "Tooltip shows user name and current view"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T16:58:35.307605",
       "notes": "Implementation: Extend WebSocket to broadcast user presence. Store user sessions server-side. Edge cases: Handle disconnections gracefully, show recently left users briefly. Dependencies: F065 (WebSocket). Context: Team awareness for collaborative editing. Gotchas: Privacy considerations - make presence opt-in."
     },
     {
@@ -2824,8 +2826,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T16:47:16.749920",
+    "lastUpdated": "2025-12-22T16:50:44.260451",
     "totalFeatures": 104,
-    "passingFeatures": 85
+    "passingFeatures": 86
   }
 }

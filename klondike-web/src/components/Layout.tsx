@@ -20,6 +20,7 @@ import { getApiBaseUrl, getWebSocketUrl } from '../utils/api'
 import { SessionBanner } from './SessionBanner'
 import { SkipLink } from '../utils/accessibility'
 import { SessionTimerWidget, useSessionTimer } from './SessionTimer'
+import { PresenceIndicator } from './PresenceIndicator'
 
 interface ActiveSession {
     id: number;
@@ -243,19 +244,27 @@ export function Layout() {
             </div>
 
             {/* Mobile header with hamburger */}
-            <div className="fixed top-0 left-0 right-0 z-30 h-16 bg-white dark:bg-gray-800 shadow-sm md:hidden flex items-center px-4">
-                <button
-                    onClick={() => setSidebarOpen(true)}
-                    aria-label="Open navigation menu"
-                    className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                    <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-                </button>
-                <h1 className="ml-3 text-lg font-bold text-indigo-600 dark:text-indigo-400">🎯 Klondike</h1>
+            <div className="fixed top-0 left-0 right-0 z-30 h-16 bg-white dark:bg-gray-800 shadow-sm md:hidden flex items-center justify-between px-4">
+                <div className="flex items-center">
+                    <button
+                        onClick={() => setSidebarOpen(true)}
+                        aria-label="Open navigation menu"
+                        className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                    </button>
+                    <h1 className="ml-3 text-lg font-bold text-indigo-600 dark:text-indigo-400">🎯 Klondike</h1>
+                </div>
+                <PresenceIndicator />
             </div>
 
             {/* Main content */}
             <div className={`pt-16 md:pt-0 transition-all duration-200 ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-64'}`}>
+                {/* Desktop presence indicator */}
+                <div className="hidden md:flex justify-end px-4 md:px-8 pt-4">
+                    <PresenceIndicator />
+                </div>
+                
                 {/* Active session banner */}
                 {activeSession && (
                     <SessionBanner

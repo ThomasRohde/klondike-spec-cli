@@ -578,18 +578,18 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F085",
-        "description": "Feature dependency graph visualization",
-        "status": "in-progress"
-      },
-      {
         "id": "F088",
         "description": "Real-time collaboration indicators showing active users",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F090",
         "description": "Customizable dashboard widgets with drag-drop layout",
+        "status": "not-started"
+      },
+      {
+        "id": "F092",
+        "description": "Theme customization with color accent picker",
         "status": "not-started"
       }
     ]
