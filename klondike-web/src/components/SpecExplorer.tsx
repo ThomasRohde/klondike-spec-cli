@@ -6,6 +6,7 @@ import { ExpandableFeatureCard } from './ExpandableFeatureCard'
 import { getApiBaseUrl, apiCall } from '../utils/api'
 import { FeatureListSkeleton, Skeleton } from './Skeleton'
 import { EmptyFeaturesState, EmptySearchState } from './EmptyStates'
+import { BulkActionsToolbar, SelectAllCheckbox, SelectionCheckbox, clearSelection, useSelection } from './BulkActions'
 
 interface Feature {
     id: string
@@ -53,6 +54,10 @@ export function SpecExplorer() {
     const [isAddFormOpen, setIsAddFormOpen] = useState(false)
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
     const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
+    
+    // Track selection
+    const selectedIds = useSelection()
+    const filteredIds = filteredFeatures.map(f => f.id)
 
     // Extract unique categories from features
     const categories = Array.from(new Set(features.map(f => f.category))).sort()
@@ -83,6 +88,8 @@ export function SpecExplorer() {
         }
 
         setFilteredFeatures(filtered)
+        // Clear selection when filters change
+        clearSelection()
     }, [features, statusFilter, categoryFilter, searchText])
 
     async function fetchFeatures() {
@@ -354,8 +361,12 @@ export function SpecExplorer() {
 
                 <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
                     Showing {filteredFeatures.length} of {features.length} features
+                    {selectedIds.size > 0 && ` (${selectedIds.size} selected)`}
                 </div>
             </div>
+
+            {/* Bulk Actions Toolbar */}
+            <BulkActionsToolbar allIds={filteredIds} onRefresh={fetchFeatures} />
 
             {/* Features - Table View */}
             {viewMode === 'table' && (
@@ -364,6 +375,9 @@ export function SpecExplorer() {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-900">
                             <tr>
+                                <th className="px-4 py-3 text-left">
+                                    <SelectAllCheckbox allIds={filteredIds} />
+                                </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     ID
                                 </th>
@@ -391,6 +405,9 @@ export function SpecExplorer() {
                                     onClick={() => navigate(`/task/${feature.id}`)}
                                     className="group hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                                 >
+                                    <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
+                                        <SelectionCheckbox id={feature.id} />
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                         {feature.id}
                                     </td>

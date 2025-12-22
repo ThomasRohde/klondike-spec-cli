@@ -24,7 +24,7 @@ klondike feature list  # List all features
 | ID | Description | Status |
 |----|-------------|--------|
 | F081 | Drag-and-drop feature prioritization in Spec Explorer | ⏳ Not started |
-| F082 | Bulk actions toolbar for multiple feature selection | ⏳ Not started |
+| F082 | Bulk actions toolbar for multiple feature selection | 🔄 In progress |
 | F084 | Feature timeline visualization showing project history | ⏳ Not started |
 
 ---

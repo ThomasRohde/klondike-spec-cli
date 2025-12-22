@@ -2226,13 +2226,13 @@
         "Actions: verify all/block all/change priority/delete"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T16:32:58.132280",
       "notes": "Implementation: Track selected feature IDs in state. Show ActionBar component when selection.length > 0. Edge cases: Handle mixed statuses (some already verified). Dependencies: F062 (status transitions API). Context: Batch operations save time on large projects. Gotchas: Confirm destructive actions, handle partial failures in batch."
     },
     {
@@ -2700,11 +2700,16 @@
         "Clear all filters button"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T16:32:50.127702",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "AdvancedSearch.tsx with multi-filter support",
+        "saved queries in localStorage",
+        "filter badges",
+        "collapsible panel; build success; 181 tests pass; commit fb6012a"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T16:30:50.486534",
       "notes": "Implementation: Combine existing filters with localStorage for saved queries. Add chips UI component. Edge cases: Handle very long saved query names. Dependencies: F067 (spec explorer). Context: Power users need fast access to specific features. Gotchas: Debounce search input to avoid excessive filtering."
@@ -2811,8 +2816,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T16:30:45.698142",
+    "lastUpdated": "2025-12-22T16:32:50.127713",
     "totalFeatures": 104,
-    "passingFeatures": 81
+    "passingFeatures": 82
   }
 }
