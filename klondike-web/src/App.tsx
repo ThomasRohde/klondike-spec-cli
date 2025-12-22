@@ -6,6 +6,7 @@ import { SpecExplorer } from './components/SpecExplorer'
 import { ActivityLog } from './components/ActivityLog'
 import { ConfigEditor } from './components/ConfigEditor'
 import { TaskViewer } from './components/TaskViewer'
+import { KanbanBoard } from './components/KanbanBoard'
 import { CommandPalette } from './components/CommandPalette'
 import { useCommandPalette } from './hooks/useCommandPalette'
 
@@ -47,6 +48,7 @@ function App() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="specs" element={<SpecExplorer />} />
+          <Route path="kanban" element={<KanbanBoard />} />
           <Route path="task/:featureId" element={<TaskViewer />} />
           <Route path="activity" element={<ActivityLog />} />
           <Route path="config" element={<ConfigEditor />} />

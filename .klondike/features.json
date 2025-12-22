@@ -2245,11 +2245,18 @@
         "Loading spinners with meaningful messages"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T15:35:16.824235",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "Skeleton.tsx created with FeatureCardSkeleton",
+        "FeatureListSkeleton",
+        "DashboardStatsSkeleton",
+        "ProgressRingSkeleton",
+        "LoadingSpinner",
+        "ButtonSpinner. CSS animations for btn-press/btn-lift/card-hover/status-changing. prefers-reduced-motion respected. Dashboard and SpecExplorer use skeleton loading. Build passes."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T15:31:10.131689",
       "notes": "Implementation: Create Skeleton component with shimmer animation using CSS. Use framer-motion for complex animations. Edge cases: Respect prefers-reduced-motion. Dependencies: None. Context: Polish that makes app feel responsive and professional. Gotchas: Don't over-animate - subtle is better, skeleton should match actual content layout."
@@ -2313,11 +2320,17 @@
         "Buttons positioned to avoid accidental clicks"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T15:35:16.905513",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "SpecExplorer.tsx updated with Actions column",
+        "hover-reveal buttons using group/group-hover pattern",
+        "Start/Verify/Block actions with handleQuickStart/handleQuickVerify/handleQuickBlock functions",
+        "buttons positioned in rightmost column to avoid accidental clicks",
+        "visual feedback via apiCall toasts. Build passes."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T15:32:56.825774",
       "notes": "Implementation: Use group/group-hover Tailwind pattern. Position actions in top-right corner. Edge cases: Touch devices need different trigger (long press or always visible). Dependencies: F062 (status API). Context: Reduce clicks needed for common operations. Gotchas: Don't obstruct feature title or description on hover."
@@ -2381,13 +2394,13 @@
         "Horizontal scroll on mobile"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T15:35:36.723993",
       "notes": "Implementation: Reuse existing feature list data, render in column layout. Integrate with dnd-kit for drag-drop. Edge cases: Many features in one column - add scrolling. Dependencies: F081 (drag-drop), F067 (spec explorer). Context: Familiar Kanban UX from Trello/Jira. Gotchas: Keyboard accessibility for column navigation."
     },
     {
@@ -2731,8 +2744,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T15:30:50.562229",
+    "lastUpdated": "2025-12-22T15:35:16.905523",
     "totalFeatures": 104,
-    "passingFeatures": 66
+    "passingFeatures": 68
   }
 }

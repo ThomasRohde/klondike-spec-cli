@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F083 | Microinteractions and loading states with skeleton screens | 🔄 In progress |
-| F086 | Quick action buttons on feature cards (hover reveal) | 🔄 In progress |
-| F089 | Kanban board view for features by status | ⏳ Not started |
+| F089 | Kanban board view for features by status | 🔄 In progress |
+| F091 | Markdown preview and editor for feature notes | ⏳ Not started |
+| F093 | Feature card expanded view with acceptance criteria checklist | ⏳ Not started |
 
 ---
 

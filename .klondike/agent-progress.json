@@ -578,18 +578,18 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F083",
-        "description": "Microinteractions and loading states with skeleton screens",
-        "status": "in-progress"
-      },
-      {
-        "id": "F086",
-        "description": "Quick action buttons on feature cards (hover reveal)",
-        "status": "in-progress"
-      },
-      {
         "id": "F089",
         "description": "Kanban board view for features by status",
+        "status": "in-progress"
+      },
+      {
+        "id": "F091",
+        "description": "Markdown preview and editor for feature notes",
+        "status": "not-started"
+      },
+      {
+        "id": "F093",
+        "description": "Feature card expanded view with acceptance criteria checklist",
         "status": "not-started"
       }
     ]

@@ -98,7 +98,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                         {/* Navigation */}
                         <Command.Group heading="Navigation" className="mb-2">
                             <Command.Item 
-                                value="nav:/"
+                                value="nav:/dashboard"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
@@ -106,12 +106,28 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span>Dashboard</span>
                             </Command.Item>
                             <Command.Item 
-                                value="nav:/features"
+                                value="nav:/specs"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
                                 <span className="text-lg">📋</span>
-                                <span>All Features</span>
+                                <span>Spec Explorer</span>
+                            </Command.Item>
+                            <Command.Item 
+                                value="nav:/kanban"
+                                onSelect={handleSelect}
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
+                            >
+                                <span className="text-lg">📊</span>
+                                <span>Kanban Board</span>
+                            </Command.Item>
+                            <Command.Item 
+                                value="nav:/activity"
+                                onSelect={handleSelect}
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
+                            >
+                                <span className="text-lg">📅</span>
+                                <span>Activity Log</span>
                             </Command.Item>
                             <Command.Item 
                                 value="nav:/config"
