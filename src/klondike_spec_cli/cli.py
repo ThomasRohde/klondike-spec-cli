@@ -3,7 +3,8 @@
 This CLI is built with the Pith library for agent-native progressive discovery.
 """
 
-from __future__ import annotations
+# Note: Do NOT use `from __future__ import annotations` here.
+# It breaks FastAPI's WebSocket type detection at runtime (causes 403 on WS handshake).
 
 import json
 import re

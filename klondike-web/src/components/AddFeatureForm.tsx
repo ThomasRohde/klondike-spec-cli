@@ -108,14 +108,14 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
 
             {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-                <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-auto">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl mx-auto">
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                        <h3 className="text-2xl font-bold text-gray-900">Add New Feature</h3>
+                    <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Add New Feature</h3>
                         <button
                             onClick={handleClose}
                             disabled={submitting}
-                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
                             aria-label="Close"
                         >
                             <XMarkIcon className="w-6 h-6" />
@@ -126,14 +126,14 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
                     <form onSubmit={handleSubmit} className="p-6 space-y-4">
                         {/* Error Message */}
                         {error && (
-                            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                            <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded">
                                 {error}
                             </div>
                         )}
 
                         {/* Description (Required) */}
                         <div>
-                            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Description <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -142,7 +142,7 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
                                 required
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 placeholder="Brief description of the feature"
                                 disabled={submitting}
                             />
@@ -150,14 +150,14 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
 
                         {/* Category */}
                         <div>
-                            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Category
                             </label>
                             <select
                                 id="category"
                                 value={formData.category}
                                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 disabled={submitting}
                             >
                                 <option value="core">Core</option>
@@ -173,14 +173,14 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
 
                         {/* Priority */}
                         <div>
-                            <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="priority" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Priority
                             </label>
                             <select
                                 id="priority"
                                 value={formData.priority}
                                 onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 disabled={submitting}
                             >
                                 <option value="1">P1 - Critical</option>
@@ -193,38 +193,38 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
 
                         {/* Acceptance Criteria */}
                         <div>
-                            <label htmlFor="criteria" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="criteria" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Acceptance Criteria
                             </label>
                             <textarea
                                 id="criteria"
                                 value={formData.acceptanceCriteria}
                                 onChange={(e) => setFormData({ ...formData, acceptanceCriteria: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 rows={4}
                                 placeholder="Enter each criterion on a new line or separated by commas"
                                 disabled={submitting}
                             />
-                            <p className="mt-1 text-sm text-gray-500">
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                 Optional. Separate criteria with new lines or commas.
                             </p>
                         </div>
 
                         {/* Notes */}
                         <div>
-                            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Notes
                             </label>
                             <textarea
                                 id="notes"
                                 value={formData.notes}
                                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 rows={3}
                                 placeholder="Additional notes, implementation details, dependencies, etc."
                                 disabled={submitting}
                             />
-                            <p className="mt-1 text-sm text-gray-500">
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                 Optional. Add context for future implementation.
                             </p>
                         </div>
@@ -235,7 +235,7 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
                                 type="button"
                                 onClick={handleClose}
                                 disabled={submitting}
-                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Cancel
                             </button>

@@ -32,8 +32,8 @@ dev = [
     "types-PyYAML>=6.0",
 ]
 mcp = ["mcp>=1.2.0"]
-serve = ["fastapi>=0.115.0", "uvicorn[standard]>=0.32.0", "watchdog>=3.0.0"]
-all = ["mcp>=1.2.0", "fastapi>=0.115.0", "uvicorn[standard]>=0.32.0", "watchdog>=3.0.0"]
+serve = ["fastapi>=0.115.0", "uvicorn[standard]>=0.32.0", "watchdog>=3.0.0", "websockets<15"]
+all = ["mcp>=1.2.0", "fastapi>=0.115.0", "uvicorn[standard]>=0.32.0", "watchdog>=3.0.0", "websockets<15"]
 
 [project.scripts]
 klondike = "klondike_spec_cli.cli:main"

@@ -104,7 +104,7 @@ export function ConfigEditor() {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
             </div>
         )
     }
@@ -112,38 +112,38 @@ export function ConfigEditor() {
     if (!config) {
         return (
             <div className="text-center py-12">
-                <p className="text-gray-600">Failed to load configuration</p>
+                <p className="text-gray-600 dark:text-gray-400">Failed to load configuration</p>
             </div>
         )
     }
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Configuration</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Configuration</h2>
 
-            <div className="bg-white rounded-lg shadow">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
                 <div className="p-6 space-y-6">
                     {/* Message Banner */}
                     {message && (
-                        <div className={`p-4 rounded-lg ${message.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+                        <div className={`p-4 rounded-lg ${message.type === 'success' ? 'bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-400' : 'bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-400'}`}>
                             <p className="text-sm font-medium">{message.text}</p>
                         </div>
                     )}
 
                     {/* Feature Defaults Section */}
                     <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Feature Defaults</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Feature Defaults</h3>
                         <div className="space-y-4">
                             {/* Default Category */}
                             <div>
-                                <label htmlFor="default_category" className="block text-sm font-medium text-gray-700 mb-1">
+                                <label htmlFor="default_category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Default Category
                                 </label>
                                 <select
                                     id="default_category"
                                     value={formData.default_category || ''}
                                     onChange={(e) => handleChange('default_category', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 >
                                     {COMMON_CATEGORIES.map((cat) => (
                                         <option key={cat} value={cat}>
@@ -151,14 +151,14 @@ export function ConfigEditor() {
                                         </option>
                                     ))}
                                 </select>
-                                <p className="mt-1 text-sm text-gray-500">
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                     Default category for new features
                                 </p>
                             </div>
 
                             {/* Default Priority */}
                             <div>
-                                <label htmlFor="default_priority" className="block text-sm font-medium text-gray-700 mb-1">
+                                <label htmlFor="default_priority" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Default Priority
                                 </label>
                                 <input
@@ -168,9 +168,9 @@ export function ConfigEditor() {
                                     max="5"
                                     value={formData.default_priority || 2}
                                     onChange={(e) => handleChange('default_priority', parseInt(e.target.value))}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 />
-                                <p className="mt-1 text-sm text-gray-500">
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                     Default priority (1=critical, 5=nice-to-have)
                                 </p>
                             </div>
@@ -178,12 +178,12 @@ export function ConfigEditor() {
                     </div>
 
                     {/* Agent Configuration Section */}
-                    <div className="border-t pt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Agent Configuration</h3>
+                    <div className="border-t dark:border-gray-700 pt-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Agent Configuration</h3>
                         <div className="space-y-4">
                             {/* Verified By */}
                             <div>
-                                <label htmlFor="verified_by" className="block text-sm font-medium text-gray-700 mb-1">
+                                <label htmlFor="verified_by" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Verified By
                                 </label>
                                 <input
@@ -191,16 +191,16 @@ export function ConfigEditor() {
                                     id="verified_by"
                                     value={formData.verified_by || ''}
                                     onChange={(e) => handleChange('verified_by', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 />
-                                <p className="mt-1 text-sm text-gray-500">
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                     Identifier for agent verification field
                                 </p>
                             </div>
 
                             {/* Configured Agents */}
                             <div>
-                                <label htmlFor="configured_agents" className="block text-sm font-medium text-gray-700 mb-1">
+                                <label htmlFor="configured_agents" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Configured Agents
                                 </label>
                                 <input
@@ -208,9 +208,9 @@ export function ConfigEditor() {
                                     id="configured_agents"
                                     value={formData.configured_agents?.join(', ') || ''}
                                     onChange={(e) => handleAgentsChange(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 />
-                                <p className="mt-1 text-sm text-gray-500">
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                     Comma-separated list of AI agents (e.g., copilot, claude)
                                 </p>
                             </div>
@@ -218,12 +218,12 @@ export function ConfigEditor() {
                     </div>
 
                     {/* Progress Generation Section */}
-                    <div className="border-t pt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Progress Generation</h3>
+                    <div className="border-t dark:border-gray-700 pt-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Progress Generation</h3>
                         <div className="space-y-4">
                             {/* Progress Output Path */}
                             <div>
-                                <label htmlFor="progress_output_path" className="block text-sm font-medium text-gray-700 mb-1">
+                                <label htmlFor="progress_output_path" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Progress Output Path
                                 </label>
                                 <input
@@ -231,9 +231,9 @@ export function ConfigEditor() {
                                     id="progress_output_path"
                                     value={formData.progress_output_path || ''}
                                     onChange={(e) => handleChange('progress_output_path', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 />
-                                <p className="mt-1 text-sm text-gray-500">
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                     Path where agent progress file is generated
                                 </p>
                             </div>
@@ -245,25 +245,25 @@ export function ConfigEditor() {
                                     id="auto_regenerate_progress"
                                     checked={formData.auto_regenerate_progress ?? true}
                                     onChange={(e) => handleChange('auto_regenerate_progress', e.target.checked)}
-                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    className="h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
                                 />
-                                <label htmlFor="auto_regenerate_progress" className="ml-2 block text-sm text-gray-700">
+                                <label htmlFor="auto_regenerate_progress" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                                     Auto-regenerate progress file
                                 </label>
                             </div>
-                            <p className="text-sm text-gray-500 ml-6">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 ml-6">
                                 Automatically update progress file when features or sessions change
                             </p>
                         </div>
                     </div>
 
                     {/* Documentation Section */}
-                    <div className="border-t pt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Documentation</h3>
+                    <div className="border-t dark:border-gray-700 pt-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Documentation</h3>
                         <div className="space-y-4">
                             {/* PRD Source */}
                             <div>
-                                <label htmlFor="prd_source" className="block text-sm font-medium text-gray-700 mb-1">
+                                <label htmlFor="prd_source" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     PRD Source
                                 </label>
                                 <input
@@ -272,9 +272,9 @@ export function ConfigEditor() {
                                     value={formData.prd_source || ''}
                                     onChange={(e) => handleChange('prd_source', e.target.value || null)}
                                     placeholder="https://example.com/prd.md"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                                 />
-                                <p className="mt-1 text-sm text-gray-500">
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                     Optional link to PRD document for agent context
                                 </p>
                             </div>
@@ -283,10 +283,10 @@ export function ConfigEditor() {
 
                     {/* Version Info (Read-only) */}
                     {config.klondike_version && (
-                        <div className="border-t pt-6">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">System Information</h3>
-                            <div className="bg-gray-50 rounded-lg p-4">
-                                <p className="text-sm text-gray-600">
+                        <div className="border-t dark:border-gray-700 pt-6">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">System Information</h3>
+                            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                <p className="text-sm text-gray-600 dark:text-gray-300">
                                     <span className="font-medium">Klondike Version:</span> {config.klondike_version}
                                 </p>
                             </div>
@@ -294,7 +294,7 @@ export function ConfigEditor() {
                     )}
 
                     {/* Save Button */}
-                    <div className="border-t pt-6 flex justify-end">
+                    <div className="border-t dark:border-gray-700 pt-6 flex justify-end">
                         <button
                             onClick={handleSave}
                             disabled={saving}

@@ -25,18 +25,18 @@ interface FeaturesResponse {
 }
 
 const statusConfig = {
-    'verified': { icon: CheckCircleIcon, color: 'text-green-600', bg: 'bg-green-50', label: 'Verified' },
-    'in-progress': { icon: ArrowPathIcon, color: 'text-blue-600', bg: 'bg-blue-50', label: 'In Progress' },
-    'blocked': { icon: XCircleIcon, color: 'text-red-600', bg: 'bg-red-50', label: 'Blocked' },
-    'not-started': { icon: ClockIcon, color: 'text-gray-600', bg: 'bg-gray-50', label: 'Not Started' }
+    'verified': { icon: CheckCircleIcon, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-900/50', label: 'Verified' },
+    'in-progress': { icon: ArrowPathIcon, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/50', label: 'In Progress' },
+    'blocked': { icon: XCircleIcon, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-900/50', label: 'Blocked' },
+    'not-started': { icon: ClockIcon, color: 'text-gray-600 dark:text-gray-400', bg: 'bg-gray-50 dark:bg-gray-700', label: 'Not Started' }
 }
 
 const priorityColors = {
-    1: 'text-red-700 bg-red-50',
-    2: 'text-orange-700 bg-orange-50',
-    3: 'text-yellow-700 bg-yellow-50',
-    4: 'text-blue-700 bg-blue-50',
-    5: 'text-gray-700 bg-gray-50'
+    1: 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/50',
+    2: 'text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/50',
+    3: 'text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/50',
+    4: 'text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/50',
+    5: 'text-gray-700 dark:text-gray-400 bg-gray-50 dark:bg-gray-700'
 }
 
 export function SpecExplorer() {
@@ -122,7 +122,7 @@ export function SpecExplorer() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="text-gray-500">Loading features...</div>
+                <div className="text-gray-500 dark:text-gray-400">Loading features...</div>
             </div>
         )
     }
@@ -130,7 +130,7 @@ export function SpecExplorer() {
     return (
         <div>
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-gray-900">Spec Explorer</h2>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Spec Explorer</h2>
                 <button
                     onClick={() => setIsAddFormOpen(true)}
                     className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -142,17 +142,17 @@ export function SpecExplorer() {
 
             {/* Success Message */}
             {successMessage && (
-                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-6">
+                <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-4 py-3 rounded mb-6">
                     {successMessage}
                 </div>
             )}
 
             {/* Filters */}
-            <div className="bg-white rounded-lg shadow mb-6 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 p-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Search */}
                     <div>
-                        <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Search
                         </label>
                         <input
@@ -161,20 +161,20 @@ export function SpecExplorer() {
                             placeholder="Search features..."
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         />
                     </div>
 
                     {/* Status Filter */}
                     <div>
-                        <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Status
                         </label>
                         <select
                             id="status"
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         >
                             <option value="all">All Statuses</option>
                             <option value="not-started">Not Started</option>
@@ -186,14 +186,14 @@ export function SpecExplorer() {
 
                     {/* Category Filter */}
                     <div>
-                        <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Category
                         </label>
                         <select
                             id="category"
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         >
                             <option value="all">All Categories</option>
                             {categories.map(cat => (
@@ -203,50 +203,50 @@ export function SpecExplorer() {
                     </div>
                 </div>
 
-                <div className="mt-3 text-sm text-gray-600">
+                <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
                     Showing {filteredFeatures.length} of {features.length} features
                 </div>
             </div>
 
             {/* Features Table */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead className="bg-gray-50 dark:bg-gray-900">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     ID
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Description
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Category
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Priority
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Status
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             {filteredFeatures.map((feature) => (
                                 <tr
                                     key={feature.id}
                                     onClick={() => navigate(`/task/${feature.id}`)}
-                                    className="hover:bg-gray-50 cursor-pointer transition-colors"
+                                    className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                                 >
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                         {feature.id}
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">
                                         <div className="max-w-md truncate" title={feature.description}>
                                             {feature.description}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                         {feature.category}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -262,7 +262,7 @@ export function SpecExplorer() {
                 </div>
 
                 {filteredFeatures.length === 0 && (
-                    <div className="text-center py-12 text-gray-500">
+                    <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                         No features match your filters
                     </div>
                 )}

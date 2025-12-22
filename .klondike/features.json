@@ -1961,13 +1961,13 @@
         "Optional dark mode toggle"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T12:37:03.215409",
       "notes": "Implementation: React component with React Router NavLink. Use Tailwind responsive classes (hidden md:block etc). Consider localStorage for dark mode preference. Context: Main navigation per WEB_PRD.md Look and Feel section. Dependencies: F059."
     },
     {

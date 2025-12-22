@@ -81,15 +81,15 @@ export function ActivityLog() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="text-lg text-gray-600">Loading session history...</div>
+                <div className="text-lg text-gray-600 dark:text-gray-400">Loading session history...</div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="text-red-800">Error: {error}</p>
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                <p className="text-red-800 dark:text-red-400">Error: {error}</p>
                 <button
                     onClick={fetchProgress}
                     className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
@@ -103,9 +103,9 @@ export function ActivityLog() {
     if (!progress || progress.sessions.length === 0) {
         return (
             <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">Activity Log</h2>
-                <div className="bg-white rounded-lg shadow p-6">
-                    <p className="text-gray-600">No session history available yet.</p>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Activity Log</h2>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <p className="text-gray-600 dark:text-gray-400">No session history available yet.</p>
                 </div>
             </div>
         );
@@ -118,14 +118,14 @@ export function ActivityLog() {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-bold text-gray-900">Activity Log</h2>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Activity Log</h2>
                 <div className="flex items-center gap-2">
-                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm ${isConnected ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm ${isConnected ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-400'
                         }`}>
                         <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`} />
                         {isConnected ? 'Live' : 'Offline'}
                     </span>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
                         {progress.total_sessions} session{progress.total_sessions !== 1 ? 's' : ''}
                     </span>
                 </div>
@@ -139,19 +139,19 @@ export function ActivityLog() {
                     return (
                         <div
                             key={session.sessionNumber}
-                            className={`bg-white rounded-lg shadow-md border-l-4 transition-all ${isLatest
-                                ? 'border-indigo-500 ring-2 ring-indigo-100'
-                                : 'border-gray-300'
+                            className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border-l-4 transition-all ${isLatest
+                                ? 'border-indigo-500 ring-2 ring-indigo-100 dark:ring-indigo-900'
+                                : 'border-gray-300 dark:border-gray-600'
                                 }`}
                         >
                             {/* Session Header */}
                             <div
-                                className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                                className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                 onClick={() => toggleSession(session.sessionNumber)}
                             >
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-start gap-3 flex-1">
-                                        <button className="mt-1 text-gray-500 hover:text-gray-700">
+                                        <button className="mt-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
                                             {isExpanded ? (
                                                 <ChevronDownIcon className="h-5 w-5" />
                                             ) : (
@@ -160,19 +160,19 @@ export function ActivityLog() {
                                         </button>
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <h3 className="text-lg font-semibold text-gray-900">
+                                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                                     Session #{session.sessionNumber}
                                                 </h3>
                                                 {isLatest && (
-                                                    <span className="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-xs font-medium rounded">
+                                                    <span className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-400 text-xs font-medium rounded">
                                                         Latest
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-sm text-gray-600 mb-2">
+                                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                                                 {session.focus}
                                             </p>
-                                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                                            <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                                                 <span className="flex items-center gap-1">
                                                     <ClockIcon className="h-4 w-4" />
                                                     {session.date}
@@ -218,13 +218,13 @@ export function ActivityLog() {
 
                             {/* Expanded Content */}
                             {isExpanded && (
-                                <div className="px-4 pb-4 border-t border-gray-100">
+                                <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-700">
                                     <div className="mt-4 space-y-4">
                                         {/* Completed Items */}
                                         {session.completed.length > 0 && (
                                             <div>
-                                                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                                    <CheckCircleIcon className="h-4 w-4 text-green-600" />
+                                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                                                    <CheckCircleIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
                                                     Completed
                                                 </h4>
                                                 <ul className="space-y-1">
@@ -244,17 +244,17 @@ export function ActivityLog() {
                                         {/* In Progress Items */}
                                         {session.inProgress.length > 0 && (
                                             <div>
-                                                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                                    <ClockIcon className="h-4 w-4 text-blue-600" />
+                                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                                                    <ClockIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                                     In Progress
                                                 </h4>
                                                 <ul className="space-y-1">
                                                     {session.inProgress.map((item, idx) => (
                                                         <li
                                                             key={idx}
-                                                            className="text-sm text-gray-600 flex items-start gap-2 pl-6"
+                                                            className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2 pl-6"
                                                         >
-                                                            <span className="text-blue-600 mt-0.5">⏳</span>
+                                                            <span className="text-blue-600 dark:text-blue-400 mt-0.5">⏳</span>
                                                             <span>{item}</span>
                                                         </li>
                                                     ))}
@@ -265,17 +265,17 @@ export function ActivityLog() {
                                         {/* Blockers */}
                                         {session.blockers.length > 0 && (
                                             <div>
-                                                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                                    <ExclamationTriangleIcon className="h-4 w-4 text-amber-600" />
+                                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                                                    <ExclamationTriangleIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                                                     Blockers
                                                 </h4>
                                                 <ul className="space-y-1">
                                                     {session.blockers.map((item, idx) => (
                                                         <li
                                                             key={idx}
-                                                            className="text-sm text-gray-600 flex items-start gap-2 pl-6"
+                                                            className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2 pl-6"
                                                         >
-                                                            <span className="text-amber-600 mt-0.5">⚠</span>
+                                                            <span className="text-amber-600 dark:text-amber-400 mt-0.5">⚠</span>
                                                             <span>{item}</span>
                                                         </li>
                                                     ))}
@@ -286,17 +286,17 @@ export function ActivityLog() {
                                         {/* Next Steps */}
                                         {session.nextSteps.length > 0 && (
                                             <div>
-                                                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                                    <ArrowRightIcon className="h-4 w-4 text-blue-600" />
+                                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                                                    <ArrowRightIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                                     Next Steps
                                                 </h4>
                                                 <ul className="space-y-1">
                                                     {session.nextSteps.map((item, idx) => (
                                                         <li
                                                             key={idx}
-                                                            className="text-sm text-gray-600 flex items-start gap-2 pl-6"
+                                                            className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2 pl-6"
                                                         >
-                                                            <span className="text-blue-600 mt-0.5">→</span>
+                                                            <span className="text-blue-600 dark:text-blue-400 mt-0.5">→</span>
                                                             <span>{item}</span>
                                                         </li>
                                                     ))}
@@ -307,14 +307,14 @@ export function ActivityLog() {
                                         {/* Technical Notes */}
                                         {session.technicalNotes.length > 0 && (
                                             <div>
-                                                <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                                     Technical Notes
                                                 </h4>
                                                 <ul className="space-y-1">
                                                     {session.technicalNotes.map((note, idx) => (
                                                         <li
                                                             key={idx}
-                                                            className="text-sm text-gray-600 pl-6"
+                                                            className="text-sm text-gray-600 dark:text-gray-400 pl-6"
                                                         >
                                                             • {note}
                                                         </li>

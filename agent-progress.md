@@ -2,7 +2,7 @@
 
 ## Project: klondike-spec-cli
 ## Started: 2025-12-07
-## Current Status: Session Ended
+## Current Status: In Progress
 
 ---
 
@@ -699,6 +699,28 @@ klondike feature list  # List all features
 
 #### Recommended Next Steps
 1. Consider F073 (Navigation sidebar) or F072 (Session control UI) next for completing the web UI.
+
+#### Technical Notes
+- None
+
+---
+
+### Session 29 - 2025-12-22
+**Agent**: Coding Agent
+**Duration**: (in progress)
+**Focus**: F073 - Navigation sidebar with view switching
+
+#### Completed
+- None
+
+#### In Progress
+- Session started
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
 
 #### Technical Notes
 - None
