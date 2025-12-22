@@ -578,14 +578,9 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F103",
-        "description": "Print-friendly view for feature reports",
-        "status": "in-progress"
-      },
-      {
         "id": "F104",
         "description": "Offline support with service worker caching",
-        "status": "not-started"
+        "status": "in-progress"
       }
     ]
   }

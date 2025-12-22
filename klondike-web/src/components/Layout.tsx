@@ -23,6 +23,7 @@ import { SkipLink } from '../utils/accessibility'
 import { SessionTimerWidget, useSessionTimer } from './SessionTimer'
 import { PresenceIndicator } from './PresenceIndicator'
 import { ThemeCustomizer, initializeTheme } from './ThemeCustomizer'
+import { OfflineIndicator } from './OfflineSupport'
 
 // Initialize theme on module load
 initializeTheme();
@@ -274,13 +275,17 @@ export function Layout() {
                     </button>
                     <h1 className="ml-3 text-lg font-bold text-indigo-600 dark:text-indigo-400">🎯 Klondike</h1>
                 </div>
-                <PresenceIndicator />
+                <div className="flex items-center gap-2">
+                    <OfflineIndicator />
+                    <PresenceIndicator />
+                </div>
             </div>
 
             {/* Main content */}
             <div className={`pt-16 md:pt-0 transition-all duration-200 ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-64'}`}>
-                {/* Desktop presence indicator */}
-                <div className="hidden md:flex justify-end px-4 md:px-8 pt-4">
+                {/* Desktop presence and offline indicators */}
+                <div className="hidden md:flex justify-end items-center gap-4 px-4 md:px-8 pt-4">
+                    <OfflineIndicator />
                     <PresenceIndicator />
                 </div>
                 
