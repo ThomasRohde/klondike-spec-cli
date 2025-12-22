@@ -2021,13 +2021,13 @@
         "Optional count query parameter"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T13:21:05.087773",
       "notes": "Implementation: Reuse get_recent_commits from git.py. Simple JSON array response. Context: Optional endpoint for extended Activity Log per WEB_PRD.md. Dependencies: F058. Edge cases: Not a git repo, no commits yet."
     },
     {
@@ -2043,11 +2043,18 @@
         "Default is no auto-open"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T13:21:00.357929",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Implemented --open/-o flag for serve command. Uses threading with 1.5s delay to open browser after server starts. Tested on Windows - browser opens successfully to http://localhost:PORT. All acceptance criteria met: optional flag",
+        "opens to correct URL",
+        "works cross-platform via webbrowser.open()",
+        "default is no auto-open. Pre-commit checks passed: linting (ruff)",
+        "formatting (ruff format)",
+        "181 tests passed."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T13:17:49.428488",
       "notes": "Implementation: Use webbrowser.open() from Python stdlib. Print URL regardless of flag. Context: Zero-config UX improvement per WEB_PRD.md Open Questions. Dependencies: F058."
@@ -2055,8 +2062,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T13:02:11.681117",
+    "lastUpdated": "2025-12-22T13:21:00.357942",
     "totalFeatures": 76,
-    "passingFeatures": 60
+    "passingFeatures": 61
   }
 }

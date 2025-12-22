@@ -2078,6 +2078,34 @@ def serve(
         except Exception as e:
             return {"error": str(e)}
 
+    @app_instance.get("/api/commits")
+    async def api_commits(count: int = 10):
+        """Get recent git commits.
+
+        Args:
+            count: Number of commits to return (default 10)
+
+        Returns:
+            List of commit objects with hash, author, date, and message.
+            Returns empty list if not a git repo.
+        """
+        from .git import get_recent_commits
+
+        try:
+            commits = get_recent_commits(count=count, path=root)
+            return [
+                {
+                    "hash": commit.hash,
+                    "author": commit.author,
+                    "date": commit.date,
+                    "message": commit.message,
+                }
+                for commit in commits
+            ]
+        except Exception:
+            # Return empty list if not a git repo or any other error
+            return []
+
     @app_instance.get("/api/config")
     async def api_config_get():
         """Get current configuration.
