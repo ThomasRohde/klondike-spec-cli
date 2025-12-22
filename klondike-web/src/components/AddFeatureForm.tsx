@@ -70,7 +70,7 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
 
             // Success!
             onSuccess(data.id)
-            
+
             // Reset form
             setFormData({
                 description: '',
@@ -101,11 +101,11 @@ export function AddFeatureForm({ isOpen, onClose, onSuccess }: AddFeatureFormPro
     return (
         <>
             {/* Backdrop */}
-            <div 
+            <div
                 className="fixed inset-0 bg-black bg-opacity-50 z-40"
                 onClick={handleClose}
             />
-            
+
             {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
                 <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-auto">

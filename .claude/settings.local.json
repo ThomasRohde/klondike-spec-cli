@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv run klondike:*)",
+      "Bash(rm:*)",
+      "Bash(uv sync:*)",
+      "Bash(python -m klondike_spec_cli.cli serve:*)",
+      "Bash(python3:*)",
+      "Bash(uv run python:*)"
+    ]
+  }
+}

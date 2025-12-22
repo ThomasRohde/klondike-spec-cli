@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useWebSocket } from '../hooks/useWebSocket';
+import { getApiBaseUrl, getWebSocketUrl } from '../utils/api';
 
 interface StatusData {
     project_name: string;
@@ -40,7 +41,7 @@ export function Dashboard() {
     const [error, setError] = useState<string | null>(null);
 
     // WebSocket for live updates
-    const { lastMessage, isConnected } = useWebSocket('ws://localhost:8000/api/updates');
+    const { lastMessage, isConnected } = useWebSocket(getWebSocketUrl('/api/updates'));
 
     // Fetch initial status data
     useEffect(() => {
@@ -57,7 +58,7 @@ export function Dashboard() {
 
     const fetchStatus = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/status');
+            const response = await fetch(`${getApiBaseUrl()}/api/status`);
             if (!response.ok) {
                 throw new Error('Failed to fetch status');
             }
@@ -179,9 +180,9 @@ export function Dashboard() {
                                             {feature.id}
                                         </span>
                                         <span className={`text-xs px-2 py-1 rounded ${feature.status === 'verified' ? 'bg-green-100 text-green-800' :
-                                                feature.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800' :
-                                                    feature.status === 'blocked' ? 'bg-red-100 text-red-800' :
-                                                        'bg-gray-100 text-gray-800'
+                                            feature.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800' :
+                                                feature.status === 'blocked' ? 'bg-red-100 text-red-800' :
+                                                    'bg-gray-100 text-gray-800'
                                             }`}>
                                             {feature.status}
                                         </span>

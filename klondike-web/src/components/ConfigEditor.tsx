@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useWebSocket } from '../hooks/useWebSocket'
+import { getWebSocketUrl } from '../utils/api'
 
 interface Config {
     default_category: string
@@ -32,7 +33,7 @@ export function ConfigEditor() {
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
     const [formData, setFormData] = useState<Partial<Config>>({})
 
-    const { lastMessage } = useWebSocket('ws://localhost:8000/api/updates')
+    const { lastMessage } = useWebSocket(getWebSocketUrl('/api/updates'))
 
     // Load config on mount
     useEffect(() => {
@@ -298,8 +299,8 @@ export function ConfigEditor() {
                             onClick={handleSave}
                             disabled={saving}
                             className={`px-6 py-2 rounded-lg font-medium transition-colors ${saving
-                                    ? 'bg-gray-400 cursor-not-allowed'
-                                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-blue-600 hover:bg-blue-700 text-white'
                                 }`}
                         >
                             {saving ? 'Saving...' : 'Save Configuration'}

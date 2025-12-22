@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useWebSocket } from '../hooks/useWebSocket';
+import { getApiBaseUrl, getWebSocketUrl } from '../utils/api';
 import {
     CheckCircleIcon,
     ExclamationTriangleIcon,
@@ -35,7 +36,7 @@ export function ActivityLog() {
     const [expandedSessions, setExpandedSessions] = useState<Set<number>>(new Set([1])); // Expand first session by default
 
     // WebSocket for live updates
-    const { lastMessage, isConnected } = useWebSocket('ws://localhost:8000/api/updates');
+    const { lastMessage, isConnected } = useWebSocket(getWebSocketUrl('/api/updates'));
 
     // Fetch initial progress data
     useEffect(() => {
@@ -51,7 +52,7 @@ export function ActivityLog() {
 
     const fetchProgress = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/progress');
+            const response = await fetch(`${getApiBaseUrl()}/api/progress`);
             if (!response.ok) {
                 throw new Error('Failed to fetch progress');
             }

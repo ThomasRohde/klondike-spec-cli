@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { AddFeatureForm } from './AddFeatureForm'
+import { getApiBaseUrl } from '../utils/api'
 
 interface Feature {
     id: string
@@ -82,7 +83,7 @@ export function SpecExplorer() {
 
     async function fetchFeatures() {
         try {
-            const response = await fetch('http://localhost:8000/api/features')
+            const response = await fetch(`${getApiBaseUrl()}/api/features`)
             const data: FeaturesResponse = await response.json()
             setFeatures(data.features)
             setFilteredFeatures(data.features)
