@@ -714,7 +714,9 @@ def run_server(transport: str = "stdio") -> None:
     from typing import Literal, cast
 
     if not MCP_AVAILABLE:
-        logger.error("MCP SDK import failed. Try reinstalling: pip install --force-reinstall klondike-spec-cli")
+        logger.error(
+            "MCP SDK import failed. Try reinstalling: pip install --force-reinstall klondike-spec-cli"
+        )
         raise ImportError("MCP SDK not available")
 
     mcp = create_mcp_server()
