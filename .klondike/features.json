@@ -2178,13 +2178,13 @@
         "Shortcuts work globally except in inputs"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T16:09:11.404705",
       "notes": "Implementation: Use useHotkeys hook or custom event listener. Create KeyboardShortcutsProvider context. Edge cases: Disable shortcuts when modal open or input focused. Dependencies: F079 for consistent pattern. Context: Vim-style navigation for power users. Gotchas: Different shortcuts for Mac vs Windows, show correct modifier in UI."
     },
     {
@@ -2604,11 +2604,15 @@
         "Type icons distinguish activity types"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T15:57:17.895739",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "RecentActivityFeed.tsx with relative timestamps",
+        "activity icons",
+        "WebSocket live updates; Dashboard.tsx integration; build success; 181 tests pass; commit 5180ad7"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T15:53:48.152992",
       "notes": "Implementation: Aggregate from features and git commits APIs. Use WebSocket for push updates. Edge cases: Handle high activity volume - debounce or batch. Dependencies: F065 (WebSocket), F075 (commits API). Context: At-a-glance project pulse. Gotchas: Timezone handling for timestamps."
@@ -2779,8 +2783,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T15:53:33.693550",
+    "lastUpdated": "2025-12-22T15:57:17.895748",
     "totalFeatures": 104,
-    "passingFeatures": 74
+    "passingFeatures": 75
   }
 }

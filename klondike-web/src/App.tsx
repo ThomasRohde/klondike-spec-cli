@@ -9,13 +9,19 @@ import { TaskViewer } from './components/TaskViewer'
 import { KanbanBoard } from './components/KanbanBoard'
 import { CommandPalette } from './components/CommandPalette'
 import { useCommandPalette } from './hooks/useCommandPalette'
+import { ShortcutsHelpOverlay, ShortcutsHelpButton } from './components/ShortcutsHelp'
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 
-function App() {
+function AppContent() {
   const commandPalette = useCommandPalette();
+  // Initialize keyboard shortcuts
+  useKeyboardShortcuts();
 
   return (
-    <BrowserRouter>
+    <>
       <CommandPalette isOpen={commandPalette.isOpen} onClose={commandPalette.close} />
+      <ShortcutsHelpOverlay />
+      <ShortcutsHelpButton />
       <Toaster
         position="top-right"
         toastOptions={{
@@ -54,6 +60,14 @@ function App() {
           <Route path="config" element={<ConfigEditor />} />
         </Route>
       </Routes>
+    </>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   )
 }

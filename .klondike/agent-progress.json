@@ -578,18 +578,18 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F097",
-        "description": "Recent activity feed with live updates on dashboard",
-        "status": "in-progress"
-      },
-      {
         "id": "F080",
         "description": "Keyboard shortcuts for common actions with help overlay",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F081",
         "description": "Drag-and-drop feature prioritization in Spec Explorer",
+        "status": "not-started"
+      },
+      {
+        "id": "F082",
+        "description": "Bulk actions toolbar for multiple feature selection",
         "status": "not-started"
       }
     ]
