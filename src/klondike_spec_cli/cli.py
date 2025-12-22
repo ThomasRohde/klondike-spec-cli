@@ -1491,6 +1491,7 @@ def serve(
                 git_data = {
                     "branch": git_status_obj.current_branch,
                     "clean": git_status_obj.clean,
+                    "is_clean": git_status_obj.clean,  # Alias for frontend
                     "staged": git_status_obj.staged_count,
                     "unstaged": git_status_obj.unstaged_count,
                     "untracked": git_status_obj.untracked_count,
@@ -1505,6 +1506,11 @@ def serve(
                     ],
                 }
 
+            # Check if a session is currently active
+            is_session_active = (
+                progress_log.current_status == "In Progress" and current_session is not None
+            )
+
             return {
                 "project_name": root.name,
                 "project_version": registry.version,
@@ -1516,7 +1522,9 @@ def serve(
                     "in_progress": by_status["in-progress"],
                     "not_started": by_status["not-started"],
                 },
-                "last_session": current_session,
+                "is_session_active": is_session_active,
+                "current_session": current_session,
+                "last_session": current_session,  # Keep for backwards compat
                 "priority_features": priority_features,
                 "git_status": git_data,
             }

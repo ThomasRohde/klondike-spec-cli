@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { getApiBaseUrl, getWebSocketUrl } from '../utils/api';
+import { SessionControl } from './SessionControl';
 
 interface StatusData {
     project_name: string;
@@ -13,6 +14,12 @@ interface StatusData {
         not_started: number;
         total: number;
     };
+    is_session_active?: boolean;
+    current_session?: {
+        id: number;
+        date: string;
+        focus: string;
+    } | null;
     last_session: {
         id: number;
         date: string;
@@ -20,6 +27,7 @@ interface StatusData {
     } | null;
     git_status: {
         is_clean: boolean;
+        clean?: boolean;
         branch: string;
         recent_commits: Array<{
             hash: string;
@@ -148,24 +156,22 @@ export function Dashboard() {
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{status.completion_percentage.toFixed(1)}% Complete</p>
             </div>
 
-            {/* Current session */}
-            {status.last_session && (
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Current Session</h3>
-                    <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 bg-indigo-100 dark:bg-indigo-900/50 rounded-full p-3">
-                            <svg className="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">Session #{status.last_session.id}</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">{status.last_session.date}</p>
-                            <p className="mt-2 text-gray-800 dark:text-gray-200">{status.last_session.focus}</p>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* Session Control */}
+            <div className="mb-8">
+                <SessionControl
+                    currentSession={status.current_session || status.last_session ? {
+                        session_number: (status.current_session || status.last_session)!.id,
+                        date: (status.current_session || status.last_session)!.date,
+                        focus: (status.current_session || status.last_session)!.focus,
+                    } : null}
+                    isSessionActive={status.is_session_active ?? (status.last_session !== null)}
+                    gitStatus={status.git_status ? {
+                        is_clean: status.git_status.is_clean ?? status.git_status.clean ?? true,
+                        branch: status.git_status.branch,
+                    } : null}
+                    onSessionChange={fetchStatus}
+                />
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Priority features */}

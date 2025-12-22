@@ -10,6 +10,15 @@ import {
     SunIcon,
     MoonIcon,
 } from '@heroicons/react/24/outline'
+import { useWebSocket } from '../hooks/useWebSocket'
+import { getApiBaseUrl, getWebSocketUrl } from '../utils/api'
+import { SessionBanner } from './SessionBanner'
+
+interface ActiveSession {
+    id: number;
+    date: string;
+    focus: string;
+}
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
@@ -47,6 +56,41 @@ export function Layout() {
     const location = useLocation()
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [darkMode, setDarkMode] = useTheme()
+    const [activeSession, setActiveSession] = useState<ActiveSession | null>(null)
+
+    // WebSocket for live updates
+    const { lastMessage } = useWebSocket(getWebSocketUrl('/api/updates'))
+
+    // Fetch session status
+    const fetchSessionStatus = async () => {
+        try {
+            const response = await fetch(`${getApiBaseUrl()}/api/status`)
+            if (response.ok) {
+                const data = await response.json()
+                if (data.is_session_active && data.current_session) {
+                    setActiveSession(data.current_session)
+                } else if (data.is_session_active && data.last_session) {
+                    setActiveSession(data.last_session)
+                } else {
+                    setActiveSession(null)
+                }
+            }
+        } catch {
+            // Silently fail - banner is not critical
+        }
+    }
+
+    // Fetch on mount
+    useEffect(() => {
+        fetchSessionStatus()
+    }, [])
+
+    // Refetch on WebSocket updates
+    useEffect(() => {
+        if (lastMessage) {
+            fetchSessionStatus()
+        }
+    }, [lastMessage])
 
     // Close sidebar on route change (mobile)
     useEffect(() => {
@@ -141,6 +185,14 @@ export function Layout() {
 
             {/* Main content */}
             <div className="md:pl-64 pt-16 md:pt-0">
+                {/* Active session banner */}
+                {activeSession && (
+                    <SessionBanner
+                        sessionNumber={activeSession.id}
+                        focus={activeSession.focus}
+                        date={activeSession.date}
+                    />
+                )}
                 <main className="p-4 md:p-8">
                     <Outlet />
                 </main>

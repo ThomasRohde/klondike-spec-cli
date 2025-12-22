@@ -520,6 +520,38 @@
         "F043) to determine if they can be unblocked."
       ],
       "technicalNotes": []
+    },
+    {
+      "sessionNumber": 32,
+      "date": "2025-12-22",
+      "agent": "Coding Agent",
+      "duration": "~session",
+      "focus": "Testing session end from API",
+      "completed": [],
+      "inProgress": [],
+      "blockers": [],
+      "nextSteps": [
+        "Continue F039: Local CI check command that detects and runs project CI checks",
+        "Continue F042: Integration test",
+        "Continue F043: E2E test"
+      ],
+      "technicalNotes": []
+    },
+    {
+      "sessionNumber": 33,
+      "date": "2025-12-22",
+      "agent": "Coding Agent",
+      "duration": "~session",
+      "focus": "F072 - Session control UI components test",
+      "completed": [],
+      "inProgress": [],
+      "blockers": [],
+      "nextSteps": [
+        "Continue F039: Local CI check command that detects and runs project CI checks",
+        "Continue F042: Integration test",
+        "Continue F043: E2E test"
+      ],
+      "technicalNotes": []
     }
   ],
   "quickReference": {
