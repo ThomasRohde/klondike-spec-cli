@@ -2,7 +2,7 @@
 
 ## Project: klondike-spec-cli
 ## Started: 2025-12-07
-## Current Status: In Progress
+## Current Status: Session Ended
 
 ---
 
@@ -753,20 +753,22 @@ klondike feature list  # List all features
 
 ### Session 31 - 2025-12-22
 **Agent**: Coding Agent
-**Duration**: (in progress)
-**Focus**: Review and identify next priority feature for implementation
+**Duration**: ~session
+**Focus**: Completed F076 (serve --open flag) and F075 (GET /api/commits endpoint). F076 adds --open/-o flag to auto-launch browser using threading with 1.5s delay. F075 adds REST API endpoint returning recent git commits with hash/author/date/message fields. Both features fully tested and verified. All pre-commit checks passed (linting, formatting, 181 tests).
 
 #### Completed
 - None
 
 #### In Progress
-- Session started
+- None
 
 #### Blockers
 - None
 
 #### Recommended Next Steps
-1. Continue implementation
+1. Continue with F072 (Session control UI components) - implement React components for session start/end with forms and active session indicator. Then investigate blocked features (F039
+2. F042
+3. F043) to determine if they can be unblocked.
 
 #### Technical Notes
 - None
