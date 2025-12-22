@@ -2391,11 +2391,15 @@
         "Tooltip shows user name and current view"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T17:02:14.777697",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "PresenceIndicator.tsx with WebSocket presence",
+        "avatar stack",
+        "tooltips; Layout.tsx integration in mobile and desktop headers; build succeeds; 181 tests pass; commit fec290d"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T16:58:35.307605",
       "notes": "Implementation: Extend WebSocket to broadcast user presence. Store user sessions server-side. Edge cases: Handle disconnections gracefully, show recently left users briefly. Dependencies: F065 (WebSocket). Context: Team awareness for collaborative editing. Gotchas: Privacy considerations - make presence opt-in."
@@ -2442,13 +2446,13 @@
         "Default widgets: progress ring chart and priority features"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T17:02:22.676158",
       "notes": "Implementation: Use react-grid-layout for dashboard layout. Define widget registry with component and default size. Edge cases: Reset to default option if layout breaks. Dependencies: F077, F078 (charts). Context: Personalized workspace like Notion dashboards. Gotchas: Handle window resize and mobile layouts differently."
     },
     {
@@ -2826,8 +2830,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T16:50:44.260451",
+    "lastUpdated": "2025-12-22T17:02:14.777710",
     "totalFeatures": 104,
-    "passingFeatures": 86
+    "passingFeatures": 87
   }
 }
