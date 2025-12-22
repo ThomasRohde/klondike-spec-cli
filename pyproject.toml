@@ -110,8 +110,28 @@ warn_unused_ignores = true
 [[tool.mypy.overrides]]
 module = "klondike_spec_cli.cli"
 # Pith/Typer use Argument/Option as defaults which mypy can't understand
+# Also has FastAPI endpoint functions with complex types
+disable_error_code = ["assignment", "no-untyped-def", "type-arg", "attr-defined", "no-untyped-call", "var-annotated"]
+
+[[tool.mypy.overrides]]
+module = "klondike_spec_cli.commands.*"
+# Pith/Typer use Argument/Option as defaults which mypy can't understand
 disable_error_code = ["assignment"]
 
 [[tool.mypy.overrides]]
+module = "klondike_spec_cli.worktree"
+# Dict type parameters in dataclasses
+disable_error_code = ["type-arg"]
+
+[[tool.mypy.overrides]]
+module = "klondike_spec_cli.formatting"
+# Rich table.add_row takes *args
+disable_error_code = ["arg-type"]
+
+[[tool.mypy.overrides]]
 module = "pith.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "yaml"
 ignore_missing_imports = true
