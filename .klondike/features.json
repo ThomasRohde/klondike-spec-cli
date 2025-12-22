@@ -1771,13 +1771,13 @@
         "Click to open Task Viewer detail"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T11:05:53.876830",
       "notes": "Implementation: React component with master-detail layout. Fetch from GET /api/features. Use status icons: hourglass for not-started, refresh for in-progress, x-circle for blocked, check-circle for verified. Context: Feature browsing per WEB_PRD.md Spec Explorer section. Dependencies: F059, F061."
     },
     {

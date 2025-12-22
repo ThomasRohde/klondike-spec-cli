@@ -1,15 +1,339 @@
+import { useState, useEffect } from 'react'
+import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
+
+interface Feature {
+    id: string
+    description: string
+    category: string
+    priority: number
+    status: 'not-started' | 'in-progress' | 'blocked' | 'verified'
+    passes: boolean
+    acceptanceCriteria: string[]
+    notes: string | null
+    blockedBy: string | null
+    verifiedBy: string | null
+    verifiedAt: string | null
+    evidenceLinks: string[]
+}
+
+interface FeaturesResponse {
+    features: Feature[]
+    total: number
+}
+
+const statusConfig = {
+    'verified': { icon: CheckCircleIcon, color: 'text-green-600', bg: 'bg-green-50', label: 'Verified' },
+    'in-progress': { icon: ArrowPathIcon, color: 'text-blue-600', bg: 'bg-blue-50', label: 'In Progress' },
+    'blocked': { icon: XCircleIcon, color: 'text-red-600', bg: 'bg-red-50', label: 'Blocked' },
+    'not-started': { icon: ClockIcon, color: 'text-gray-600', bg: 'bg-gray-50', label: 'Not Started' }
+}
+
+const priorityColors = {
+    1: 'text-red-700 bg-red-50',
+    2: 'text-orange-700 bg-orange-50',
+    3: 'text-yellow-700 bg-yellow-50',
+    4: 'text-blue-700 bg-blue-50',
+    5: 'text-gray-700 bg-gray-50'
+}
+
 export function SpecExplorer() {
+    const [features, setFeatures] = useState<Feature[]>([])
+    const [filteredFeatures, setFilteredFeatures] = useState<Feature[]>([])
+    const [loading, setLoading] = useState(true)
+    const [searchText, setSearchText] = useState('')
+    const [statusFilter, setStatusFilter] = useState<string>('all')
+    const [categoryFilter, setCategoryFilter] = useState<string>('all')
+    const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null)
+
+    // Extract unique categories from features
+    const categories = Array.from(new Set(features.map(f => f.category))).sort()
+
+    useEffect(() => {
+        fetchFeatures()
+    }, [])
+
+    useEffect(() => {
+        // Apply filters
+        let filtered = features
+
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(f => f.status === statusFilter)
+        }
+
+        if (categoryFilter !== 'all') {
+            filtered = filtered.filter(f => f.category === categoryFilter)
+        }
+
+        if (searchText) {
+            const search = searchText.toLowerCase()
+            filtered = filtered.filter(f =>
+                f.id.toLowerCase().includes(search) ||
+                f.description.toLowerCase().includes(search) ||
+                (f.notes && f.notes.toLowerCase().includes(search))
+            )
+        }
+
+        setFilteredFeatures(filtered)
+    }, [features, statusFilter, categoryFilter, searchText])
+
+    async function fetchFeatures() {
+        try {
+            const response = await fetch('http://localhost:8000/api/features')
+            const data: FeaturesResponse = await response.json()
+            setFeatures(data.features)
+            setFilteredFeatures(data.features)
+        } catch (error) {
+            console.error('Failed to fetch features:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    function StatusBadge({ status }: { status: Feature['status'] }) {
+        const config = statusConfig[status]
+        const Icon = config.icon
+        return (
+            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config.bg} ${config.color}`}>
+                <Icon className="w-4 h-4" />
+                {config.label}
+            </span>
+        )
+    }
+
+    function PriorityBadge({ priority }: { priority: number }) {
+        return (
+            <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${priorityColors[priority as keyof typeof priorityColors]}`}>
+                P{priority}
+            </span>
+        )
+    }
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <div className="text-gray-500">Loading features...</div>
+            </div>
+        )
+    }
+
     return (
         <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Spec Explorer</h2>
-            <div className="bg-white rounded-lg shadow">
-                <div className="p-6">
-                    <p className="text-gray-600">Feature list will be displayed here.</p>
-                    <p className="text-sm text-gray-500 mt-2">
-                        This component will show all features with filtering and sorting capabilities.
-                    </p>
+            
+            {/* Filters */}
+            <div className="bg-white rounded-lg shadow mb-6 p-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Search */}
+                    <div>
+                        <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
+                            Search
+                        </label>
+                        <input
+                            id="search"
+                            type="text"
+                            placeholder="Search features..."
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+
+                    {/* Status Filter */}
+                    <div>
+                        <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+                            Status
+                        </label>
+                        <select
+                            id="status"
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="all">All Statuses</option>
+                            <option value="not-started">Not Started</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="blocked">Blocked</option>
+                            <option value="verified">Verified</option>
+                        </select>
+                    </div>
+
+                    {/* Category Filter */}
+                    <div>
+                        <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                            Category
+                        </label>
+                        <select
+                            id="category"
+                            value={categoryFilter}
+                            onChange={(e) => setCategoryFilter(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="all">All Categories</option>
+                            {categories.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                
+                <div className="mt-3 text-sm text-gray-600">
+                    Showing {filteredFeatures.length} of {features.length} features
                 </div>
             </div>
+
+            {/* Features Table */}
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    ID
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Description
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Category
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Priority
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {filteredFeatures.map((feature) => (
+                                <tr
+                                    key={feature.id}
+                                    onClick={() => setSelectedFeature(feature)}
+                                    className="hover:bg-gray-50 cursor-pointer transition-colors"
+                                >
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {feature.id}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                        <div className="max-w-md truncate" title={feature.description}>
+                                            {feature.description}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {feature.category}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                        <PriorityBadge priority={feature.priority} />
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                        <StatusBadge status={feature.status} />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {filteredFeatures.length === 0 && (
+                    <div className="text-center py-12 text-gray-500">
+                        No features match your filters
+                    </div>
+                )}
+            </div>
+
+            {/* Feature Detail Modal */}
+            {selectedFeature && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 className="text-2xl font-bold text-gray-900">{selectedFeature.id}</h3>
+                                    <p className="text-gray-700 mt-2">{selectedFeature.description}</p>
+                                </div>
+                                <button
+                                    onClick={() => setSelectedFeature(null)}
+                                    className="text-gray-400 hover:text-gray-500"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="flex gap-4">
+                                    <div>
+                                        <span className="text-sm text-gray-500">Status:</span>
+                                        <div className="mt-1">
+                                            <StatusBadge status={selectedFeature.status} />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span className="text-sm text-gray-500">Priority:</span>
+                                        <div className="mt-1">
+                                            <PriorityBadge priority={selectedFeature.priority} />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span className="text-sm text-gray-500">Category:</span>
+                                        <div className="mt-1 text-sm">{selectedFeature.category}</div>
+                                    </div>
+                                </div>
+
+                                {selectedFeature.acceptanceCriteria.length > 0 && (
+                                    <div>
+                                        <h4 className="text-sm font-medium text-gray-900 mb-2">Acceptance Criteria</h4>
+                                        <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+                                            {selectedFeature.acceptanceCriteria.map((criteria, idx) => (
+                                                <li key={idx}>{criteria}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                {selectedFeature.notes && (
+                                    <div>
+                                        <h4 className="text-sm font-medium text-gray-900 mb-2">Notes</h4>
+                                        <p className="text-sm text-gray-700 whitespace-pre-wrap">{selectedFeature.notes}</p>
+                                    </div>
+                                )}
+
+                                {selectedFeature.blockedBy && (
+                                    <div className="bg-red-50 border border-red-200 rounded-md p-3">
+                                        <h4 className="text-sm font-medium text-red-900 mb-1">Blocked</h4>
+                                        <p className="text-sm text-red-700">{selectedFeature.blockedBy}</p>
+                                    </div>
+                                )}
+
+                                {selectedFeature.verifiedBy && (
+                                    <div className="bg-green-50 border border-green-200 rounded-md p-3">
+                                        <h4 className="text-sm font-medium text-green-900 mb-1">
+                                            Verified by {selectedFeature.verifiedBy}
+                                        </h4>
+                                        {selectedFeature.evidenceLinks.length > 0 && (
+                                            <ul className="list-disc list-inside space-y-1 text-sm text-green-700 mt-2">
+                                                {selectedFeature.evidenceLinks.map((evidence, idx) => (
+                                                    <li key={idx}>{evidence}</li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mt-6 flex justify-end">
+                                <button
+                                    onClick={() => setSelectedFeature(null)}
+                                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
