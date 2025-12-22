@@ -2,7 +2,7 @@
 
 ## Project: klondike-spec-cli
 ## Started: 2025-12-07
-## Current Status: Session Ended
+## Current Status: In Progress
 
 ---
 
@@ -601,6 +601,28 @@ klondike feature list  # List all features
 3. F070 (Config Editor)
 4. F071 (Add Feature form)
 5. F073 (Navigation sidebar)
+
+#### Technical Notes
+- None
+
+---
+
+### Session 25 - 2025-12-22
+**Agent**: Coding Agent
+**Duration**: (in progress)
+**Focus**: F068 - Task Viewer UI component with feature details and acceptance criteria
+
+#### Completed
+- None
+
+#### In Progress
+- Session started
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
 
 #### Technical Notes
 - None

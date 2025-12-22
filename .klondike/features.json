@@ -1813,13 +1813,13 @@
         "One-click Start/Block/Verify actions with forms"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T11:14:14.520755",
       "notes": "Implementation: React component as detail panel or separate route. Use modals for block reason and verify evidence inputs. PUT to /api/features/{id} for edits, POST to status endpoints for actions. Context: Feature detail view per WEB_PRD.md Task Viewer section. Dependencies: F059, F061, F062."
     },
     {
