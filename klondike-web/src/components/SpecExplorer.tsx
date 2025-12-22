@@ -5,6 +5,7 @@ import { AddFeatureForm } from './AddFeatureForm'
 import { ExpandableFeatureCard } from './ExpandableFeatureCard'
 import { getApiBaseUrl, apiCall } from '../utils/api'
 import { FeatureListSkeleton, Skeleton } from './Skeleton'
+import { EmptyFeaturesState, EmptySearchState } from './EmptyStates'
 
 interface Feature {
     id: string
@@ -447,10 +448,12 @@ export function SpecExplorer() {
                     </table>
                 </div>
 
-                {filteredFeatures.length === 0 && (
-                    <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                        No features match your filters
-                    </div>
+                {filteredFeatures.length === 0 && features.length === 0 && (
+                    <EmptyFeaturesState onAdd={() => setIsAddFormOpen(true)} />
+                )}
+                
+                {filteredFeatures.length === 0 && features.length > 0 && (
+                    <EmptySearchState query={searchText || statusFilter || categoryFilter || 'filters'} />
                 )}
             </div>
             )}
@@ -468,10 +471,12 @@ export function SpecExplorer() {
                             onNavigate={() => navigate(`/task/${feature.id}`)}
                         />
                     ))}
-                    {filteredFeatures.length === 0 && (
-                        <div className="text-center py-12 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 rounded-lg shadow">
-                            No features match your filters
-                        </div>
+                    {filteredFeatures.length === 0 && features.length === 0 && (
+                        <EmptyFeaturesState onAdd={() => setIsAddFormOpen(true)} />
+                    )}
+                    
+                    {filteredFeatures.length === 0 && features.length > 0 && (
+                        <EmptySearchState query={searchText || statusFilter || categoryFilter || 'filters'} />
                     )}
                 </div>
             )}

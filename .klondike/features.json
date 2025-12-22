@@ -2640,11 +2640,16 @@
         "Success animation on create"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T16:22:50.212324",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "QuickAddDialog.tsx with form",
+        "keyboard shortcut integration in useKeyboardShortcuts.tsx",
+        "App.tsx integration",
+        "screen reader announcements; build success; 181 tests pass; commit 160bb3b"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T16:19:57.919930",
       "notes": "Implementation: Create FloatingActionButton component with mini form. Use React Portal for overlay. Edge cases: Form validation, handle rapid submissions. Dependencies: F071 (add feature form), F061 (API). Context: Capture ideas quickly without navigation. Gotchas: Position must not block important content."
@@ -2662,13 +2667,13 @@
         "Getting started checklist for new projects"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T16:22:54.304860",
       "notes": "Implementation: Create EmptyState component with SVG illustrations. Store onboarding progress in localStorage. Edge cases: Don't show hints after user has used feature. Dependencies: None. Context: Friendly first impression, reduce confusion. Gotchas: Keep illustrations lightweight (SVG not PNG), respect prefers-reduced-motion."
     },
     {
@@ -2792,8 +2797,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T16:19:54.061523",
+    "lastUpdated": "2025-12-22T16:22:50.212333",
     "totalFeatures": 104,
-    "passingFeatures": 77
+    "passingFeatures": 78
   }
 }
