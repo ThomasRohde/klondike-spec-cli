@@ -2,7 +2,7 @@
 
 ## Project: klondike-spec-cli
 ## Started: 2025-12-07
-## Current Status: Session Ended
+## Current Status: In Progress
 
 ---
 
@@ -390,6 +390,28 @@ klondike feature list  # List all features
 
 #### Recommended Next Steps
 1. Continue with F060: Implement REST API endpoint GET /api/status for project overview. Then implement remaining API endpoints (F061-F065) and connect React components to the backend.
+
+#### Technical Notes
+- None
+
+---
+
+### Session 16 - 2025-12-22
+**Agent**: Coding Agent
+**Duration**: (in progress)
+**Focus**: F060 - Implement REST API endpoint GET /api/status
+
+#### Completed
+- None
+
+#### In Progress
+- Session started
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
 
 #### Technical Notes
 - None

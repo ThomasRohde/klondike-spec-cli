@@ -1259,6 +1259,98 @@ def serve(
         """Health check endpoint."""
         return {"status": "ok", "version": __version__}
 
+    @app_instance.get("/api/status")
+    async def api_status():
+        """Get project status overview.
+        
+        Returns project metadata, progress counts, feature status summary,
+        current session info, priority features, and recent git commits.
+        """
+        from .data import load_config, load_features, load_progress
+        from .git import get_git_status, get_recent_commits
+        
+        try:
+            # Load project data
+            config = load_config(root)
+            registry = load_features(root)
+            progress_log = load_progress(root)
+            
+            # Calculate progress
+            total = len(registry.features)
+            passing = sum(1 for f in registry.features if f.passes)
+            percent = round((passing / total * 100), 1) if total > 0 else 0.0
+            
+            # Count features by status
+            by_status = {
+                "not-started": 0,
+                "in-progress": 0,
+                "blocked": 0,
+                "verified": 0,
+            }
+            for feature in registry.features:
+                status_key = feature.status.value if hasattr(feature.status, 'value') else feature.status
+                if status_key in by_status:
+                    by_status[status_key] += 1
+            
+            # Get current session (if active)
+            current_session = None
+            if progress_log.sessions and progress_log.current_status == "In Progress":
+                last_session = progress_log.sessions[-1]
+                current_session = {
+                    "number": last_session.session_number,
+                    "focus": last_session.focus,
+                    "agent": last_session.agent,
+                    "date": last_session.date,
+                }
+            
+            # Get priority features
+            priority_features = []
+            for pf in progress_log.quick_reference.priority_features[:3]:
+                priority_features.append({
+                    "id": pf.id,
+                    "description": pf.description,
+                    "status": pf.status,
+                })
+            
+            # Get git status and recent commits
+            git_status_obj = get_git_status(root)
+            git_data = None
+            if git_status_obj.is_git_repo:
+                recent_commits = get_recent_commits(5, root)
+                git_data = {
+                    "branch": git_status_obj.current_branch,
+                    "clean": git_status_obj.clean,
+                    "staged": git_status_obj.staged_count,
+                    "unstaged": git_status_obj.unstaged_count,
+                    "untracked": git_status_obj.untracked_count,
+                    "recent_commits": [
+                        {
+                            "hash": c.short_hash,
+                            "message": c.message,
+                            "author": c.author,
+                            "date": c.date,
+                        }
+                        for c in recent_commits
+                    ],
+                }
+            
+            return {
+                "project": root.name,
+                "version": registry.version,
+                "progress": {
+                    "total": total,
+                    "passing": passing,
+                    "percent": percent,
+                },
+                "by_status": by_status,
+                "current_session": current_session,
+                "priority_features": priority_features,
+                "git": git_data,
+            }
+        
+        except Exception as e:
+            return {"error": str(e)}
+
     @app_instance.get("/{full_path:path}", response_class=HTMLResponse)
     async def serve_spa(full_path: str):
         """Serve index.html for all routes (React Router support)."""

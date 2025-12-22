@@ -1569,13 +1569,20 @@
         "Returns recent git commits"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T08:27:38.251125",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Tested GET /api/status endpoint - returns project metadata",
+        "progress counts (60.5%)",
+        "feature counts by status",
+        "current session (16)",
+        "top 3 priority features",
+        "and 5 recent git commits. All acceptance criteria verified."
+      ],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T08:16:34.252916",
       "notes": "Implementation: Reuse logic from cli.py status command and get_status MCP tool. JSON response structure per WEB_PRD.md API Outline. Context: Powers Dashboard view. Dependencies: F058 (serve command). Edge cases: Handle no git repo, no active session, empty feature registry."
     },
     {
@@ -1949,8 +1956,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T08:11:12.886708",
+    "lastUpdated": "2025-12-22T08:27:38.251135",
     "totalFeatures": 76,
-    "passingFeatures": 46
+    "passingFeatures": 47
   }
 }
