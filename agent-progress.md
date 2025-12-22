@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F095 | Mobile-optimized touch gestures and responsive layout | 🔄 In progress |
 | F097 | Recent activity feed with live updates on dashboard | ⏳ Not started |
-| F101 | Confirmation dialogs with undo option for destructive actions | ⏳ Not started |
+| F101 | Confirmation dialogs with undo option for destructive actions | 🔄 In progress |
+| F080 | Keyboard shortcuts for common actions with help overlay | ⏳ Not started |
 
 ---
 

@@ -2551,11 +2551,18 @@
         "Pull to refresh on lists"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T15:51:40.340623",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "useTouchGestures.tsx with useSwipe",
+        "usePullToRefresh hooks; BottomSheet.tsx with ActionButton; CSS for 44px touch targets",
+        "safe-area insets",
+        "slide-up animation; build passes",
+        "181 tests pass",
+        "commit 2d87a3e"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T15:49:10.925047",
       "notes": "Implementation: Use touch event handlers or react-swipeable. Media queries for breakpoints. Edge cases: Hybrid touch/mouse devices. Dependencies: None - applies across components. Context: First-class mobile experience. Gotchas: Test on actual devices, not just responsive mode."
@@ -2687,13 +2694,13 @@
         "Keyboard accessible (Enter confirms and Escape cancels)"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T15:51:52.503581",
       "notes": "Implementation: Create ConfirmDialog component with timer for undo. Use optimistic updates with rollback. Edge cases: Handle multiple undo requests. Dependencies: F074 (toast system). Context: Prevent accidental data loss. Gotchas: Undo must actually work - queue the real deletion."
     },
     {
@@ -2766,8 +2773,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T15:48:57.137526",
+    "lastUpdated": "2025-12-22T15:51:40.340635",
     "totalFeatures": 104,
-    "passingFeatures": 72
+    "passingFeatures": 73
   }
 }
