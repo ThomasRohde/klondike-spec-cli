@@ -1,7 +1,7 @@
 {
   "projectName": "klondike-spec-cli",
   "startedAt": "2025-12-07T00:00:00Z",
-  "currentStatus": "Session Ended",
+  "currentStatus": "In Progress",
   "sessions": [
     {
       "sessionNumber": 1,
@@ -339,6 +339,34 @@
       "nextSteps": [
         "F065 - WebSocket endpoint for real-time UI updates"
       ],
+      "technicalNotes": []
+    },
+    {
+      "sessionNumber": 21,
+      "date": "2025-12-22",
+      "agent": "Coding Agent",
+      "duration": "(in progress)",
+      "focus": "Code review and next feature planning",
+      "completed": [],
+      "inProgress": [
+        "Session started"
+      ],
+      "blockers": [],
+      "nextSteps": [],
+      "technicalNotes": []
+    },
+    {
+      "sessionNumber": 22,
+      "date": "2025-12-22",
+      "agent": "Coding Agent",
+      "duration": "(in progress)",
+      "focus": "Code review and next feature planning",
+      "completed": [],
+      "inProgress": [
+        "Session started"
+      ],
+      "blockers": [],
+      "nextSteps": [],
       "technicalNotes": []
     }
   ],
