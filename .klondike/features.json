@@ -2021,11 +2021,19 @@
         "Optional count query parameter"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T13:30:53.560879",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Implemented GET /api/commits endpoint. Returns list of recent commits with hash",
+        "author",
+        "date",
+        "and message fields. Tested with live server: default returns 10 commits",
+        "count=3 returns 3 commits. All required fields present. Returns empty array for non-git repos (exception handling). Pre-commit checks passed: linting",
+        "formatting",
+        "181 tests passed."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T13:21:05.087773",
       "notes": "Implementation: Reuse get_recent_commits from git.py. Simple JSON array response. Context: Optional endpoint for extended Activity Log per WEB_PRD.md. Dependencies: F058. Edge cases: Not a git repo, no commits yet."
@@ -2062,8 +2070,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T13:21:00.357942",
+    "lastUpdated": "2025-12-22T13:30:53.560906",
     "totalFeatures": 76,
-    "passingFeatures": 61
+    "passingFeatures": 62
   }
 }
