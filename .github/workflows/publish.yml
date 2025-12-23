@@ -49,11 +49,14 @@ jobs:
           npm ci
           npm run build
 
-      - name: Copy web assets to static directory
+      - name: Verify static assets exist
         run: |
-          rm -rf src/klondike_spec_cli/static
-          mkdir -p src/klondike_spec_cli/static
-          cp -r klondike-web/dist/* src/klondike_spec_cli/static/
+          if [ ! -d src/klondike_spec_cli/static ] || [ -z "$(ls -A src/klondike_spec_cli/static)" ]; then
+            echo "Build output missing! Check the web build step."
+            exit 1
+          fi
+          echo "Static assets built successfully:"
+          ls -la src/klondike_spec_cli/static/
 
       - name: Install build dependencies
         run: uv pip install --system build hatchling hatch-vcs
