@@ -9,10 +9,11 @@ import signal
 import sys
 import threading
 import webbrowser
+from collections.abc import Awaitable, Callable
 from datetime import datetime
 from pathlib import Path
 from types import FrameType
-from typing import Any, Awaitable, Callable
+from typing import Any
 
 from pith import PithException, echo
 
