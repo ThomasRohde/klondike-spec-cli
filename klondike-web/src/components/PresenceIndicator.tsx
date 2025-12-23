@@ -89,29 +89,41 @@ export function initializePresence() {
             try {
                 const message = JSON.parse(event.data);
 
+                // Skip malformed messages
+                if (!message || typeof message.type !== 'string') {
+                    return;
+                }
+
                 if (message.type === 'presence') {
-                    // Single user update
-                    const user: UserPresence = message.user;
-                    if (user.id !== store.userId) {
+                    // Single user update - validate user object exists
+                    const user: UserPresence | undefined = message.user;
+                    if (user && typeof user.id === 'string' && user.id !== store.userId) {
                         store.users.set(user.id, user);
                         emitChange();
                     }
                 } else if (message.type === 'presenceList') {
                     // Full list of active users
                     store.users.clear();
-                    for (const user of message.users as UserPresence[]) {
-                        if (user.id !== store.userId) {
-                            store.users.set(user.id, user);
+                    if (Array.isArray(message.users)) {
+                        for (const user of message.users as UserPresence[]) {
+                            if (user && user.id && user.id !== store.userId) {
+                                store.users.set(user.id, user);
+                            }
                         }
                     }
                     emitChange();
                 } else if (message.type === 'userLeft') {
-                    // User disconnected
-                    store.users.delete(message.userId);
-                    emitChange();
+                    // User disconnected - validate userId exists
+                    if (typeof message.userId === 'string') {
+                        store.users.delete(message.userId);
+                        emitChange();
+                    }
                 }
             } catch (error) {
-                console.error('Failed to parse presence message:', error);
+                // Only log actual parsing errors, not invalid message structure
+                if (error instanceof SyntaxError) {
+                    console.error('Failed to parse presence message JSON:', error);
+                }
             }
         };
 

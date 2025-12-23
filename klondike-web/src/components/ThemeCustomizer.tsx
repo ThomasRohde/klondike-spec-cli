@@ -90,11 +90,15 @@ function applyTheme(settings: ThemeSettings): void {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = settings.mode === 'dark' || (settings.mode === 'system' && prefersDark);
 
+    console.log('Applying theme:', { mode: settings.mode, isDark, prefersDark });
+
     if (isDark) {
         root.classList.add('dark');
     } else {
         root.classList.remove('dark');
     }
+
+    console.log('Document classes:', root.classList.toString());
 
     // Apply accent color CSS variables
     const accentConfig = ACCENT_COLORS.find(c => c.id === settings.accentColor);
@@ -112,7 +116,9 @@ function applyTheme(settings: ThemeSettings): void {
 
 // Initialize theme on load
 export function initializeTheme(): void {
+    console.log('Initializing theme...');
     const settings = loadTheme();
+    console.log('Loaded theme settings:', settings);
     applyTheme(settings);
 
     // Listen for system theme changes
@@ -229,8 +235,8 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                                     key={mode}
                                     onClick={() => setMode(mode)}
                                     className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg border transition-colors ${settings.mode === mode
-                                            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
-                                            : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                        ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
+                                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                                         }`}
                                 >
                                     {mode === 'light' && <SunIcon className="h-4 w-4" />}
@@ -252,8 +258,8 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                                     key={color.id}
                                     onClick={() => setAccentColor(color.id)}
                                     className={`relative w-10 h-10 rounded-lg transition-transform hover:scale-110 ${settings.accentColor === color.id && !settings.customAccent
-                                            ? 'ring-2 ring-offset-2 ring-gray-400 dark:ring-gray-500'
-                                            : ''
+                                        ? 'ring-2 ring-offset-2 ring-gray-400 dark:ring-gray-500'
+                                        : ''
                                         }`}
                                     style={{ backgroundColor: color.primary }}
                                     title={color.name}

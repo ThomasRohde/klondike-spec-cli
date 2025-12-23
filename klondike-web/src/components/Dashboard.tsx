@@ -255,7 +255,11 @@ export function Dashboard() {
                 );
 
             case 'recent-activity':
-                return <RecentActivityFeed maxItems={10} />;
+                return (
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow h-full">
+                        <RecentActivityFeed maxItems={10} showHeader={true} />
+                    </div>
+                );
 
             default:
                 return null;

@@ -22,11 +22,8 @@ import { SessionBanner } from './SessionBanner'
 import { SkipLink } from '../utils/accessibility'
 import { SessionTimerWidget, useSessionTimer } from './SessionTimer'
 import { PresenceIndicator } from './PresenceIndicator'
-import { ThemeCustomizer, initializeTheme } from './ThemeCustomizer'
+import { ThemeCustomizer, useTheme } from './ThemeCustomizer'
 import { OfflineIndicator } from './OfflineSupport'
-
-// Initialize theme on module load
-initializeTheme();
 
 interface ActiveSession {
     id: number;
@@ -45,31 +42,6 @@ const navigation = [
     { name: 'Config', href: '/config', icon: Cog6ToothIcon },
 ]
 
-function useTheme() {
-    const [darkMode, setDarkMode] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const stored = localStorage.getItem('klondike-dark-mode')
-            if (stored !== null) {
-                return stored === 'true'
-            }
-            return window.matchMedia('(prefers-color-scheme: dark)').matches
-        }
-        return false
-    })
-
-    useEffect(() => {
-        const root = document.documentElement
-        if (darkMode) {
-            root.classList.add('dark')
-        } else {
-            root.classList.remove('dark')
-        }
-        localStorage.setItem('klondike-dark-mode', String(darkMode))
-    }, [darkMode])
-
-    return [darkMode, setDarkMode] as const
-}
-
 export function Layout() {
     const location = useLocation()
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -80,9 +52,19 @@ export function Layout() {
         }
         return false
     })
-    const [darkMode, setDarkMode] = useTheme()
+    const { isDark, setMode, settings } = useTheme()
     const [activeSession, setActiveSession] = useState<ActiveSession | null>(null)
     const [showThemeCustomizer, setShowThemeCustomizer] = useState(false)
+
+    const toggleTheme = () => {
+        if (settings.mode === 'system') {
+            setMode(isDark ? 'light' : 'dark');
+        } else if (settings.mode === 'dark') {
+            setMode('light');
+        } else {
+            setMode('dark');
+        }
+    }
 
     // Persist sidebar collapsed state
     useEffect(() => {
@@ -239,16 +221,16 @@ export function Layout() {
                         {!sidebarCollapsed && <span className="font-medium">Theme</span>}
                     </button>
                     <button
-                        onClick={() => setDarkMode(!darkMode)}
-                        aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-                        title={sidebarCollapsed ? (darkMode ? 'Light Mode' : 'Dark Mode') : undefined}
+                        onClick={toggleTheme}
+                        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                        title={sidebarCollapsed ? (isDark ? 'Light Mode' : 'Dark Mode') : undefined}
                         className={`
                             flex items-center gap-3 w-full rounded-lg text-gray-700 dark:text-gray-300 
                             hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
                             ${sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'}
                         `}
                     >
-                        {darkMode ? (
+                        {isDark ? (
                             <>
                                 <SunIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
                                 {!sidebarCollapsed && <span className="font-medium">Light Mode</span>}

@@ -1071,7 +1071,7 @@ def serve_command(
 
         Returns:
             List of commit objects with hash, author, date, and message.
-            Returns empty list if not a git repo.
+            Returns empty list if not a git repo or any other error.
         """
         from ..git import get_recent_commits
 
@@ -1089,6 +1089,88 @@ def serve_command(
         except Exception:
             # Return empty list if not a git repo or any other error
             return []
+
+    @app_instance.get("/api/activity")
+    async def api_activity(limit: int = 10):
+        """Get recent activity feed.
+
+        Args:
+            limit: Maximum number of activities to return (default 10)
+
+        Returns:
+            List of activity objects with type, description, timestamp.
+        """
+        from ..data import load_features, load_progress
+        from ..git import get_recent_commits
+
+        try:
+            activities = []
+
+            # Get recent feature updates
+            registry = load_features(root)
+            for feature in sorted(
+                registry.features, key=lambda f: f.last_worked_on or "", reverse=True
+            )[:limit]:
+                if feature.last_worked_on:
+                    activity_type = (
+                        "feature_verified"
+                        if feature.status.value == "verified"
+                        else (
+                            "feature_started"
+                            if feature.status.value == "in-progress"
+                            else "feature_blocked"
+                            if feature.status.value == "blocked"
+                            else "feature_updated"
+                        )
+                    )
+                    activities.append(
+                        {
+                            "id": f"{feature.id}_{feature.last_worked_on}",
+                            "type": activity_type,
+                            "featureId": feature.id,
+                            "description": feature.description,
+                            "timestamp": feature.last_worked_on,
+                        }
+                    )
+
+            # Get recent sessions
+            progress = load_progress(root)
+            for session in reversed(progress.sessions[-limit:]):
+                activities.append(
+                    {
+                        "id": f"session_{session.session_number}",
+                        "type": "session_started",
+                        "description": session.focus,
+                        "timestamp": f"{session.date}T00:00:00",
+                    }
+                )
+
+            # Get recent commits
+            try:
+                commits = get_recent_commits(count=limit, path=root)
+                for commit in commits:
+                    activities.append(
+                        {
+                            "id": f"commit_{commit.hash}",
+                            "type": "commit",
+                            "description": commit.message,
+                            "timestamp": commit.date,
+                            "metadata": {
+                                "hash": commit.short_hash,
+                                "author": commit.author,
+                            },
+                        }
+                    )
+            except Exception:
+                pass  # Ignore git errors
+
+            # Sort by timestamp and limit
+            activities.sort(key=lambda a: a["timestamp"], reverse=True)
+            activities = activities[:limit]
+
+            return {"activities": activities}
+        except Exception as e:
+            return {"activities": [], "error": str(e)}
 
     @app_instance.get("/api/config")
     async def api_config_get():

@@ -966,13 +966,13 @@
         "Shows link to created PR on completion"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:29.016254",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": null
     },
     {
@@ -988,13 +988,13 @@
         "Auto-suggests resume when starting new klondike session"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:29.445913",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": null
     },
     {
@@ -1011,13 +1011,13 @@
         "Stores gist URL in session record"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:29.863872",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": null
     },
     {
@@ -1034,13 +1034,13 @@
         "Supports --auto-add to directly add suggestions"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:30.266727",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": null
     },
     {
@@ -1053,13 +1053,13 @@
         "Reports pass/fail status"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:26.734280",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": null
     },
     {
@@ -1127,13 +1127,13 @@
         "Feature works as described"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:27.384741",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": null
     },
     {
@@ -1146,13 +1146,13 @@
         "Feature works as described"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:28.011166",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": null
     },
     {
@@ -1382,13 +1382,13 @@
         "Release workflow tests pass"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:28.567551",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": "Implementation: Create src/klondike_spec_cli/commands/release.py. Move release command logic and _bump_version helper (lines 2520-2700 approx). Keep @app.command decorator in cli.py. Dependencies: F044 (data access layer), git.py module. Self-contained release workflow logic."
     },
     {
@@ -1404,13 +1404,13 @@
         "Clean import structure with no circular dependencies"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:30.661347",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": "Implementation: Create commands/__init__.py that re-exports all command handlers from submodules. This creates a clean API: from klondike_spec_cli.commands import feature_add, session_start, etc. Should be done after individual command modules are extracted. Dependencies: F044-F052. This is the consolidation step."
     },
     {
@@ -1426,18 +1426,13 @@
         "All tests pass with full coverage maintained"
       ],
       "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-23T05:59:04.590592",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "cli.py reduced from 2639\u21921103 lines (58% reduction). Extracted 4 command modules: admin.py (validate/config/completion/progress/version)",
-        "agents_cmd.py",
-        "release_cmd.py",
-        "serve_cmd.py (1618 lines). All 181 tests passing. Command decorators and routing remain in cli.py as required."
-      ],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-23T05:17:54.129978",
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": "Implementation: After all command extractions are complete, cli.py should contain only: imports, Pith app definition, @app.command decorated functions that delegate to command modules, and main() entry point. Remove any orphaned helper functions. Run ruff to clean imports. Dependencies: F044-F053. This is the final cleanup step. Verify line count reduction from 3000+ to under 500."
     },
     {
@@ -1452,13 +1447,13 @@
         "Ruff check passes with no import warnings"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:31.542486",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": "Implementation: Run ruff check --select F401 to find unused imports. Remove Option import from init.py (parameters are function args, not CLI decorators). Edge cases: Some imports may be used for type hints only. Context: Cleanup after cli.py refactoring. Gotchas: Ensure imports needed for TYPE_CHECKING blocks are preserved."
     },
     {
@@ -1473,13 +1468,13 @@
         "All tests pass after move"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:31.932398",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": "Implementation: Move generate_progress_bar() from commands/reporting.py to formatting.py. Update import in reporting.py. Edge cases: Function is self-contained with no dependencies. Context: Consolidate display utilities in formatting.py for consistency. Gotchas: Ensure the function signature and behavior remain unchanged."
     },
     {
@@ -1494,1374 +1489,20 @@
         "No duplicate examples or usage info between layers"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "not-started",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
-      "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:35.273165",
+      "blockedBy": null,
+      "lastWorkedOn": null,
       "notes": "Implementation: Keep full docstrings on @app.command decorators (user-facing help). Reduce command function docstrings to brief implementation notes. Edge cases: init_command and upgrade_command in commands/init.py have full copies. Context: Docstring duplication makes maintenance harder. Gotchas: Ensure klondike --help and klondike pith still show correct documentation."
-    },
-    {
-      "id": "F058",
-      "category": "core",
-      "priority": 2,
-      "description": "Implement 'klondike serve' command with FastAPI server",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Server starts on localhost with configurable port",
-        "Serves static React SPA from bundled assets",
-        "Graceful shutdown on Ctrl+C",
-        "Auto-detection of .klondike folder or error if missing"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T07:35:21.894582",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Server starts successfully on configurable port",
-        "serves static index.html",
-        "/health endpoint works",
-        "handles Ctrl+C gracefully",
-        "detects .klondike directory. Tested via background job with curl validation. All tests pass (181/181)."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T07:09:35.233784",
-      "notes": "Implementation: Use FastAPI with uvicorn for async/WebSocket support. Bundle React build in package static/ folder. Default port 8000, allow --port flag. Print clear URL message on start. Context: Foundation for all web UI features per WEB_PRD.md. Dependencies: React SPA build (F059). Gotchas: Ensure cross-platform compatibility (Windows/Mac/Linux), handle port-in-use errors gracefully."
-    },
-    {
-      "id": "F059",
-      "category": "ui",
-      "priority": 2,
-      "description": "React SPA scaffold with Tailwind CSS for serve UI",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "React SPA bootstrapped with Vite or CRA",
-        "Tailwind CSS configured for styling",
-        "React Router for client-side navigation",
-        "WebSocket hook for real-time updates",
-        "Build output bundled into Python package"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T08:11:12.886697",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "React SPA successfully scaffolded with Vite + TypeScript. Tailwind CSS v4 configured with @tailwindcss/postcss. React Router implemented with 4 main routes (Dashboard",
-        "SpecExplorer",
-        "ActivityLog",
-        "ConfigEditor). Layout component with sidebar navigation using HeroIcons. WebSocket hook created for real-time updates. Vite build configured to output to Python package static directory. FastAPI serve command updated with client-side routing support. Verified working by starting server and viewing in browser."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T07:49:14.233639",
-      "notes": "Implementation: Use Vite for fast builds. Structure: src/components for Dashboard, SpecExplorer, ActivityLog, ConfigEditor. Use HeroIcons for consistent iconography. Context: Frontend foundation per WEB_PRD.md UI Design section. Gotchas: Ensure build artifacts are included in Python package via pyproject.toml. Client-side routing needs server fallback to index.html."
-    },
-    {
-      "id": "F060",
-      "category": "api",
-      "priority": 2,
-      "description": "REST API endpoint: GET /api/status for project overview",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Returns project name and version",
-        "Returns progress counts (total/passing/percent)",
-        "Returns feature counts by status",
-        "Returns current session info if active",
-        "Returns top 3 priority features",
-        "Returns recent git commits"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T08:27:38.251125",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Tested GET /api/status endpoint - returns project metadata",
-        "progress counts (60.5%)",
-        "feature counts by status",
-        "current session (16)",
-        "top 3 priority features",
-        "and 5 recent git commits. All acceptance criteria verified."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T08:16:34.252916",
-      "notes": "Implementation: Reuse logic from cli.py status command and get_status MCP tool. JSON response structure per WEB_PRD.md API Outline. Context: Powers Dashboard view. Dependencies: F058 (serve command). Edge cases: Handle no git repo, no active session, empty feature registry."
-    },
-    {
-      "id": "F061",
-      "category": "api",
-      "priority": 2,
-      "description": "REST API endpoints for feature CRUD operations",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "GET /api/features returns all features with optional status filter",
-        "POST /api/features creates new feature with validation",
-        "GET /api/features/{id} returns single feature details",
-        "PUT /api/features/{id} updates feature properties"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T08:38:19.761488",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Implemented GET /api/features (with filtering)",
-        "GET /api/features/{id}",
-        "POST /api/features",
-        "PUT /api/features/{id}. All endpoints tested with positive and negative test cases. Created F077 test feature",
-        "updated it",
-        "then cleaned up. Error handling validated for 404",
-        "400 scenarios."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T08:35:58.474285",
-      "notes": "Implementation: Reuse FeatureRegistry from data.py. Validate required fields (description). Auto-assign next feature ID. Support filtering via query params (?status=blocked). Context: Powers Spec Explorer and Task Viewer per WEB_PRD.md. Dependencies: F058. Edge cases: Feature not found (404), invalid priority range, empty description."
-    },
-    {
-      "id": "F062",
-      "category": "api",
-      "priority": 2,
-      "description": "REST API endpoints for feature status transitions",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "POST /api/features/{id}/start marks feature in-progress",
-        "POST /api/features/{id}/block requires reason and marks blocked",
-        "POST /api/features/{id}/verify requires evidence and marks verified",
-        "Returns warnings if multiple features in-progress"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T09:12:27.584897",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Manual API testing of /start",
-        "/verify",
-        "/block endpoints. Validated error cases (404",
-        "400). All tests pass."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T08:42:46.868278",
-      "notes": "Implementation: Reuse logic from feature start/block/verify CLI commands. Validate evidence required for verify, reason required for block. Update last_worked_on timestamps. Context: Powers one-click status actions per WEB_PRD.md. Dependencies: F061. Gotchas: Multiple in-progress warning per CLI behavior."
-    },
-    {
-      "id": "F063",
-      "category": "api",
-      "priority": 2,
-      "description": "REST API endpoints for session management",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "GET /api/progress returns all session history",
-        "POST /api/session/start creates new session with focus",
-        "POST /api/session/end closes session with summary/completed/blockers/nextSteps",
-        "Validates no active session on start if one already exists"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T09:16:47.721742",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Manual API testing: GET /api/progress",
-        "POST /api/session/start",
-        "POST /api/session/end. Validated error cases. Auto-generation of next steps works. All tests pass."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T09:12:52.875362",
-      "notes": "Implementation: Reuse ProgressLog from data.py and session start/end CLI logic. Auto-generate nextSteps from priority features if not provided. Context: Powers Activity Log and session controls per WEB_PRD.md. Dependencies: F058. Edge cases: No active session on end (error), artifact validation on start."
-    },
-    {
-      "id": "F064",
-      "category": "api",
-      "priority": 2,
-      "description": "REST API endpoints for configuration management",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "GET /api/config returns all config settings",
-        "PUT /api/config updates one or more config fields",
-        "Validates config values (priority range etc)",
-        "Persists changes to config.yaml"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T09:34:00.771081",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Implemented and tested both endpoints: GET /api/config returns all settings",
-        "PUT /api/config validates and persists updates. Manual testing confirmed config changes persist to YAML with comments preserved. Validation works for priority ranges (1-5) and field types. All 181 tests passing."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T09:30:22.652911",
-      "notes": "Implementation: Reuse KlondikeConfig from models.py. Validate field types and ranges. Include klondike_version and configured_agents in response. Context: Powers Config Editor per WEB_PRD.md. Dependencies: F058. Gotchas: Preserve YAML comments if possible, or rewrite in standard format."
-    },
-    {
-      "id": "F065",
-      "category": "api",
-      "priority": 2,
-      "description": "WebSocket endpoint for real-time UI updates",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "WebSocket endpoint at /api/updates",
-        "Emits events on feature changes (add/update/status)",
-        "Emits events on session changes (start/end)",
-        "Emits events on config changes",
-        "File watcher detects external CLI changes"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T10:27:41.362732",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "tests/test_cli.py (181 tests passing)",
-        "src/klondike_spec_cli/cli.py (WebSocket endpoint implemented)",
-        "pyproject.toml (watchdog dependency added)"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T09:36:34.911155",
-      "notes": "Implementation: Use FastAPI WebSocket support. Consider watchdog library for filesystem monitoring. Event types: featureAdded, featureUpdated, sessionStarted, sessionEnded, configChanged. Context: Ensures real-time sync per WEB_PRD.md. Dependencies: F058. Gotchas: Handle WebSocket reconnection, initial sync on connect."
-    },
-    {
-      "id": "F066",
-      "category": "ui",
-      "priority": 2,
-      "description": "Dashboard UI component with project overview",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Displays project name and version",
-        "Shows progress bar or donut chart for feature completion",
-        "Shows feature counts by status with color-coded badges",
-        "Shows current session status indicator",
-        "Lists top 3 priority features as actionable items",
-        "Shows recent git commits"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T10:59:13.923745",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Implemented Dashboard UI component with all acceptance criteria:\n- Displays project name (klondike-spec-cli) and version (0.2.18.dev24)\n- Shows animated progress bar reflecting 68.4% completion\n- Displays feature counts by status with color-coded cards (Total: 76",
-        "Verified: 52",
-        "In Progress: 1",
-        "Blocked: 13)\n- Shows current session status (Session #22 with focus)\n- Lists priority features as actionable items with status badges\n- Shows recent 5 git commits with hash",
-        "date",
-        "and message\n- Real-time WebSocket connection indicator (green=connected)\n- Fetches data from GET /api/status endpoint\n- Auto-refreshes on WebSocket events (featureUpdated",
-        "sessionUpdated",
-        "etc.)\n- CORS middleware configured to allow dev server connections\n- Build completed successfully",
-        "all linting passes",
-        "all 181 tests pass\n- Manual verification: API responds with 200",
-        "server running on localhost:8000\n- React components render without errors in dev server"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T10:31:48.085999",
-      "notes": "Implementation: React component using Tailwind. Fetch data from GET /api/status. Use useEffect for WebSocket subscription. Consider recharts or similar for progress visualization. Context: Main landing view per WEB_PRD.md Dashboard section. Dependencies: F059, F060."
-    },
-    {
-      "id": "F067",
-      "category": "ui",
-      "priority": 2,
-      "description": "Spec Explorer UI component with feature list and filtering",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Displays all features in scrollable list/table",
-        "Shows ID description status category priority for each",
-        "Color-coded status badges with icons",
-        "Filter by status or category",
-        "Search/filter by text",
-        "Click to open Task Viewer detail"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T11:10:35.335375",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "SpecExplorer component fully implemented with all acceptance criteria:\n\u2022 Scrollable table displays all features with ID",
-        "description",
-        "category",
-        "priority",
-        "status\n\u2022 Color-coded status badges with HeroIcons (CheckCircle=verified",
-        "XCircle=blocked",
-        "Clock=not-started",
-        "ArrowPath=in-progress)\n\u2022 Priority badges color-coded P1-P5 (red/orange/yellow/blue/gray)\n\u2022 Filter dropdown for status (all/not-started/in-progress/blocked/verified)\n\u2022 Filter dropdown for category (dynamic list from features)\n\u2022 Search input filters by ID",
-        "description",
-        "or notes (case-insensitive)\n\u2022 Click row opens modal with full feature details\n\u2022 Modal shows acceptance criteria list",
-        "notes",
-        "blocked reason (if blocked)",
-        "verification evidence (if verified)\n\u2022 Counter shows 'Showing X of Y features' based on active filters\n\u2022 Tested with real API data from /api/features endpoint\n\u2022 Build successful",
-        "ESLint clean",
-        "all 181 tests passing\n\u2022 Manual verification: filters work correctly",
-        "search is responsive",
-        "modal displays all info"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T11:05:53.876830",
-      "notes": "Implementation: React component with master-detail layout. Fetch from GET /api/features. Use status icons: hourglass for not-started, refresh for in-progress, x-circle for blocked, check-circle for verified. Context: Feature browsing per WEB_PRD.md Spec Explorer section. Dependencies: F059, F061."
-    },
-    {
-      "id": "F068",
-      "category": "ui",
-      "priority": 2,
-      "description": "Task Viewer UI component with feature details and editing",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Displays full feature details (description/category/priority/criteria/notes)",
-        "Shows acceptance criteria as checklist",
-        "Displays verification evidence if verified",
-        "Displays block reason if blocked",
-        "Edit mode for modifiable fields",
-        "One-click Start/Block/Verify actions with forms"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T11:17:55.906927",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Manual end-to-end testing completed successfully. TaskViewer displays all feature details including description/category/priority/criteria/notes. Acceptance criteria shown as checklist with pass indicators. Verification evidence and block reason displayed appropriately. Edit mode functional for all modifiable fields. Start/Block/Verify action buttons working with modal forms. Navigation from SpecExplorer works seamlessly. All UI components render correctly with proper styling. Build passed",
-        "linting clean",
-        "all 181 tests passing."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T11:14:14.520755",
-      "notes": "Implementation: React component as detail panel or separate route. Use modals for block reason and verify evidence inputs. PUT to /api/features/{id} for edits, POST to status endpoints for actions. Context: Feature detail view per WEB_PRD.md Task Viewer section. Dependencies: F059, F061, F062."
-    },
-    {
-      "id": "F069",
-      "category": "ui",
-      "priority": 2,
-      "description": "Activity Log UI component with session history",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Displays all sessions in chronological order",
-        "Shows session focus/summary as title",
-        "Lists completed items with checkmarks",
-        "Lists blockers with warning icons",
-        "Lists next steps with arrow icons",
-        "Optionally shows recent git commits interwoven or separate"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T11:29:15.752055",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Implemented comprehensive session timeline UI with expandable/collapsible cards",
-        "chronological display",
-        "icon indicators for completed/blocked/next steps",
-        "real-time WebSocket updates",
-        "and API integration with /api/progress endpoint. All acceptance criteria met. Component tested with live data showing 26 sessions. Build successful",
-        "linting clean",
-        "all 181 tests passing."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T11:19:48.212614",
-      "notes": "Implementation: React component with timeline or card layout. Fetch from GET /api/progress. Highlight active session with different styling. Consider expandable/collapsible session cards for long histories. Context: Session history view per WEB_PRD.md Activity Log section. Dependencies: F059, F063."
-    },
-    {
-      "id": "F070",
-      "category": "ui",
-      "priority": 2,
-      "description": "Config Editor UI component with settings form",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Displays all config fields with labels and descriptions",
-        "Text inputs for strings (verified_by/prd_source)",
-        "Dropdown for default_category with common options",
-        "Number input for default_priority",
-        "Checkbox for auto_regenerate_progress",
-        "Save button with success/error feedback"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T11:38:02.448034",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Implemented ConfigEditor.tsx component with:\n- Complete form for all config fields (default_category dropdown",
-        "default_priority number input",
-        "verified_by/progress_output_path text",
-        "auto_regenerate_progress checkbox",
-        "prd_source optional text",
-        "configured_agents comma-separated list)\n- Grouped into logical sections: Feature Defaults",
-        "Agent Configuration",
-        "Progress Generation",
-        "Documentation",
-        "System Information\n- Integrated with GET /api/config to load initial values\n- Integrated with PUT /api/config to save changes with validation\n- Real-time WebSocket updates via useWebSocket('ws://localhost:8765/ws')\n- Success/error feedback banner after save\n- API tested manually: GET returns config",
-        "PUT successfully updates and broadcasts WebSocket event\n- TypeScript build successful with no errors\n- All 181 Python tests passing\n- Component accessible at /config route in web UI\n- Linting clean (ESLint",
-        "ruff)\nAll acceptance criteria verified."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T11:33:19.734143",
-      "notes": "Implementation: React form component. Fetch from GET /api/config, save with PUT /api/config. Group related settings logically. Show validation errors inline. Context: Settings management per WEB_PRD.md Config Editor section. Dependencies: F059, F064."
-    },
-    {
-      "id": "F071",
-      "category": "ui",
-      "priority": 2,
-      "description": "Add Feature form UI component",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Modal or page form for new feature creation",
-        "Required description field with validation",
-        "Optional category dropdown",
-        "Optional priority selector (1-5)",
-        "Optional acceptance criteria as multi-line input",
-        "Success feedback with new feature ID"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T11:49:50.613914",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Tested modal form with all fields",
-        "POST integration",
-        "validation",
-        "and success feedback. All acceptance criteria met."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T11:46:36.787779",
-      "notes": "Implementation: React form component triggered from Spec Explorer. POST to /api/features. Parse criteria as comma-separated or line-separated. Show validation errors from API. Context: Feature creation per WEB_PRD.md Interactive Controls section. Dependencies: F059, F061."
-    },
-    {
-      "id": "F072",
-      "category": "ui",
-      "priority": 3,
-      "description": "Session control UI components (start/end session)",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Start Session button with focus input field",
-        "End Session form with summary/completed/blockers/nextSteps fields",
-        "Session active indicator banner when in progress",
-        "Confirmation before ending session",
-        "Warning about uncommitted git changes"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T13:44:18.153309",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Implemented SessionControl.tsx with Start/End Session forms",
-        "SessionBanner.tsx for active session indicator",
-        "integrated into Dashboard and Layout. API endpoints tested via curl - session start creates session 33",
-        "session end correctly closes session. Git warning displays when uncommitted changes detected. All 181 tests pass",
-        "frontend builds successfully."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T13:33:08.703511",
-      "notes": "Implementation: React components for session lifecycle. POST to /api/session/start and /api/session/end. Show persistent banner when session active. Context: Optional session management per WEB_PRD.md Session Management section. Dependencies: F059, F063. Gotchas: This is nice-to-have, can be deferred."
-    },
-    {
-      "id": "F073",
-      "category": "ui",
-      "priority": 2,
-      "description": "Navigation sidebar with view switching",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Sidebar menu with Dashboard/Spec Explorer/Activity Log/Config links",
-        "Current section highlighted",
-        "Project name displayed at top",
-        "Responsive collapse to hamburger menu on small screens",
-        "Optional dark mode toggle"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T12:57:57.150958",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Layout component implements full navigation sidebar with all acceptance criteria: menu items for all views with icons",
-        "active route highlighting",
-        "project name header",
-        "responsive mobile hamburger menu",
-        "and dark mode toggle with localStorage persistence. Verified in both dev server and production build."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T12:37:03.215409",
-      "notes": "Implementation: React component with React Router NavLink. Use Tailwind responsive classes (hidden md:block etc). Consider localStorage for dark mode preference. Context: Main navigation per WEB_PRD.md Look and Feel section. Dependencies: F059."
-    },
-    {
-      "id": "F074",
-      "category": "ui",
-      "priority": 3,
-      "description": "Toast notifications and feedback system",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Success toasts for completed actions",
-        "Error toasts for failed operations",
-        "Warning toasts for validation issues",
-        "Auto-dismiss after timeout",
-        "Stackable multiple notifications"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T13:02:11.681104",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Implemented toast notification system with react-hot-toast: (1) Success toasts for all completed API operations (feature creation",
-        "status changes",
-        "config saves)",
-        "(2) Error toasts for failed operations with detailed error messages",
-        "(3) Warning toasts for validation issues and non-critical warnings",
-        "(4) Auto-dismiss after configured timeout (3s success",
-        "5s error)",
-        "(5) Stackable notifications with loading states. Toaster configured in App.tsx with dark mode support. apiCall helper function provides consistent toast behavior across all API calls. Dev server compiled successfully without errors."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T12:58:48.701750",
-      "notes": "Implementation: React context or library like react-hot-toast. Display after API calls complete. Include action descriptions (Feature F001 verified). Context: User feedback per WEB_PRD.md General Usability section. Dependencies: F059."
-    },
-    {
-      "id": "F075",
-      "category": "api",
-      "priority": 3,
-      "description": "REST API endpoint: GET /api/commits for git history",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Returns list of recent commits (default 10)",
-        "Each commit includes hash/author/date/message",
-        "Returns empty list if not a git repo",
-        "Optional count query parameter"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T13:30:53.560879",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Implemented GET /api/commits endpoint. Returns list of recent commits with hash",
-        "author",
-        "date",
-        "and message fields. Tested with live server: default returns 10 commits",
-        "count=3 returns 3 commits. All required fields present. Returns empty array for non-git repos (exception handling). Pre-commit checks passed: linting",
-        "formatting",
-        "181 tests passed."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T13:21:05.087773",
-      "notes": "Implementation: Reuse get_recent_commits from git.py. Simple JSON array response. Context: Optional endpoint for extended Activity Log per WEB_PRD.md. Dependencies: F058. Edge cases: Not a git repo, no commits yet."
-    },
-    {
-      "id": "F076",
-      "category": "core",
-      "priority": 4,
-      "description": "Serve command --open flag to auto-launch browser",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Optional --open flag opens default browser",
-        "Opens to localhost:PORT URL",
-        "Works cross-platform (Windows/Mac/Linux)",
-        "Default is no auto-open"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T13:21:00.357929",
-      "verifiedBy": "coding-agent",
-      "evidenceLinks": [
-        "Implemented --open/-o flag for serve command. Uses threading with 1.5s delay to open browser after server starts. Tested on Windows - browser opens successfully to http://localhost:PORT. All acceptance criteria met: optional flag",
-        "opens to correct URL",
-        "works cross-platform via webbrowser.open()",
-        "default is no auto-open. Pre-commit checks passed: linting (ruff)",
-        "formatting (ruff format)",
-        "181 tests passed."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T13:17:49.428488",
-      "notes": "Implementation: Use webbrowser.open() from Python stdlib. Print URL regardless of flag. Context: Zero-config UX improvement per WEB_PRD.md Open Questions. Dependencies: F058."
-    },
-    {
-      "id": "F077",
-      "category": "ui",
-      "priority": 2,
-      "description": "Animated progress ring on dashboard with percentage and color transitions",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "SVG ring animates on load",
-        "Color transitions from red to green based on percentage",
-        "Percentage text displays in center",
-        "Smooth transition on value changes"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:30:50.464183",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "ProgressRing.tsx component created",
-        "animates on load via useSyncExternalStore pattern",
-        "color transitions red->yellow->green based on percentage",
-        "percentage text displays in center",
-        "CSS transitions for smooth value changes. Build passes",
-        "visible in dashboard."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:14:14.955570",
-      "notes": "Implementation: Use SVG circle with stroke-dasharray animation. Calculate circumference (2*PI*r) and offset based on percentage. Edge cases: Handle 0% and 100% gracefully. Dependencies: None. Context: Visual centerpiece for dashboard - first thing users see. Gotchas: SVG coordinate system starts at 12 o'clock, need to rotate -90deg."
-    },
-    {
-      "id": "F078",
-      "category": "ui",
-      "priority": 2,
-      "description": "Feature status distribution pie/donut chart on dashboard",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Chart shows verified/blocked/in-progress/not-started segments",
-        "Hover reveals exact count and percentage",
-        "Click on segment filters to that status",
-        "Responsive sizing"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:30:50.536242",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "StatusChart.tsx component created",
-        "shows verified/blocked/in-progress/not-started segments",
-        "hover reveals count and percentage",
-        "click navigates to filtered features list",
-        "responsive sizing with lg:grid-cols-2 layout. Build passes",
-        "visible in dashboard."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:24:15.379477",
-      "notes": "Implementation: Use lightweight charting library (Chart.js or Recharts) or custom SVG. Colors should match statusConfig theme. Edge cases: Handle when all features are same status (full circle). Dependencies: F077 for consistent visual style. Context: Quick visual breakdown of project health. Gotchas: Ensure accessibility with aria-labels for screen readers."
-    },
-    {
-      "id": "F079",
-      "category": "ui",
-      "priority": 2,
-      "description": "Command palette (Cmd+K) for quick navigation and actions",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Opens with Cmd+K or Ctrl+K shortcut",
-        "Fuzzy search across features and commands",
-        "Arrow keys navigate results",
-        "Enter executes selected action",
-        "ESC closes palette"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:30:50.562220",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "CommandPalette.tsx and useCommandPalette.ts created",
-        "opens with Cmd+K/Ctrl+K",
-        "uses cmdk library for fuzzy search",
-        "arrow keys navigate",
-        "Enter executes",
-        "ESC closes. Includes navigation",
-        "status filters",
-        "and actions. Build passes."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:25:57.254233",
-      "notes": "Implementation: Use cmdk library or build custom. Index features, navigation routes, and actions. Edge cases: Handle no results gracefully, show recent actions. Dependencies: None. Context: Power user feature - dramatically speeds up navigation. Gotchas: Prevent browser default behavior for Cmd+K, handle focus trap correctly."
-    },
-    {
-      "id": "F080",
-      "category": "ui",
-      "priority": 3,
-      "description": "Keyboard shortcuts for common actions with help overlay",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "? key shows shortcuts overlay",
-        "G+D navigates to dashboard",
-        "G+S navigates to specs",
-        "N creates new feature",
-        "/ focuses search",
-        "Shortcuts work globally except in inputs"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:11:36.023597",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "useKeyboardShortcuts.tsx with global shortcuts",
-        "ShortcutsHelp.tsx with overlay and button",
-        "App.tsx integration; build success; 181 tests pass; commit 52e7aad"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:09:11.404705",
-      "notes": "Implementation: Use useHotkeys hook or custom event listener. Create KeyboardShortcutsProvider context. Edge cases: Disable shortcuts when modal open or input focused. Dependencies: F079 for consistent pattern. Context: Vim-style navigation for power users. Gotchas: Different shortcuts for Mac vs Windows, show correct modifier in UI."
-    },
-    {
-      "id": "F081",
-      "category": "ui",
-      "priority": 3,
-      "description": "Drag-and-drop feature prioritization in Spec Explorer",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Features can be dragged to reorder within priority group",
-        "Visual feedback during drag",
-        "Priority updates on drop",
-        "Optimistic UI update with API sync"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:44:13.990029",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "DragDropFeatures.tsx with dnd-kit integration; SortableItem with drag handle; FeatureDndContext with keyboard support; POST /api/features/reorder endpoint in cli.py; toggle reorder mode in SpecExplorer; optimistic updates with SaveStatus; build success; 181 tests pass; commit 302795d"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:37:50.118065",
-      "notes": "Implementation: Use dnd-kit or react-beautiful-dnd. Store order in features.json or separate ordering field. Edge cases: Handle concurrent edits, revert on API failure. Dependencies: F061 (feature CRUD API). Context: Visual project management like Trello. Gotchas: Accessibility - need keyboard alternatives for drag operations."
-    },
-    {
-      "id": "F082",
-      "category": "ui",
-      "priority": 3,
-      "description": "Bulk actions toolbar for multiple feature selection",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Checkbox on each feature row for selection",
-        "Select all checkbox in header",
-        "Floating toolbar appears with selection count",
-        "Actions: verify all/block all/change priority/delete"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:37:44.734982",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "BulkActions.tsx with useSyncExternalStore pattern for selection; SelectionCheckbox and SelectAllCheckbox components; BulkActionsToolbar with start/block/verify bulk actions; integrated into SpecExplorer table view; build success; 181 tests pass; commit 95ab786"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:32:58.132280",
-      "notes": "Implementation: Track selected feature IDs in state. Show ActionBar component when selection.length > 0. Edge cases: Handle mixed statuses (some already verified). Dependencies: F062 (status transitions API). Context: Batch operations save time on large projects. Gotchas: Confirm destructive actions, handle partial failures in batch."
-    },
-    {
-      "id": "F083",
-      "category": "ui",
-      "priority": 2,
-      "description": "Microinteractions and loading states with skeleton screens",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Skeleton loaders for cards and lists",
-        "Button hover/click animations",
-        "Status change animations",
-        "Toast slide-in animations",
-        "Loading spinners with meaningful messages"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:35:16.824235",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "Skeleton.tsx created with FeatureCardSkeleton",
-        "FeatureListSkeleton",
-        "DashboardStatsSkeleton",
-        "ProgressRingSkeleton",
-        "LoadingSpinner",
-        "ButtonSpinner. CSS animations for btn-press/btn-lift/card-hover/status-changing. prefers-reduced-motion respected. Dashboard and SpecExplorer use skeleton loading. Build passes."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:31:10.131689",
-      "notes": "Implementation: Create Skeleton component with shimmer animation using CSS. Use framer-motion for complex animations. Edge cases: Respect prefers-reduced-motion. Dependencies: None. Context: Polish that makes app feel responsive and professional. Gotchas: Don't over-animate - subtle is better, skeleton should match actual content layout."
-    },
-    {
-      "id": "F084",
-      "category": "ui",
-      "priority": 3,
-      "description": "Feature timeline visualization showing project history",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Vertical timeline of feature completions",
-        "Date markers and session grouping",
-        "Color-coded status changes",
-        "Expandable details on each event",
-        "Filter by date range"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:47:16.749907",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "FeatureTimeline.tsx with vertical timeline; TimelineEventCard with expandable details; DateRangeFilter component; groupEventsByDate utility; EventIcon color-coded by type; fetches from /api/features",
-        "/api/progress",
-        "/api/commits; route and nav link added; build success; 181 tests pass; commit dedfdb6"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:44:25.646748",
-      "notes": "Implementation: Custom timeline component with flex layout. Query git commits and session history for events. Edge cases: Handle sparse timelines with few events. Dependencies: F075 (git history API). Context: Project retrospective and progress tracking. Gotchas: Performance with many events - virtualize or paginate."
-    },
-    {
-      "id": "F085",
-      "category": "ui",
-      "priority": 4,
-      "description": "Feature dependency graph visualization",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Interactive node graph showing feature relationships",
-        "Nodes colored by status",
-        "Edges show dependencies",
-        "Click node to view feature",
-        "Zoom and pan controls"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:50:44.260440",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "DependencyGraph.tsx using @xyflow/react; FeatureNode custom node with status colors; layoutNodes algorithm for layered layout; parseDependencies from notes; zoom/pan/minimap controls; fullscreen toggle; GraphFilters and GraphLegend components; route and nav link; build success; 181 tests pass; commit 5eddf14"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:47:25.545225",
-      "notes": "Implementation: Use react-flow or d3-force for graph layout. Parse notes field for dependency mentions. Edge cases: Handle circular dependencies, orphan nodes. Dependencies: F068 (feature details). Context: Visualize complex project structure and blockers. Gotchas: Layout algorithm can be expensive - cache results, limit visible nodes."
-    },
-    {
-      "id": "F086",
-      "category": "ui",
-      "priority": 2,
-      "description": "Quick action buttons on feature cards (hover reveal)",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Start/verify/block buttons appear on hover",
-        "Actions execute with single click",
-        "Visual feedback on action",
-        "Buttons positioned to avoid accidental clicks"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:35:16.905513",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "SpecExplorer.tsx updated with Actions column",
-        "hover-reveal buttons using group/group-hover pattern",
-        "Start/Verify/Block actions with handleQuickStart/handleQuickVerify/handleQuickBlock functions",
-        "buttons positioned in rightmost column to avoid accidental clicks",
-        "visual feedback via apiCall toasts. Build passes."
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:32:56.825774",
-      "notes": "Implementation: Use group/group-hover Tailwind pattern. Position actions in top-right corner. Edge cases: Touch devices need different trigger (long press or always visible). Dependencies: F062 (status API). Context: Reduce clicks needed for common operations. Gotchas: Don't obstruct feature title or description on hover."
-    },
-    {
-      "id": "F087",
-      "category": "ui",
-      "priority": 3,
-      "description": "Collapsible sidebar with icon-only mode",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Toggle button collapses sidebar to icons only",
-        "Smooth width transition animation",
-        "Tooltips show labels in collapsed mode",
-        "State persists in localStorage",
-        "Expands on hover option"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:30:45.698130",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "Layout.tsx with collapsible sidebar",
-        "ChevronDoubleLeft/Right icons",
-        "localStorage persistence",
-        "icon-only mode with tooltips",
-        "dynamic content padding; build success; 181 tests pass; commit f30f802"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:28:21.971681",
-      "notes": "Implementation: Store collapsed state in localStorage. Use Tailwind w-64 vs w-16 with transition. Edge cases: Handle mobile where sidebar is overlay. Dependencies: F073 (navigation sidebar). Context: More screen real estate for content. Gotchas: Icons must be recognizable without labels, test with users."
-    },
-    {
-      "id": "F088",
-      "category": "ui",
-      "priority": 4,
-      "description": "Real-time collaboration indicators showing active users",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Avatar stack shows connected users",
-        "Colored presence indicator",
-        "Cursor or focus position shared",
-        "Tooltip shows user name and current view"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T17:02:14.777697",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "PresenceIndicator.tsx with WebSocket presence",
-        "avatar stack",
-        "tooltips; Layout.tsx integration in mobile and desktop headers; build succeeds; 181 tests pass; commit fec290d"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:58:35.307605",
-      "notes": "Implementation: Extend WebSocket to broadcast user presence. Store user sessions server-side. Edge cases: Handle disconnections gracefully, show recently left users briefly. Dependencies: F065 (WebSocket). Context: Team awareness for collaborative editing. Gotchas: Privacy considerations - make presence opt-in."
-    },
-    {
-      "id": "F089",
-      "category": "ui",
-      "priority": 2,
-      "description": "Kanban board view for features by status",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Four columns: not-started/in-progress/blocked/verified",
-        "Drag features between columns to change status",
-        "Card shows ID and truncated description",
-        "Column headers show count",
-        "Horizontal scroll on mobile"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:39:28.516392",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "KanbanBoard.tsx with 4 status columns",
-        "quick actions",
-        "skeleton loading; route at /kanban; navigation in Layout.tsx and CommandPalette.tsx; build passes",
-        "181 tests pass",
-        "commit a83e1c0"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:35:36.723993",
-      "notes": "Implementation: Reuse existing feature list data, render in column layout. Integrate with dnd-kit for drag-drop. Edge cases: Many features in one column - add scrolling. Dependencies: F081 (drag-drop), F067 (spec explorer). Context: Familiar Kanban UX from Trello/Jira. Gotchas: Keyboard accessibility for column navigation."
-    },
-    {
-      "id": "F090",
-      "category": "ui",
-      "priority": 4,
-      "description": "Customizable dashboard widgets with drag-drop layout",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Users can add/remove widgets from dashboard",
-        "Widgets can be resized and repositioned",
-        "Layout saves to localStorage",
-        "Default widgets: progress ring chart and priority features"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T17:06:43.270844",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "WidgetGrid.tsx with @dnd-kit sortable",
-        "useWidgetLayout hook",
-        "localStorage persistence",
-        "Dashboard.tsx integration",
-        "edit mode with controls; build succeeds; 181 tests pass; commit 0d646b3"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T17:02:22.676158",
-      "notes": "Implementation: Use react-grid-layout for dashboard layout. Define widget registry with component and default size. Edge cases: Reset to default option if layout breaks. Dependencies: F077, F078 (charts). Context: Personalized workspace like Notion dashboards. Gotchas: Handle window resize and mobile layouts differently."
-    },
-    {
-      "id": "F091",
-      "category": "ui",
-      "priority": 2,
-      "description": "Markdown preview and editor for feature notes",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Live preview pane shows rendered markdown",
-        "Syntax highlighting for code blocks",
-        "Toolbar with formatting buttons",
-        "Preview toggle button",
-        "Support for common markdown extensions"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:42:03.225492",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "MarkdownEditor.tsx with toolbar and preview; uses react-markdown",
-        "remark-gfm",
-        "rehype-highlight; integrated in TaskViewer; build passes",
-        "181 tests pass",
-        "commit 501c0d7"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:39:57.863546",
-      "notes": "Implementation: Use react-markdown with remark-gfm for GFM support. Prism or highlight.js for code. Edge cases: Sanitize HTML to prevent XSS. Dependencies: F068 (task viewer). Context: Rich documentation for complex features. Gotchas: Performance with large documents - debounce preview updates."
-    },
-    {
-      "id": "F092",
-      "category": "ui",
-      "priority": 4,
-      "description": "Theme customization with color accent picker",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Accent color picker in config",
-        "Preset theme options beyond light/dark",
-        "CSS variables update in real-time",
-        "Theme saves to localStorage and syncs to config"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T17:09:41.796868",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "ThemeCustomizer.tsx with 12 accent colors",
-        "custom color picker",
-        "light/dark/system modes",
-        "localStorage persistence",
-        "CSS variables",
-        "Layout.tsx integration with Theme button and modal; build succeeds; 181 tests pass; commit 3f45fee"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T17:06:47.448003",
-      "notes": "Implementation: Use CSS custom properties (--primary, --accent). Create color palette generator from base color. Edge cases: Ensure contrast ratios meet WCAG AA. Dependencies: F070 (config editor). Context: Brand customization for different projects. Gotchas: Test readability with all color combinations."
-    },
-    {
-      "id": "F093",
-      "category": "ui",
-      "priority": 2,
-      "description": "Feature card expanded view with acceptance criteria checklist",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Click expands card inline showing full details",
-        "Acceptance criteria rendered as interactive checklist",
-        "Checkboxes update verification evidence",
-        "Collapse button or click outside closes"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:45:38.219320",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "ExpandableFeatureCard.tsx with expand/collapse and criteria checklist; view toggle in SpecExplorer; verify button enabled when all criteria checked; build passes",
-        "181 tests pass",
-        "commit 3ba0215"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:42:11.040256",
-      "notes": "Implementation: Animate height transition with framer-motion or CSS grid. Store checked criteria in feature verifiedBy field or separate. Edge cases: Very long criteria lists need scroll. Dependencies: F067 (spec explorer). Context: In-place editing reduces navigation. Gotchas: Handle keyboard navigation within expanded card."
-    },
-    {
-      "id": "F094",
-      "category": "ui",
-      "priority": 2,
-      "description": "Accessibility improvements with ARIA labels and focus management",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "All interactive elements have ARIA labels",
-        "Focus ring visible on keyboard navigation",
-        "Skip to main content link",
-        "Screen reader announcements for status changes",
-        "Color is not only indicator"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:48:57.137516",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "accessibility.tsx with SkipLink",
-        "announce",
-        "focus trap; ARIA labels on Layout buttons; focus-visible CSS styles; live region announcements in api.ts; build passes",
-        "181 tests pass",
-        "commit 2f50052"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:45:46.427370",
-      "notes": "Implementation: Add aria-label, aria-describedby, role attributes. Use focus-visible for focus rings. Edge cases: Test with actual screen readers (VoiceOver NVDA). Dependencies: None - applies across all components. Context: Inclusive design and legal compliance. Gotchas: Live regions for dynamic content updates."
-    },
-    {
-      "id": "F095",
-      "category": "ui",
-      "priority": 2,
-      "description": "Mobile-optimized touch gestures and responsive layout",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Swipe gestures on feature cards for quick actions",
-        "Bottom sheet modals on mobile",
-        "Touch-friendly button sizes minimum 44px",
-        "Responsive grid adjusts to screen width",
-        "Pull to refresh on lists"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:51:40.340623",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "useTouchGestures.tsx with useSwipe",
-        "usePullToRefresh hooks; BottomSheet.tsx with ActionButton; CSS for 44px touch targets",
-        "safe-area insets",
-        "slide-up animation; build passes",
-        "181 tests pass",
-        "commit 2d87a3e"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:49:10.925047",
-      "notes": "Implementation: Use touch event handlers or react-swipeable. Media queries for breakpoints. Edge cases: Hybrid touch/mouse devices. Dependencies: None - applies across components. Context: First-class mobile experience. Gotchas: Test on actual devices, not just responsive mode."
-    },
-    {
-      "id": "F096",
-      "category": "ui",
-      "priority": 3,
-      "description": "Session timer widget showing elapsed time and activity",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Displays elapsed time since session start",
-        "Updates every second when session active",
-        "Shows idle time detection warning",
-        "Pause/resume controls",
-        "Session summary on hover"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:19:54.061511",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "SessionTimer.tsx with full/compact/minimal variants",
-        "useSessionTimer hook",
-        "blinking indicator",
-        "elapsed time display; Layout.tsx integration in sidebar; build success; 181 tests pass; commit da34c50"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:11:39.327297",
-      "notes": "Implementation: Use setInterval for timer, track last activity timestamp. Store in React context or Zustand. Edge cases: Browser tab hidden - use visibilitychange API. Dependencies: F072 (session control). Context: Time awareness for focused work sessions. Gotchas: Don't drain battery - reduce update frequency when hidden."
-    },
-    {
-      "id": "F097",
-      "category": "ui",
-      "priority": 2,
-      "description": "Recent activity feed with live updates on dashboard",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Shows last 10 activities (feature changes and commits)",
-        "Live updates via WebSocket",
-        "Relative timestamps (2 min ago)",
-        "Click navigates to related feature",
-        "Type icons distinguish activity types"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:57:17.895739",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "RecentActivityFeed.tsx with relative timestamps",
-        "activity icons",
-        "WebSocket live updates; Dashboard.tsx integration; build success; 181 tests pass; commit 5180ad7"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:53:48.152992",
-      "notes": "Implementation: Aggregate from features and git commits APIs. Use WebSocket for push updates. Edge cases: Handle high activity volume - debounce or batch. Dependencies: F065 (WebSocket), F075 (commits API). Context: At-a-glance project pulse. Gotchas: Timezone handling for timestamps."
-    },
-    {
-      "id": "F098",
-      "category": "ui",
-      "priority": 3,
-      "description": "Inline feature quick-add from anywhere in the app",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Floating action button in corner",
-        "Expands to minimal input form",
-        "Only requires description field",
-        "Category and priority default from context",
-        "Success animation on create"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:22:50.212324",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "QuickAddDialog.tsx with form",
-        "keyboard shortcut integration in useKeyboardShortcuts.tsx",
-        "App.tsx integration",
-        "screen reader announcements; build success; 181 tests pass; commit 160bb3b"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:19:57.919930",
-      "notes": "Implementation: Create FloatingActionButton component with mini form. Use React Portal for overlay. Edge cases: Form validation, handle rapid submissions. Dependencies: F071 (add feature form), F061 (API). Context: Capture ideas quickly without navigation. Gotchas: Position must not block important content."
-    },
-    {
-      "id": "F099",
-      "category": "ui",
-      "priority": 3,
-      "description": "Empty state illustrations and onboarding hints",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Custom illustrations for empty lists",
-        "First-time user hints with dismiss option",
-        "Progressive disclosure of features",
-        "Getting started checklist for new projects"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:26:28.542919",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "EmptyStates.tsx with SVG illustrations",
-        "OnboardingHint component",
-        "NoFeatures/NoSearch/NoSession/NoActivity/Welcome presets; SpecExplorer.tsx integration; build success; 181 tests pass; commit 0c43c69"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:22:54.304860",
-      "notes": "Implementation: Create EmptyState component with SVG illustrations. Store onboarding progress in localStorage. Edge cases: Don't show hints after user has used feature. Dependencies: None. Context: Friendly first impression, reduce confusion. Gotchas: Keep illustrations lightweight (SVG not PNG), respect prefers-reduced-motion."
-    },
-    {
-      "id": "F100",
-      "category": "ui",
-      "priority": 3,
-      "description": "Feature search with advanced filters and saved queries",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Full-text search across all feature fields",
-        "Filter chips for quick filtering",
-        "Save and name custom filter combinations",
-        "Recent searches history",
-        "Clear all filters button"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:32:50.127702",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "AdvancedSearch.tsx with multi-filter support",
-        "saved queries in localStorage",
-        "filter badges",
-        "collapsible panel; build success; 181 tests pass; commit fb6012a"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:30:50.486534",
-      "notes": "Implementation: Combine existing filters with localStorage for saved queries. Add chips UI component. Edge cases: Handle very long saved query names. Dependencies: F067 (spec explorer). Context: Power users need fast access to specific features. Gotchas: Debounce search input to avoid excessive filtering."
-    },
-    {
-      "id": "F101",
-      "category": "ui",
-      "priority": 2,
-      "description": "Confirmation dialogs with undo option for destructive actions",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Delete and block actions show confirmation modal",
-        "Undo option available for 5 seconds after action",
-        "Clear visual warning for destructive actions",
-        "Keyboard accessible (Enter confirms and Escape cancels)"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T15:53:33.693538",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "ConfirmDialog.tsx with useConfirmWithUndo",
-        "UndoToast",
-        "useUndoableAction; keyboard a11y with Enter/Escape; 5-second undo countdown; danger/warning variants; build passes",
-        "181 tests pass",
-        "commit 083ec22"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T15:51:52.503581",
-      "notes": "Implementation: Create ConfirmDialog component with timer for undo. Use optimistic updates with rollback. Edge cases: Handle multiple undo requests. Dependencies: F074 (toast system). Context: Prevent accidental data loss. Gotchas: Undo must actually work - queue the real deletion."
-    },
-    {
-      "id": "F102",
-      "category": "ui",
-      "priority": 3,
-      "description": "Breadcrumb navigation showing current location hierarchy",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Shows path like Dashboard > Specs > F001",
-        "Each segment is clickable for navigation",
-        "Truncates gracefully on small screens",
-        "Updates on route change"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T16:28:14.679328",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "Breadcrumbs.tsx with route-aware hierarchy",
-        "CompactBreadcrumbs for mobile",
-        "PageHeader component; TaskViewer.tsx integration; build success; 181 tests pass; commit 8ee683e"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T16:26:32.867367",
-      "notes": "Implementation: Parse current route and build breadcrumb array. Use react-router useLocation. Edge cases: Handle deep nesting (more than 3 levels). Dependencies: F073 (navigation). Context: Orientation in app structure. Gotchas: Don't show single breadcrumb (just current page)."
-    },
-    {
-      "id": "F103",
-      "category": "ui",
-      "priority": 4,
-      "description": "Print-friendly view for feature reports",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "Print button generates clean printable view",
-        "Hides navigation and interactive elements",
-        "Proper page breaks between features",
-        "Include project header and timestamp",
-        "Works with browser print dialog"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T17:13:08.601228",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "PrintView.tsx with print preview modal",
-        "status filtering",
-        "content options",
-        "category grouping",
-        "summary stats",
-        "@media print CSS; PrintButton in SpecExplorer toolbar; build succeeds; 181 tests pass; commit b503181"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T17:09:46.531521",
-      "notes": "Implementation: Add @media print styles. Create PrintableReport component with simplified layout. Edge cases: Handle very long notes (page overflow). Dependencies: F026 (report command). Context: Share progress with stakeholders offline. Gotchas: Test in multiple browsers - print CSS varies."
-    },
-    {
-      "id": "F104",
-      "category": "infrastructure",
-      "priority": 4,
-      "description": "Offline support with service worker caching",
-      "dependencies": [],
-      "acceptanceCriteria": [
-        "App loads without network connection",
-        "Cached data displayed with offline indicator",
-        "Queue actions for sync when online",
-        "Clear offline data option in settings"
-      ],
-      "estimatedEffort": null,
-      "status": "verified",
-      "passes": true,
-      "verifiedAt": "2025-12-22T17:47:26.644169",
-      "verifiedBy": "MCP Agent",
-      "evidenceLinks": [
-        "sw.js service worker with network-first API",
-        "cache-first static assets; OfflineSupport.tsx with OfflineIndicator",
-        "banner",
-        "update notifications; service worker registration in main.tsx; offline indicators in Layout mobile and desktop headers; build succeeds; 181 tests pass; commit 6d6967e"
-      ],
-      "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T17:13:34.587384",
-      "notes": "Implementation: Use Vite PWA plugin or workbox. Cache API responses in IndexedDB. Edge cases: Handle stale data conflicts on reconnect. Dependencies: F065 (WebSocket - needs reconnection logic). Context: Reliability for users with spotty connections. Gotchas: Service worker updates can be tricky - implement update notification."
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-23T05:59:04.590608",
-    "totalFeatures": 104,
-    "passingFeatures": 92
+    "lastUpdated": "2025-12-11T10:24:14.318199",
+    "totalFeatures": 57,
+    "passingFeatures": 44
   }
 }

@@ -870,3 +870,25 @@ klondike feature list  # List all features
 - None
 
 ---
+
+### Session 36 - 2025-12-23
+**Agent**: Coding Agent
+**Duration**: ~session
+**Focus**: Fixed theme support
+
+#### Completed
+- None
+
+#### In Progress
+- None
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
+
+#### Technical Notes
+- None
+
+---
