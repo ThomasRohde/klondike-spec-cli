@@ -1499,12 +1499,38 @@
       "blockedBy": null,
       "lastWorkedOn": null,
       "notes": "Implementation: Keep full docstrings on @app.command decorators (user-facing help). Reduce command function docstrings to brief implementation notes. Edge cases: init_command and upgrade_command in commands/init.py have full copies. Context: Docstring duplication makes maintenance harder. Gotchas: Ensure klondike --help and klondike pith still show correct documentation."
+    },
+    {
+      "id": "F058",
+      "category": "infrastructure",
+      "priority": 3,
+      "description": "Integrate ntfy.sh push notifications for klondike events",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Config supports ntfy channel/topic and optional server URL",
+        "Config supports enabling/disabling notification types (session start/end",
+        "feature status changes",
+        "errors)",
+        "Notifications sent automatically when ntfy channel configured",
+        "Separate notifications module (ntfy.py) with clean API",
+        "Support for message priority and tags based on event type",
+        "Authentication support via access token in config"
+      ],
+      "estimatedEffort": null,
+      "status": "in-progress",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-23T10:56:16.957791",
+      "notes": "Implementation: Create src/klondike_spec_cli/ntfy.py module. Use requests library (already a dependency) to POST to ntfy.sh API. Message format: POST body is message text, X-Title/X-Priority/X-Tags headers. Config structure in config.yaml: ntfy: { channel: 'my-topic', server: 'https://ntfy.sh' (optional, defaults to ntfy.sh), token: 'tk_xxx' (optional), events: { session_start: true, session_end: true, feature_verified: true, feature_blocked: true, errors: true } }. Edge cases: Handle network failures gracefully (log warning, don't crash), handle missing/invalid config, handle rate limiting (429 response). Dependencies: None (uses existing requests). Context: Enables real-time notifications on mobile/desktop when agent completes work or hits issues. Gotchas: ntfy.sh has rate limits (60 req/visitor then 1/5s refill), topic is public unless using auth, keep messages concise (<4096 bytes)."
     }
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-23T09:46:41.727142",
-    "totalFeatures": 57,
+    "lastUpdated": "2025-12-23T10:54:35.166346",
+    "totalFeatures": 58,
     "passingFeatures": 45
   }
 }

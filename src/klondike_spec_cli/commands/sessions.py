@@ -7,6 +7,7 @@ from datetime import datetime
 from pith import PithException, echo
 
 from ..data import (
+    load_config,
     load_features,
     load_progress,
     regenerate_progress_md,
@@ -15,6 +16,7 @@ from ..data import (
     update_quick_reference,
 )
 from ..models import Session
+from ..ntfy import get_ntfy_client
 
 
 def session_start(focus: str | None) -> None:
@@ -101,6 +103,12 @@ def session_start(focus: str | None) -> None:
     echo("")
     echo("💡 Tip: Use 'klondike feature start <ID>' to mark a feature as in-progress")
 
+    # Send notification
+    config = load_config()
+    ntfy_client = get_ntfy_client(config.ntfy)
+    if ntfy_client:
+        ntfy_client.session_started(session_num, new_session.focus)
+
 
 def session_end(
     summary: str | None,
@@ -178,3 +186,10 @@ def session_end(
             else:
                 echo("   💡 Use --auto-commit to commit changes automatically")
     echo("")
+
+    # Send notification
+    config = load_config()
+    ntfy_client = get_ntfy_client(config.ntfy)
+    if ntfy_client:
+        features_completed = len(current.completed) if current.completed else 0
+        ntfy_client.session_ended(current.session_number, current.focus, features_completed)

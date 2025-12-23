@@ -19,6 +19,7 @@ from ..data import (
     update_quick_reference,
 )
 from ..models import Feature, FeatureStatus
+from ..ntfy import get_ntfy_client
 from ..validation import (
     sanitize_string,
     validate_description,
@@ -189,6 +190,11 @@ def feature_verify(feature_id: str | None, evidence: str | None) -> None:
     echo(f"✅ Verified: {feature_id} - {feature.description}")
     echo(f"   Evidence: {', '.join(evidence_paths)}")
 
+    # Send notification
+    ntfy_client = get_ntfy_client(config.ntfy)
+    if ntfy_client:
+        ntfy_client.feature_verified(validated_id, feature.description)
+
 
 def feature_block(feature_id: str | None, reason: str | None) -> None:
     """Mark feature as blocked."""
@@ -199,6 +205,7 @@ def feature_block(feature_id: str | None, reason: str | None) -> None:
 
     registry = load_features()
     progress = load_progress()
+    config = load_config()
 
     feature = registry.get_feature(feature_id)
     if not feature:
@@ -214,6 +221,12 @@ def feature_block(feature_id: str | None, reason: str | None) -> None:
     regenerate_progress_md()
 
     echo(f"🚫 Blocked: {feature_id} - {feature.description}")
+    echo(f"   Reason: {reason}")
+
+    # Send notification
+    ntfy_client = get_ntfy_client(config.ntfy)
+    if ntfy_client:
+        ntfy_client.feature_blocked(feature_id, feature.description, reason)
     echo(f"   Reason: {reason}")
 
 

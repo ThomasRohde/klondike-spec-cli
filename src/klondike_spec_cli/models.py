@@ -13,6 +13,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
+from klondike_spec_cli.ntfy import NtfyConfig
+
 
 class FeatureStatus(str, Enum):
     """Status of a feature in the registry."""
@@ -581,6 +583,7 @@ class Config:
     configured_agents: list[str] = field(
         default_factory=lambda: ["copilot"]
     )  # AI agents configured
+    ntfy: NtfyConfig = field(default_factory=NtfyConfig)  # ntfy.sh notifications
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for YAML serialization."""
@@ -597,6 +600,8 @@ class Config:
             result["klondike_version"] = self.klondike_version
         if self.configured_agents:
             result["configured_agents"] = self.configured_agents
+        if self.ntfy and self.ntfy.enabled:
+            result["ntfy"] = self.ntfy.to_dict()
         return result
 
     @classmethod
@@ -609,6 +614,9 @@ class Config:
         if configured_agents is None:
             configured_agents = ["copilot"]
 
+        # Handle ntfy config
+        ntfy_config = NtfyConfig.from_dict(data.get("ntfy"))
+
         return cls(
             default_category=default_category,
             default_priority=data.get("default_priority", 2),
@@ -618,6 +626,7 @@ class Config:
             prd_source=data.get("prd_source"),
             klondike_version=data.get("klondike_version"),
             configured_agents=configured_agents,
+            ntfy=ntfy_config,
         )
 
     @classmethod
@@ -684,6 +693,24 @@ class Config:
                     f"configured_agents: [{agents_list}]",
                 ]
             )
+
+        # Add ntfy config if enabled
+        if self.ntfy and self.ntfy.enabled:
+            import yaml
+
+            lines.extend(
+                [
+                    "",
+                    "# Push notifications via ntfy.sh (https://ntfy.sh)",
+                    "# Sends notifications for session events, feature completions, etc.",
+                    "ntfy:",
+                ]
+            )
+            ntfy_dict = self.ntfy.to_dict()
+            # Indent the ntfy config
+            ntfy_yaml = yaml.dump(ntfy_dict, default_flow_style=False, sort_keys=False)
+            for line in ntfy_yaml.strip().split("\n"):
+                lines.append(f"  {line}")
 
         lines.append("")
 
