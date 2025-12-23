@@ -19,10 +19,13 @@ interface ShortcutStore {
     helpVisible: boolean;
 }
 
-const store: ShortcutStore = {
+let store: ShortcutStore = {
     shortcuts: new Map(),
     helpVisible: false,
 };
+
+// We need a version number to force React to re-render when store changes
+let storeVersion = 0;
 
 const listeners = new Set<() => void>();
 
@@ -32,10 +35,12 @@ function subscribe(listener: () => void) {
 }
 
 function getSnapshot() {
-    return store;
+    // Return version to trigger re-renders
+    return storeVersion;
 }
 
 function emitChange() {
+    storeVersion++;
     listeners.forEach(listener => listener());
 }
 
@@ -70,7 +75,10 @@ export function toggleShortcutsHelp() {
 }
 
 export function useShortcutsStore() {
-    return useSyncExternalStore(subscribe, getSnapshot);
+    // Subscribe to version changes
+    useSyncExternalStore(subscribe, getSnapshot);
+    // Return actual store data (the subscription above triggers re-renders)
+    return store;
 }
 
 export function useKeyboardShortcuts() {
@@ -160,11 +168,19 @@ export function useKeyboardShortcuts() {
             },
         }));
 
-        // Help shortcut
+        // Help shortcuts
         unsubscribers.push(registerShortcut({
             key: '?',
             modifiers: ['shift'],
             description: 'Show Keyboard Shortcuts',
+            category: 'Help',
+            action: toggleShortcutsHelp,
+        }));
+
+        unsubscribers.push(registerShortcut({
+            key: '/',
+            modifiers: ['ctrl'],
+            description: 'Show Keyboard Shortcuts (Alternative)',
             category: 'Help',
             action: toggleShortcutsHelp,
         }));

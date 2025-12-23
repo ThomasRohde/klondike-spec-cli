@@ -102,7 +102,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
-                                <span className="text-lg">🏠</span>
+                                <span className="text-lg">♠</span>
                                 <span>Dashboard</span>
                             </Command.Item>
                             <Command.Item
@@ -110,7 +110,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
-                                <span className="text-lg">📋</span>
+                                <span className="text-lg">♠</span>
                                 <span>Spec Explorer</span>
                             </Command.Item>
                             <Command.Item
@@ -118,7 +118,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
-                                <span className="text-lg">📊</span>
+                                <span className="text-lg">♠</span>
                                 <span>Kanban Board</span>
                             </Command.Item>
                             <Command.Item
@@ -126,7 +126,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
-                                <span className="text-lg">📅</span>
+                                <span className="text-lg">♠</span>
                                 <span>Activity Log</span>
                             </Command.Item>
                             <Command.Item
@@ -134,7 +134,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
-                                <span className="text-lg">⚙️</span>
+                                <span className="text-lg">♠</span>
                                 <span>Configuration</span>
                             </Command.Item>
                         </Command.Group>
@@ -174,7 +174,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
-                                <span className="text-lg">🔄</span>
+                                <span className="text-lg">♠</span>
                                 <span>Refresh Page</span>
                             </Command.Item>
                             <Command.Item
@@ -182,7 +182,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
-                                <span className="text-lg">🌙</span>
+                                <span className="text-lg">♠</span>
                                 <span>Toggle Dark Mode</span>
                             </Command.Item>
                         </Command.Group>

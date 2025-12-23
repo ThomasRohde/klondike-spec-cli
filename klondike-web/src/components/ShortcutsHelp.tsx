@@ -3,7 +3,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { useKeyboardShortcuts, formatShortcut, type ShortcutAction } from '../hooks/useKeyboardShortcuts';
+import { useShortcutsStore, formatShortcut, toggleShortcutsHelp, hideShortcutsHelp, type ShortcutAction } from '../hooks/useKeyboardShortcuts';
 
 interface KeyboardBadgeProps {
     children: ReactNode;
@@ -55,7 +55,9 @@ function ShortcutCategory({ category, shortcuts }: ShortcutCategoryProps) {
 }
 
 export function ShortcutsHelpOverlay() {
-    const { shortcuts, helpVisible, hideHelp } = useKeyboardShortcuts();
+    const storeState = useShortcutsStore();
+    const shortcuts = Array.from(storeState.shortcuts.values());
+    const helpVisible = storeState.helpVisible;
 
     if (!helpVisible) return null;
 
@@ -81,7 +83,7 @@ export function ShortcutsHelpOverlay() {
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-            onClick={hideHelp}
+            onClick={hideShortcutsHelp}
             role="dialog"
             aria-modal="true"
             aria-labelledby="shortcuts-title"
@@ -96,7 +98,7 @@ export function ShortcutsHelpOverlay() {
                         Keyboard Shortcuts
                     </h2>
                     <button
-                        onClick={hideHelp}
+                        onClick={hideShortcutsHelp}
                         className="p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         aria-label="Close shortcuts help"
                     >
@@ -120,7 +122,7 @@ export function ShortcutsHelpOverlay() {
                 {/* Footer */}
                 <div className="px-6 py-3 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700">
                     <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                        Press <KeyboardBadge>Esc</KeyboardBadge> or <KeyboardBadge>?</KeyboardBadge> to close
+                        Press <KeyboardBadge>Esc</KeyboardBadge> or <KeyboardBadge>Ctrl</KeyboardBadge>+<KeyboardBadge>/</KeyboardBadge> to close
                     </p>
                 </div>
             </div>
@@ -128,16 +130,17 @@ export function ShortcutsHelpOverlay() {
     );
 }
 
-// Floating help button
+// Floating help button - uses store directly to avoid re-registering shortcuts
 export function ShortcutsHelpButton() {
-    const { toggleHelp } = useKeyboardShortcuts();
+    // Just subscribe to store updates, no need to register shortcuts again
+    useShortcutsStore();
 
     return (
         <button
-            onClick={toggleHelp}
+            onClick={toggleShortcutsHelp}
             className="fixed bottom-4 right-4 z-40 p-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-full shadow-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
-            aria-label="Show keyboard shortcuts (Shift + ?)"
-            title="Keyboard shortcuts (Shift + ?)"
+            aria-label="Show keyboard shortcuts (Ctrl + /)"
+            title="Keyboard shortcuts (Ctrl + /)"
         >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
