@@ -15,12 +15,12 @@ interface BottomSheetProps {
  * Slides up from the bottom on mobile devices.
  * On desktop, renders as a centered modal.
  */
-export function BottomSheet({ 
-    isOpen, 
-    onClose, 
-    title, 
+export function BottomSheet({
+    isOpen,
+    onClose,
+    title,
     children,
-    showHandle = true 
+    showHandle = true
 }: BottomSheetProps) {
     const containerRef = useFocusTrap<HTMLDivElement>(isOpen);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -28,13 +28,13 @@ export function BottomSheet({
     // Handle escape key
     useEffect(() => {
         if (!isOpen) return;
-        
+
         function handleKeyDown(e: KeyboardEvent) {
             if (e.key === 'Escape') {
                 onClose();
             }
         }
-        
+
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [isOpen, onClose]);
@@ -56,12 +56,12 @@ export function BottomSheet({
     return (
         <div className="fixed inset-0 z-50">
             {/* Backdrop */}
-            <div 
+            <div
                 className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
                 onClick={onClose}
                 aria-hidden="true"
             />
-            
+
             {/* Sheet container */}
             <div
                 ref={containerRef}
@@ -87,11 +87,11 @@ export function BottomSheet({
                         <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full" />
                     </div>
                 )}
-                
+
                 {/* Header */}
                 {title && (
                     <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                        <h2 
+                        <h2
                             id="bottom-sheet-title"
                             className="text-lg font-semibold text-gray-900 dark:text-white"
                         >
@@ -106,9 +106,9 @@ export function BottomSheet({
                         </button>
                     </div>
                 )}
-                
+
                 {/* Content */}
-                <div 
+                <div
                     ref={contentRef}
                     className="flex-1 overflow-y-auto px-4 py-4"
                 >
@@ -131,12 +131,12 @@ interface ActionButtonProps {
     fullWidth?: boolean;
 }
 
-export function ActionButton({ 
-    onClick, 
-    variant = 'secondary', 
-    children, 
+export function ActionButton({
+    onClick,
+    variant = 'secondary',
+    children,
     disabled = false,
-    fullWidth = false 
+    fullWidth = false
 }: ActionButtonProps) {
     const baseClasses = `
         min-h-[44px] min-w-[44px] 
@@ -146,13 +146,13 @@ export function ActionButton({
         disabled:opacity-50 disabled:cursor-not-allowed
         touch-manipulation
     `;
-    
+
     const variantClasses = {
         primary: 'bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800',
         secondary: 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600',
         danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800',
     };
-    
+
     return (
         <button
             onClick={onClick}

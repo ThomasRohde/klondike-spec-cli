@@ -16,13 +16,13 @@ interface EmptyStateProps {
     className?: string;
 }
 
-export function EmptyState({ 
-    title, 
-    description, 
-    icon, 
-    action, 
+export function EmptyState({
+    title,
+    description,
+    icon,
+    action,
     hint,
-    className = '' 
+    className = ''
 }: EmptyStateProps) {
     return (
         <div className={`flex flex-col items-center justify-center py-12 px-6 text-center ${className}`}>
@@ -32,17 +32,17 @@ export function EmptyState({
                     {icon}
                 </div>
             )}
-            
+
             {/* Title */}
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {title}
             </h3>
-            
+
             {/* Description */}
             <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6">
                 {description}
             </p>
-            
+
             {/* Action button */}
             {action && (
                 <button
@@ -52,7 +52,7 @@ export function EmptyState({
                     {action.label}
                 </button>
             )}
-            
+
             {/* Hint */}
             {hint && (
                 <div className="mt-6 text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
@@ -74,12 +74,12 @@ export function NoFeaturesIllustration() {
             <rect x="30" y="20" width="60" height="80" rx="4" stroke="currentColor" strokeWidth="2" />
             <rect x="45" y="12" width="30" height="16" rx="2" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="2" />
             <circle cx="60" cy="20" r="3" fill="currentColor" />
-            
+
             {/* Lines */}
             <line x1="40" y1="45" x2="80" y2="45" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 4" />
             <line x1="40" y1="60" x2="70" y2="60" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 4" />
             <line x1="40" y1="75" x2="75" y2="75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 4" />
-            
+
             {/* Plus icon */}
             <circle cx="95" cy="85" r="18" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeWidth="2" />
             <line x1="95" y1="78" x2="95" y2="92" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -94,12 +94,12 @@ export function NoSessionIllustration() {
             {/* Clock */}
             <circle cx="60" cy="60" r="40" stroke="currentColor" strokeWidth="2" />
             <circle cx="60" cy="60" r="35" stroke="currentColor" strokeWidth="2" strokeDasharray="4 2" />
-            
+
             {/* Clock hands (paused) */}
             <line x1="60" y1="60" x2="60" y2="35" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
             <line x1="60" y1="60" x2="78" y2="60" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             <circle cx="60" cy="60" r="4" fill="currentColor" />
-            
+
             {/* Pause indicator */}
             <rect x="25" y="88" width="6" height="16" rx="2" fill="currentColor" fillOpacity="0.3" />
             <rect x="35" y="88" width="6" height="16" rx="2" fill="currentColor" fillOpacity="0.3" />
@@ -113,11 +113,11 @@ export function NoActivityIllustration() {
             {/* Calendar */}
             <rect x="20" y="30" width="80" height="70" rx="4" stroke="currentColor" strokeWidth="2" />
             <line x1="20" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="2" />
-            
+
             {/* Calendar header decorations */}
             <rect x="35" y="20" width="4" height="20" rx="2" fill="currentColor" />
             <rect x="81" y="20" width="4" height="20" rx="2" fill="currentColor" />
-            
+
             {/* Empty dots */}
             <circle cx="40" cy="70" r="5" stroke="currentColor" strokeWidth="2" strokeDasharray="3 2" />
             <circle cx="60" cy="70" r="5" stroke="currentColor" strokeWidth="2" strokeDasharray="3 2" />
@@ -132,7 +132,7 @@ export function NoResultsIllustration() {
             {/* Magnifying glass */}
             <circle cx="50" cy="50" r="25" stroke="currentColor" strokeWidth="2" />
             <line x1="68" y1="68" x2="95" y2="95" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-            
+
             {/* X mark inside */}
             <line x1="40" y1="40" x2="60" y2="60" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             <line x1="60" y1="40" x2="40" y2="60" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -146,12 +146,12 @@ export function WelcomeIllustration() {
             {/* Rocket */}
             <path d="M60 20 L80 60 L60 100 L40 60 Z" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.1" />
             <circle cx="60" cy="50" r="8" fill="currentColor" fillOpacity="0.3" />
-            
+
             {/* Flames */}
             <ellipse cx="60" cy="108" rx="8" ry="6" fill="currentColor" fillOpacity="0.4" />
             <ellipse cx="52" cy="105" rx="4" ry="3" fill="currentColor" fillOpacity="0.3" />
             <ellipse cx="68" cy="105" rx="4" ry="3" fill="currentColor" fillOpacity="0.3" />
-            
+
             {/* Stars */}
             <circle cx="25" cy="35" r="2" fill="currentColor" />
             <circle cx="95" cy="45" r="2" fill="currentColor" />
@@ -229,12 +229,12 @@ interface OnboardingHintProps {
     onDismiss?: () => void;
 }
 
-export function OnboardingHint({ 
-    title, 
-    description, 
-    step, 
-    totalSteps, 
-    onDismiss 
+export function OnboardingHint({
+    title,
+    description,
+    step,
+    totalSteps,
+    onDismiss
 }: OnboardingHintProps) {
     return (
         <div className="bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4 relative">
@@ -244,7 +244,7 @@ export function OnboardingHint({
                     Step {step} of {totalSteps}
                 </div>
             )}
-            
+
             {/* Content */}
             <div className="flex gap-3">
                 <div className="flex-shrink-0 w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center">
@@ -261,7 +261,7 @@ export function OnboardingHint({
                     </p>
                 </div>
             </div>
-            
+
             {/* Dismiss button */}
             {onDismiss && (
                 <button

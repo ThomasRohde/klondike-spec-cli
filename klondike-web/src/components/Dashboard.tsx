@@ -99,10 +99,10 @@ export function Dashboard() {
                     </div>
                     <Skeleton width={100} height={20} />
                 </div>
-                
+
                 {/* Stats skeleton */}
                 <DashboardStatsSkeleton />
-                
+
                 {/* Progress ring skeleton */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <ProgressRingSkeleton />
@@ -133,7 +133,7 @@ export function Dashboard() {
     // Render individual widget based on config
     const renderWidget = (config: WidgetConfig): React.ReactNode => {
         if (!config.visible && !isEditMode) return null;
-        
+
         switch (config.type) {
             case 'feature-counts':
                 return (
@@ -156,7 +156,7 @@ export function Dashboard() {
                         </div>
                     </div>
                 );
-            
+
             case 'progress-ring':
                 return (
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow h-full">
@@ -185,7 +185,7 @@ export function Dashboard() {
                         </div>
                     </div>
                 );
-            
+
             case 'status-chart':
                 return (
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow h-full">
@@ -205,7 +205,7 @@ export function Dashboard() {
                         </div>
                     </div>
                 );
-            
+
             case 'session-control':
                 return (
                     <SessionControl
@@ -222,7 +222,7 @@ export function Dashboard() {
                         onSessionChange={fetchStatus}
                     />
                 );
-            
+
             case 'priority-features':
                 return (
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow h-full">
@@ -239,7 +239,7 @@ export function Dashboard() {
                                                 feature.status === 'in-progress' ? 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-400' :
                                                     feature.status === 'blocked' ? 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400' :
                                                         'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
-                                            }`}>
+                                                }`}>
                                                 {feature.status}
                                             </span>
                                             <span className="text-xs text-gray-500 dark:text-gray-400">P{feature.priority}</span>
@@ -253,10 +253,10 @@ export function Dashboard() {
                         </div>
                     </div>
                 );
-            
+
             case 'recent-activity':
                 return <RecentActivityFeed maxItems={10} />;
-            
+
             default:
                 return null;
         }

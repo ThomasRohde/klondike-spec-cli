@@ -42,17 +42,17 @@ let timerInterval: ReturnType<typeof setInterval> | null = null;
 export function setSessionInfo(session: SessionInfo | null) {
     store.session = session;
     store.elapsedSeconds = 0;
-    
+
     // Clear existing interval
     if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
     }
-    
+
     // Start new timer if session is active
     if (session?.isActive) {
         store.elapsedSeconds = Math.floor((Date.now() - session.startTime.getTime()) / 1000);
-        
+
         timerInterval = setInterval(() => {
             if (store.session) {
                 store.elapsedSeconds = Math.floor((Date.now() - store.session.startTime.getTime()) / 1000);
@@ -60,7 +60,7 @@ export function setSessionInfo(session: SessionInfo | null) {
             }
         }, 1000);
     }
-    
+
     emitChange();
 }
 
@@ -72,7 +72,7 @@ function formatElapsedTime(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     if (hours > 0) {
         return `${hours}h ${minutes}m ${secs}s`;
     }
@@ -86,9 +86,9 @@ function formatCompactTime(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     const pad = (n: number) => n.toString().padStart(2, '0');
-    
+
     if (hours > 0) {
         return `${hours}:${pad(minutes)}:${pad(secs)}`;
     }
@@ -103,7 +103,7 @@ interface SessionTimerWidgetProps {
 export function SessionTimerWidget({ variant = 'full', className = '' }: SessionTimerWidgetProps) {
     const timerStore = useTimerStore();
     const [isBlinking, setIsBlinking] = useState(false);
-    
+
     // Blink effect every second
     useEffect(() => {
         if (timerStore.session?.isActive) {
@@ -113,7 +113,7 @@ export function SessionTimerWidget({ variant = 'full', className = '' }: Session
             return () => clearInterval(blinkInterval);
         }
     }, [timerStore.session?.isActive]);
-    
+
     if (!timerStore.session?.isActive) {
         if (variant === 'minimal') {
             return (
@@ -123,7 +123,7 @@ export function SessionTimerWidget({ variant = 'full', className = '' }: Session
                 </div>
             );
         }
-        
+
         return (
             <div className={`bg-gray-100 dark:bg-gray-800 rounded-lg p-4 ${className}`}>
                 <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
@@ -138,9 +138,9 @@ export function SessionTimerWidget({ variant = 'full', className = '' }: Session
             </div>
         );
     }
-    
+
     const { session, elapsedSeconds } = timerStore;
-    
+
     if (variant === 'minimal') {
         return (
             <div className={`flex items-center gap-2 ${className}`}>
@@ -151,7 +151,7 @@ export function SessionTimerWidget({ variant = 'full', className = '' }: Session
             </div>
         );
     }
-    
+
     if (variant === 'compact') {
         return (
             <div className={`flex items-center gap-3 bg-green-50 dark:bg-green-900/30 rounded-lg px-3 py-2 ${className}`}>
@@ -170,7 +170,7 @@ export function SessionTimerWidget({ variant = 'full', className = '' }: Session
             </div>
         );
     }
-    
+
     // Full variant
     return (
         <div className={`bg-white dark:bg-gray-800 rounded-lg shadow p-4 ${className}`}>
@@ -186,7 +186,7 @@ export function SessionTimerWidget({ variant = 'full', className = '' }: Session
                     #{session.sessionNumber}
                 </span>
             </div>
-            
+
             {/* Timer Display */}
             <div className="text-center mb-3">
                 <div className="text-3xl font-mono font-bold text-gray-900 dark:text-white">
@@ -196,7 +196,7 @@ export function SessionTimerWidget({ variant = 'full', className = '' }: Session
                     Started {session.startTime.toLocaleTimeString()}
                 </div>
             </div>
-            
+
             {/* Focus */}
             <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-3">
                 <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Focus</div>
@@ -204,7 +204,7 @@ export function SessionTimerWidget({ variant = 'full', className = '' }: Session
                     {session.focus}
                 </div>
             </div>
-            
+
             {/* Activity indicators */}
             <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between text-xs">
@@ -235,7 +235,7 @@ export function useSessionTimer(sessionData: { session_number?: number; focus?: 
         } else {
             setSessionInfo(null);
         }
-        
+
         return () => {
             // Cleanup on unmount - don't clear session as it may be used elsewhere
         };

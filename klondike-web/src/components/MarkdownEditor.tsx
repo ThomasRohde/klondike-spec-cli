@@ -37,9 +37,9 @@ export function MarkdownEditor({
         const end = textarea.selectionEnd;
         const selectedText = value.substring(start, end);
         const newText = value.substring(0, start) + before + selectedText + after + value.substring(end);
-        
+
         onChange(newText);
-        
+
         // Restore cursor position
         setTimeout(() => {
             textarea.focus();
@@ -97,11 +97,10 @@ export function MarkdownEditor({
                         type="button"
                         title="Toggle Split View"
                         onClick={() => { setSplitView(!splitView); setShowPreview(false); }}
-                        className={`px-2 py-1 text-sm rounded transition-colors ${
-                            splitView 
+                        className={`px-2 py-1 text-sm rounded transition-colors ${splitView
                                 ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
                                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                        }`}
+                            }`}
                     >
                         ⧉
                     </button>
@@ -109,11 +108,10 @@ export function MarkdownEditor({
                         type="button"
                         title="Toggle Preview"
                         onClick={() => { setShowPreview(!showPreview); setSplitView(false); }}
-                        className={`px-2 py-1 text-sm rounded transition-colors ${
-                            showPreview 
+                        className={`px-2 py-1 text-sm rounded transition-colors ${showPreview
                                 ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
                                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                        }`}
+                            }`}
                     >
                         👁
                     </button>
@@ -141,7 +139,7 @@ export function MarkdownEditor({
 
                 {/* Preview */}
                 {(showPreview || splitView) && (
-                    <div 
+                    <div
                         className={`${splitView ? 'w-1/2' : 'w-full'} p-3 bg-gray-50 dark:bg-gray-800 overflow-auto`}
                         style={{ minHeight }}
                     >
@@ -177,7 +175,7 @@ export function MarkdownPreview({ content, className = '' }: MarkdownPreviewProp
                 components={{
                     // Custom link handling
                     a: ({ children, href, ...props }) => (
-                        <a 
+                        <a
                             href={href}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -191,7 +189,7 @@ export function MarkdownPreview({ content, className = '' }: MarkdownPreviewProp
                     code: ({ children, className, ...props }) => {
                         const isInline = !className;
                         return isInline ? (
-                            <code 
+                            <code
                                 className="px-1 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-sm font-mono text-pink-600 dark:text-pink-400"
                                 {...props}
                             >
@@ -221,7 +219,7 @@ export function MarkdownPreview({ content, className = '' }: MarkdownPreviewProp
                         </div>
                     ),
                     th: ({ children, ...props }) => (
-                        <th 
+                        <th
                             className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800"
                             {...props}
                         >
@@ -229,7 +227,7 @@ export function MarkdownPreview({ content, className = '' }: MarkdownPreviewProp
                         </th>
                     ),
                     td: ({ children, ...props }) => (
-                        <td 
+                        <td
                             className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
                             {...props}
                         >

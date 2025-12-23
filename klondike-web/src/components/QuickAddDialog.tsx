@@ -75,7 +75,7 @@ export function QuickAddDialog() {
     const [showAdvanced, setShowAdvanced] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const dialogRef = useRef<HTMLDivElement>(null);
-    
+
     // Focus input when opened
     useEffect(() => {
         if (isOpen) {
@@ -88,7 +88,7 @@ export function QuickAddDialog() {
             setShowAdvanced(false);
         }
     }, [isOpen]);
-    
+
     // Close on escape
     useEffect(() => {
         function handleKeyDown(e: KeyboardEvent) {
@@ -96,11 +96,11 @@ export function QuickAddDialog() {
                 closeQuickAdd();
             }
         }
-        
+
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isOpen]);
-    
+
     // Close on click outside
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
@@ -108,23 +108,23 @@ export function QuickAddDialog() {
                 closeQuickAdd();
             }
         }
-        
+
         if (isOpen) {
             document.addEventListener('mousedown', handleClickOutside);
             return () => document.removeEventListener('mousedown', handleClickOutside);
         }
     }, [isOpen]);
-    
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!form.description.trim()) {
             toast.error('Description is required');
             return;
         }
-        
+
         setIsSubmitting(true);
-        
+
         try {
             const response = await fetch(`${getApiBaseUrl()}/api/features`, {
                 method: 'POST',
@@ -135,18 +135,18 @@ export function QuickAddDialog() {
                     description: form.description.trim(),
                     category: form.category,
                     priority: form.priority,
-                    acceptance_criteria: form.acceptance_criteria.trim() ? 
-                        form.acceptance_criteria.split('\n').map(c => c.trim()).filter(Boolean) : 
+                    acceptance_criteria: form.acceptance_criteria.trim() ?
+                        form.acceptance_criteria.split('\n').map(c => c.trim()).filter(Boolean) :
                         [],
                     notes: form.notes.trim(),
                 }),
             });
-            
+
             if (!response.ok) {
                 const error = await response.json().catch(() => ({ error: 'Failed to add feature' }));
                 throw new Error(error.error || 'Failed to add feature');
             }
-            
+
             const result = await response.json();
             toast.success(`Feature ${result.id} added successfully!`);
             announce(`Feature ${result.id} added: ${form.description}`);
@@ -158,16 +158,16 @@ export function QuickAddDialog() {
             setIsSubmitting(false);
         }
     };
-    
+
     const handleChange = (field: keyof QuickAddFormData, value: string | number) => {
         setForm(prev => ({ ...prev, [field]: value }));
     };
-    
+
     if (!isOpen) return null;
-    
+
     return (
         <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] bg-black/50 backdrop-blur-sm">
-            <div 
+            <div
                 ref={dialogRef}
                 className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden"
                 role="dialog"
@@ -192,7 +192,7 @@ export function QuickAddDialog() {
                         </svg>
                     </button>
                 </div>
-                
+
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="p-4 space-y-4">
                     {/* Description */}
@@ -207,7 +207,7 @@ export function QuickAddDialog() {
                             disabled={isSubmitting}
                         />
                     </div>
-                    
+
                     {/* Category and Priority */}
                     <div className="flex gap-3">
                         <div className="flex-1">
@@ -242,14 +242,14 @@ export function QuickAddDialog() {
                             </select>
                         </div>
                     </div>
-                    
+
                     {/* Advanced toggle */}
                     <button
                         type="button"
                         onClick={() => setShowAdvanced(!showAdvanced)}
                         className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center gap-1"
                     >
-                        <svg 
+                        <svg
                             className={`w-4 h-4 transform transition-transform ${showAdvanced ? 'rotate-90' : ''}`}
                             fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         >
@@ -257,7 +257,7 @@ export function QuickAddDialog() {
                         </svg>
                         {showAdvanced ? 'Hide' : 'Show'} advanced options
                     </button>
-                    
+
                     {/* Advanced options */}
                     {showAdvanced && (
                         <div className="space-y-3 pt-2 border-t border-gray-200 dark:border-gray-700">
@@ -275,7 +275,7 @@ export function QuickAddDialog() {
                                     disabled={isSubmitting}
                                 />
                             </div>
-                            
+
                             {/* Notes */}
                             <div>
                                 <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
@@ -292,7 +292,7 @@ export function QuickAddDialog() {
                             </div>
                         </div>
                     )}
-                    
+
                     {/* Actions */}
                     <div className="flex items-center justify-between pt-2">
                         <span className="text-xs text-gray-400 dark:text-gray-500">

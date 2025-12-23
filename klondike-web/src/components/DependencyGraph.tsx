@@ -41,14 +41,14 @@ interface FeatureData {
 // Parse dependencies from notes field
 function parseDependencies(notes: string | undefined): string[] {
     if (!notes) return [];
-    
+
     const deps: string[] = [];
     // Match patterns like "depends on F001", "F001, F002", "requires F003"
     const patterns = [
         /(?:depends on|requires|needs|blocked by)\s*(F\d{3}(?:\s*,\s*F\d{3})*)/gi,
         /(?:Dependencies?:?\s*)(F\d{3}(?:\s*,\s*F\d{3})*)/gi,
     ];
-    
+
     for (const pattern of patterns) {
         let match;
         while ((match = pattern.exec(notes)) !== null) {
@@ -60,7 +60,7 @@ function parseDependencies(notes: string | undefined): string[] {
             }
         }
     }
-    
+
     return [...new Set(deps)];
 }
 
@@ -92,13 +92,12 @@ function FeatureNode({ data, selected }: FeatureNodeProps) {
     const { feature, onClick } = data;
     const colors = statusColors[feature.status];
     const StatusIcon = statusIcons[feature.status];
-    
+
     return (
         <div
             onClick={onClick}
-            className={`px-3 py-2 rounded-lg cursor-pointer transition-all hover:shadow-md ${
-                selected ? 'ring-2 ring-indigo-500 ring-offset-2' : ''
-            }`}
+            className={`px-3 py-2 rounded-lg cursor-pointer transition-all hover:shadow-md ${selected ? 'ring-2 ring-indigo-500 ring-offset-2' : ''
+                }`}
             style={{
                 backgroundColor: colors.bg,
                 border: `2px solid ${colors.border}`,
@@ -112,7 +111,7 @@ function FeatureNode({ data, selected }: FeatureNodeProps) {
                     {feature.id}
                 </span>
             </div>
-            <div 
+            <div
                 className="text-xs line-clamp-2"
                 style={{ color: colors.text }}
                 title={feature.description}
@@ -136,26 +135,26 @@ function layoutNodes(
     // Calculate layers based on dependencies
     const layers = new Map<string, number>();
     const visited = new Set<string>();
-    
+
     function getLayer(id: string, depth = 0): number {
         if (depth > 100) return 0; // Prevent infinite loops
         if (layers.has(id)) return layers.get(id)!;
         if (visited.has(id)) return 0; // Circular dependency
-        
+
         visited.add(id);
         const deps = dependencyMap.get(id) || [];
         const depLayers = deps.map(d => getLayer(d, depth + 1));
         const layer = deps.length === 0 ? 0 : Math.max(...depLayers) + 1;
         layers.set(id, layer);
-        
+
         return layer;
     }
-    
+
     // Calculate layers for all features
     for (const feature of features) {
         getLayer(feature.id);
     }
-    
+
     // Group features by layer
     const layerGroups = new Map<number, FeatureData[]>();
     for (const feature of features) {
@@ -165,17 +164,17 @@ function layoutNodes(
         }
         layerGroups.get(layer)!.push(feature);
     }
-    
+
     // Position nodes
     const nodes: Node[] = [];
     const layerKeys = [...layerGroups.keys()].sort((a, b) => a - b);
     const xSpacing = 280;
     const ySpacing = 120;
-    
+
     for (const layer of layerKeys) {
         const layerFeatures = layerGroups.get(layer)!;
         const yOffset = -(layerFeatures.length - 1) * ySpacing / 2;
-        
+
         for (let i = 0; i < layerFeatures.length; i++) {
             const feature = layerFeatures[i];
             nodes.push({
@@ -184,18 +183,18 @@ function layoutNodes(
                 position: { x: layer * xSpacing, y: yOffset + i * ySpacing },
                 sourcePosition: Position.Right,
                 targetPosition: Position.Left,
-                data: { feature, onClick: () => {} },
+                data: { feature, onClick: () => { } },
             });
         }
     }
-    
+
     return nodes;
 }
 
 // Create edges from dependencies
 function createEdges(dependencyMap: Map<string, string[]>): Edge[] {
     const edges: Edge[] = [];
-    
+
     for (const [featureId, deps] of dependencyMap) {
         for (const depId of deps) {
             edges.push({
@@ -213,7 +212,7 @@ function createEdges(dependencyMap: Map<string, string[]>): Edge[] {
             });
         }
     }
-    
+
     return edges;
 }
 
@@ -272,7 +271,7 @@ function GraphFilters({
                     />
                     Only with dependencies
                 </label>
-                
+
                 <select
                     value={selectedCategory}
                     onChange={(e) => onCategoryChange(e.target.value)}
@@ -298,16 +297,16 @@ export function DependencyGraph() {
     const [showOnlyWithDeps, setShowOnlyWithDeps] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [isFullscreen, setIsFullscreen] = useState(false);
-    
-    const categories = useMemo(() => 
+
+    const categories = useMemo(() =>
         [...new Set(features.map(f => f.category))].sort(),
         [features]
     );
-    
+
     useEffect(() => {
         fetchFeatures();
     }, []);
-    
+
     async function fetchFeatures() {
         try {
             const response = await fetch(`${getApiBaseUrl()}/api/features`);
@@ -319,11 +318,11 @@ export function DependencyGraph() {
             setLoading(false);
         }
     }
-    
+
     // Build dependency map and layout
     useEffect(() => {
         if (features.length === 0) return;
-        
+
         // Parse dependencies from notes
         const dependencyMap = new Map<string, string[]>();
         for (const feature of features) {
@@ -337,10 +336,10 @@ export function DependencyGraph() {
                 dependencyMap.set(feature.id, validDeps);
             }
         }
-        
+
         // Filter features
         let filteredFeatures = features;
-        
+
         if (showOnlyWithDeps) {
             const featuresWithDeps = new Set<string>();
             for (const [id, deps] of dependencyMap) {
@@ -351,14 +350,14 @@ export function DependencyGraph() {
             }
             filteredFeatures = features.filter(f => featuresWithDeps.has(f.id));
         }
-        
+
         if (selectedCategory !== 'all') {
             filteredFeatures = filteredFeatures.filter(f => f.category === selectedCategory);
         }
-        
+
         // Layout nodes
         const layoutedNodes = layoutNodes(filteredFeatures, dependencyMap);
-        
+
         // Add click handlers
         const nodesWithHandlers = layoutedNodes.map(node => ({
             ...node,
@@ -367,15 +366,15 @@ export function DependencyGraph() {
                 onClick: () => navigate(`/task/${node.id}`),
             },
         }));
-        
+
         setNodes(nodesWithHandlers);
         setEdges(createEdges(dependencyMap));
     }, [features, showOnlyWithDeps, selectedCategory, setNodes, setEdges, navigate]);
-    
+
     const toggleFullscreen = useCallback(() => {
         setIsFullscreen(!isFullscreen);
     }, [isFullscreen]);
-    
+
     if (loading) {
         return (
             <div className="space-y-6">
@@ -386,7 +385,7 @@ export function DependencyGraph() {
             </div>
         );
     }
-    
+
     return (
         <div className={isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-gray-900' : ''}>
             <div className="flex items-center justify-between mb-6 px-4 pt-4">
@@ -410,7 +409,7 @@ export function DependencyGraph() {
                     </button>
                 </div>
             </div>
-            
+
             <div className={`relative ${isFullscreen ? 'h-[calc(100vh-80px)]' : 'h-[600px]'} bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden`}>
                 <GraphFilters
                     showOnlyWithDeps={showOnlyWithDeps}
@@ -420,7 +419,7 @@ export function DependencyGraph() {
                     onCategoryChange={setSelectedCategory}
                 />
                 <GraphLegend />
-                
+
                 <ReactFlow
                     nodes={nodes}
                     edges={edges}
@@ -436,7 +435,7 @@ export function DependencyGraph() {
                 >
                     <Background />
                     <Controls />
-                    <MiniMap 
+                    <MiniMap
                         nodeColor={(node) => {
                             const feature = (node.data as { feature: FeatureData }).feature;
                             return statusColors[feature.status].border;

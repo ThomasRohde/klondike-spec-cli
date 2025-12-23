@@ -3,10 +3,10 @@
  */
 
 import { useState, useSyncExternalStore } from 'react';
-import { 
-    CheckIcon, 
-    PlayIcon, 
-    NoSymbolIcon, 
+import {
+    CheckIcon,
+    PlayIcon,
+    NoSymbolIcon,
     XMarkIcon,
     ArrowPathIcon
 } from '@heroicons/react/24/outline';
@@ -74,7 +74,7 @@ interface SelectionCheckboxProps {
 export function SelectionCheckbox({ id, className = '' }: SelectionCheckboxProps) {
     const selectedIds = useSelection();
     const checked = selectedIds.has(id);
-    
+
     return (
         <input
             type="checkbox"
@@ -95,15 +95,15 @@ interface BulkActionsToolbarProps {
 export function BulkActionsToolbar({ allIds, onRefresh }: BulkActionsToolbarProps) {
     const selectedIds = useSelection();
     const [isProcessing, setIsProcessing] = useState(false);
-    
+
     const selectedCount = selectedIds.size;
     const allSelected = selectedCount === allIds.length && allIds.length > 0;
     const someSelected = selectedCount > 0 && selectedCount < allIds.length;
-    
+
     if (selectedCount === 0) {
         return null;
     }
-    
+
     const handleSelectAll = () => {
         if (allSelected) {
             clearSelection();
@@ -111,7 +111,7 @@ export function BulkActionsToolbar({ allIds, onRefresh }: BulkActionsToolbarProp
             selectAll(allIds);
         }
     };
-    
+
     const performBulkAction = async (
         action: 'start' | 'block' | 'verify',
         endpoint: string,
@@ -121,19 +121,19 @@ export function BulkActionsToolbar({ allIds, onRefresh }: BulkActionsToolbarProp
         const ids = [...selectedIds];
         let successCount = 0;
         let failCount = 0;
-        
+
         for (const id of ids) {
             try {
                 const response = await fetch(`${getApiBaseUrl()}/api/features/${id}/${endpoint}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: action === 'block' 
+                    body: action === 'block'
                         ? JSON.stringify({ reason: 'Blocked via bulk action' })
                         : action === 'verify'
-                        ? JSON.stringify({ evidence: 'Verified via bulk action' })
-                        : undefined,
+                            ? JSON.stringify({ evidence: 'Verified via bulk action' })
+                            : undefined,
                 });
-                
+
                 if (response.ok) {
                     successCount++;
                 } else {
@@ -143,7 +143,7 @@ export function BulkActionsToolbar({ allIds, onRefresh }: BulkActionsToolbarProp
                 failCount++;
             }
         }
-        
+
         if (successCount > 0) {
             toast.success(`${successMessage}: ${successCount} features`);
             announce(`${successCount} features ${action === 'start' ? 'started' : action === 'block' ? 'blocked' : 'verified'}`);
@@ -151,16 +151,16 @@ export function BulkActionsToolbar({ allIds, onRefresh }: BulkActionsToolbarProp
         if (failCount > 0) {
             toast.error(`Failed: ${failCount} features`);
         }
-        
+
         clearSelection();
         setIsProcessing(false);
         onRefresh?.();
     };
-    
+
     const handleBulkStart = () => performBulkAction('start', 'start', 'Started');
     const handleBulkBlock = () => performBulkAction('block', 'block', 'Blocked');
     const handleBulkVerify = () => performBulkAction('verify', 'verify', 'Verified');
-    
+
     return (
         <div className="sticky top-0 z-20 bg-indigo-600 text-white shadow-lg rounded-lg p-3 mb-4 flex items-center justify-between animate-in slide-in-from-top duration-200">
             <div className="flex items-center gap-3">
@@ -178,12 +178,12 @@ export function BulkActionsToolbar({ allIds, onRefresh }: BulkActionsToolbarProp
                     {selectedCount} selected
                 </span>
             </div>
-            
+
             <div className="flex items-center gap-2">
                 {isProcessing && (
                     <ArrowPathIcon className="w-5 h-5 animate-spin" />
                 )}
-                
+
                 <button
                     onClick={handleBulkStart}
                     disabled={isProcessing}
@@ -193,7 +193,7 @@ export function BulkActionsToolbar({ allIds, onRefresh }: BulkActionsToolbarProp
                     <PlayIcon className="w-4 h-4" />
                     <span className="hidden sm:inline">Start</span>
                 </button>
-                
+
                 <button
                     onClick={handleBulkBlock}
                     disabled={isProcessing}
@@ -203,7 +203,7 @@ export function BulkActionsToolbar({ allIds, onRefresh }: BulkActionsToolbarProp
                     <NoSymbolIcon className="w-4 h-4" />
                     <span className="hidden sm:inline">Block</span>
                 </button>
-                
+
                 <button
                     onClick={handleBulkVerify}
                     disabled={isProcessing}
@@ -213,9 +213,9 @@ export function BulkActionsToolbar({ allIds, onRefresh }: BulkActionsToolbarProp
                     <CheckIcon className="w-4 h-4" />
                     <span className="hidden sm:inline">Verify</span>
                 </button>
-                
+
                 <div className="w-px h-6 bg-white/30" />
-                
+
                 <button
                     onClick={clearSelection}
                     disabled={isProcessing}
@@ -240,7 +240,7 @@ export function SelectAllCheckbox({ allIds, className = '' }: SelectAllCheckboxP
     const selectedIds = useSelection();
     const allSelected = selectedIds.size === allIds.length && allIds.length > 0;
     const someSelected = selectedIds.size > 0 && selectedIds.size < allIds.length;
-    
+
     return (
         <input
             type="checkbox"

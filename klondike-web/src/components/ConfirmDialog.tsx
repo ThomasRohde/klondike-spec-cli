@@ -32,7 +32,7 @@ export function ConfirmDialog({
     // Handle keyboard events
     useEffect(() => {
         if (!isOpen) return;
-        
+
         function handleKeyDown(e: KeyboardEvent) {
             if (e.key === 'Escape') {
                 e.preventDefault();
@@ -46,7 +46,7 @@ export function ConfirmDialog({
                 }
             }
         }
-        
+
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [isOpen, onConfirm, onCancel]);
@@ -85,12 +85,12 @@ export function ConfirmDialog({
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             {/* Backdrop */}
-            <div 
+            <div
                 className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
                 onClick={onCancel}
                 aria-hidden="true"
             />
-            
+
             {/* Dialog */}
             <div className="flex min-h-full items-center justify-center p-4">
                 <div
@@ -106,23 +106,23 @@ export function ConfirmDialog({
                         <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${styles.icon}`}>
                             <ExclamationTriangleIcon className="w-6 h-6" />
                         </div>
-                        
+
                         {/* Content */}
                         <div className="flex-1 min-w-0">
-                            <h3 
+                            <h3
                                 id="confirm-dialog-title"
                                 className="text-lg font-semibold text-gray-900 dark:text-white"
                             >
                                 {title}
                             </h3>
-                            <p 
+                            <p
                                 id="confirm-dialog-message"
                                 className="mt-2 text-sm text-gray-600 dark:text-gray-400"
                             >
                                 {message}
                             </p>
                         </div>
-                        
+
                         {/* Close button */}
                         <button
                             onClick={onCancel}
@@ -132,7 +132,7 @@ export function ConfirmDialog({
                             <XMarkIcon className="w-5 h-5" />
                         </button>
                     </div>
-                    
+
                     {/* Actions */}
                     <div className="mt-6 flex gap-3 justify-end">
                         <button
@@ -205,10 +205,10 @@ export function useUndoableAction() {
     ) => {
         // Clear any existing action
         clearTimer();
-        
+
         const id = Date.now().toString();
         executeRef.current = executeCallback;
-        
+
         setPendingAction({
             id,
             message,
@@ -220,13 +220,13 @@ export function useUndoableAction() {
         timerRef.current = setInterval(() => {
             setPendingAction(prev => {
                 if (!prev) return null;
-                
+
                 const newTime = prev.timeRemaining - 1;
                 if (newTime <= 0) {
                     executeAction();
                     return null;
                 }
-                
+
                 return { ...prev, timeRemaining: newTime };
             });
         }, 1000);
@@ -260,7 +260,7 @@ export function UndoToast({ message, timeRemaining, onUndo, onDismiss }: UndoToa
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 animate-slide-up">
             <div className="bg-gray-900 dark:bg-gray-700 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-4">
                 <span className="text-sm">{message}</span>
-                
+
                 {/* Countdown */}
                 <div className="flex items-center gap-2">
                     <div className="relative w-8 h-8">
@@ -290,14 +290,14 @@ export function UndoToast({ message, timeRemaining, onUndo, onDismiss }: UndoToa
                             {timeRemaining}
                         </span>
                     </div>
-                    
+
                     <button
                         onClick={onUndo}
                         className="px-3 py-1 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 rounded transition-colors"
                     >
                         Undo
                     </button>
-                    
+
                     <button
                         onClick={onDismiss}
                         aria-label="Dismiss"
@@ -331,7 +331,7 @@ export function useConfirmWithUndo() {
         onConfirm: () => void;
         onUndo: () => void;
     } | null>(null);
-    
+
     const { pendingAction, startUndoableAction, cancelAction, executeAction } = useUndoableAction();
 
     const confirm = useCallback((
@@ -347,7 +347,7 @@ export function useConfirmWithUndo() {
     const handleConfirm = useCallback(() => {
         setIsOpen(false);
         const action = actionRef.current;
-        
+
         if (action && dialogConfig) {
             startUndoableAction(
                 dialogConfig.undoMessage || 'Action performed',

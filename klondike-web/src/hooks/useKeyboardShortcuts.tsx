@@ -76,11 +76,11 @@ export function useShortcutsStore() {
 export function useKeyboardShortcuts() {
     const storeState = useShortcutsStore();
     const navigate = useNavigate();
-    
+
     // Register global shortcuts
     useEffect(() => {
         const unsubscribers: (() => void)[] = [];
-        
+
         // Navigation shortcuts
         unsubscribers.push(registerShortcut({
             key: 'd',
@@ -89,7 +89,7 @@ export function useKeyboardShortcuts() {
             category: 'Navigation',
             action: () => navigate('/'),
         }));
-        
+
         unsubscribers.push(registerShortcut({
             key: 'e',
             modifiers: ['ctrl'],
@@ -97,7 +97,7 @@ export function useKeyboardShortcuts() {
             category: 'Navigation',
             action: () => navigate('/spec'),
         }));
-        
+
         unsubscribers.push(registerShortcut({
             key: 't',
             modifiers: ['ctrl'],
@@ -105,7 +105,7 @@ export function useKeyboardShortcuts() {
             category: 'Navigation',
             action: () => navigate('/tasks'),
         }));
-        
+
         unsubscribers.push(registerShortcut({
             key: 'a',
             modifiers: ['ctrl'],
@@ -113,7 +113,7 @@ export function useKeyboardShortcuts() {
             category: 'Navigation',
             action: () => navigate('/activity'),
         }));
-        
+
         unsubscribers.push(registerShortcut({
             key: 'b',
             modifiers: ['ctrl'],
@@ -121,7 +121,7 @@ export function useKeyboardShortcuts() {
             category: 'Navigation',
             action: () => navigate('/kanban'),
         }));
-        
+
         unsubscribers.push(registerShortcut({
             key: ',',
             modifiers: ['ctrl'],
@@ -129,7 +129,7 @@ export function useKeyboardShortcuts() {
             category: 'Navigation',
             action: () => navigate('/config'),
         }));
-        
+
         // Action shortcuts
         unsubscribers.push(registerShortcut({
             key: 'k',
@@ -141,7 +141,7 @@ export function useKeyboardShortcuts() {
                 window.dispatchEvent(new CustomEvent('open-command-palette'));
             },
         }));
-        
+
         unsubscribers.push(registerShortcut({
             key: 'n',
             modifiers: ['ctrl', 'shift'],
@@ -149,7 +149,7 @@ export function useKeyboardShortcuts() {
             category: 'Actions',
             action: openQuickAdd,
         }));
-        
+
         unsubscribers.push(registerShortcut({
             key: '/',
             description: 'Focus Search',
@@ -159,7 +159,7 @@ export function useKeyboardShortcuts() {
                 searchInput?.focus();
             },
         }));
-        
+
         // Help shortcut
         unsubscribers.push(registerShortcut({
             key: '?',
@@ -168,12 +168,12 @@ export function useKeyboardShortcuts() {
             category: 'Help',
             action: toggleShortcutsHelp,
         }));
-        
+
         return () => {
             unsubscribers.forEach(unsub => unsub());
         };
     }, [navigate]);
-    
+
     // Global keyboard listener
     useEffect(() => {
         function handleKeyDown(e: KeyboardEvent) {
@@ -185,35 +185,35 @@ export function useKeyboardShortcuts() {
                     return;
                 }
             }
-            
+
             // Build shortcut key
             const modifiers: ('ctrl' | 'alt' | 'shift' | 'meta')[] = [];
             if (e.ctrlKey || e.metaKey) modifiers.push('ctrl');
             if (e.altKey) modifiers.push('alt');
             if (e.shiftKey && e.key.length > 1) modifiers.push('shift'); // Only count shift for non-printable
-            
+
             // Special handling for ? (shift + /)
             const key = e.key === '?' ? '?' : e.key.toLowerCase();
-            
+
             const shortcutKey = getShortcutKey(key, modifiers.length > 0 ? modifiers : undefined);
             const action = store.shortcuts.get(shortcutKey);
-            
+
             if (action) {
                 e.preventDefault();
                 e.stopPropagation();
                 action.action();
             }
-            
+
             // Escape closes help overlay
             if (e.key === 'Escape' && store.helpVisible) {
                 hideShortcutsHelp();
             }
         }
-        
+
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
-    
+
     return {
         shortcuts: Array.from(storeState.shortcuts.values()),
         helpVisible: storeState.helpVisible,
@@ -226,7 +226,7 @@ export function useKeyboardShortcuts() {
 // Format keyboard shortcut for display
 export function formatShortcut(key: string, modifiers?: ('ctrl' | 'alt' | 'shift' | 'meta')[]): string {
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-    
+
     const modLabels = (modifiers || []).map(mod => {
         switch (mod) {
             case 'ctrl': return isMac ? '⌘' : 'Ctrl';
@@ -236,7 +236,7 @@ export function formatShortcut(key: string, modifiers?: ('ctrl' | 'alt' | 'shift
             default: return mod;
         }
     });
-    
+
     const keyLabel = key.length === 1 ? key.toUpperCase() : key;
     return [...modLabels, keyLabel].join(isMac ? '' : '+');
 }

@@ -26,7 +26,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 // Widget types available in the dashboard
-export type WidgetType = 
+export type WidgetType =
     | 'progress-ring'
     | 'status-chart'
     | 'feature-counts'
@@ -75,7 +75,7 @@ function getDefaultWidgets(): WidgetConfig[] {
 
 function loadLayout(): WidgetLayoutStore {
     if (layoutCache) return layoutCache;
-    
+
     try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
@@ -85,7 +85,7 @@ function loadLayout(): WidgetLayoutStore {
     } catch (e) {
         console.warn('Failed to load widget layout:', e);
     }
-    
+
     layoutCache = { widgets: getDefaultWidgets() };
     return layoutCache;
 }
@@ -112,15 +112,15 @@ function getLayoutSnapshot(): WidgetLayoutStore {
 // Hook for widget layout management
 export function useWidgetLayout() {
     const layout = useSyncExternalStore(subscribeLayout, getLayoutSnapshot, getLayoutSnapshot);
-    
+
     const setWidgets = useCallback((widgets: WidgetConfig[]) => {
         saveLayout({ widgets });
     }, []);
-    
+
     const resetToDefaults = useCallback(() => {
         saveLayout({ widgets: getDefaultWidgets() });
     }, []);
-    
+
     const toggleWidget = useCallback((widgetId: string) => {
         const current = loadLayout();
         const updated = current.widgets.map(w =>
@@ -128,7 +128,7 @@ export function useWidgetLayout() {
         );
         saveLayout({ widgets: updated });
     }, []);
-    
+
     const updateWidgetSize = useCallback((widgetId: string, size: WidgetConfig['size']) => {
         const current = loadLayout();
         const updated = current.widgets.map(w =>
@@ -136,7 +136,7 @@ export function useWidgetLayout() {
         );
         saveLayout({ widgets: updated });
     }, []);
-    
+
     return {
         widgets: layout.widgets,
         setWidgets,
@@ -164,13 +164,13 @@ function SortableWidget({ config, isEditMode, onToggleVisibility, onSizeChange, 
         transition,
         isDragging,
     } = useSortable({ id: config.id, disabled: !isEditMode });
-    
+
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
     };
-    
+
     // Determine grid column span based on size
     const sizeClasses = {
         small: 'col-span-1',
@@ -178,11 +178,11 @@ function SortableWidget({ config, isEditMode, onToggleVisibility, onSizeChange, 
         large: 'col-span-1 lg:col-span-2',
         full: 'col-span-1 lg:col-span-2',
     };
-    
+
     if (!config.visible && !isEditMode) {
         return null;
     }
-    
+
     return (
         <div
             ref={setNodeRef}
@@ -205,7 +205,7 @@ function SortableWidget({ config, isEditMode, onToggleVisibility, onSizeChange, 
                     >
                         <Bars3Icon className="h-4 w-4 text-gray-500" />
                     </button>
-                    
+
                     {/* Size selector */}
                     <select
                         value={config.size}
@@ -218,7 +218,7 @@ function SortableWidget({ config, isEditMode, onToggleVisibility, onSizeChange, 
                         <option value="large">Large</option>
                         <option value="full">Full</option>
                     </select>
-                    
+
                     {/* Visibility toggle */}
                     <button
                         onClick={onToggleVisibility}
@@ -233,7 +233,7 @@ function SortableWidget({ config, isEditMode, onToggleVisibility, onSizeChange, 
                     </button>
                 </div>
             )}
-            
+
             {children}
         </div>
     );
@@ -262,7 +262,7 @@ function WidgetSettingsPanel({ widgets, onToggleWidget, onResetDefaults, onClose
                         <XMarkIcon className="h-5 w-5 text-gray-500" />
                     </button>
                 </div>
-                
+
                 <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
                     {widgets.map(widget => (
                         <div
@@ -272,11 +272,10 @@ function WidgetSettingsPanel({ widgets, onToggleWidget, onResetDefaults, onClose
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => onToggleWidget(widget.id)}
-                                    className={`p-1 rounded ${
-                                        widget.visible 
-                                            ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600' 
+                                    className={`p-1 rounded ${widget.visible
+                                            ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600'
                                             : 'bg-gray-200 dark:bg-gray-600 text-gray-400'
-                                    }`}
+                                        }`}
                                 >
                                     {widget.visible ? (
                                         <EyeIcon className="h-4 w-4" />
@@ -292,7 +291,7 @@ function WidgetSettingsPanel({ widgets, onToggleWidget, onResetDefaults, onClose
                         </div>
                     ))}
                 </div>
-                
+
                 <div className="flex items-center justify-between p-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                         onClick={onResetDefaults}
@@ -324,11 +323,10 @@ export function WidgetGridControls({ isEditMode, onToggleEditMode, onOpenSetting
         <div className="flex items-center gap-2">
             <button
                 onClick={onToggleEditMode}
-                className={`p-2 rounded-lg transition-colors ${
-                    isEditMode
+                className={`p-2 rounded-lg transition-colors ${isEditMode
                         ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600'
                         : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500'
-                }`}
+                    }`}
                 title={isEditMode ? 'Exit edit mode' : 'Edit layout'}
             >
                 <ArrowsPointingOutIcon className="h-5 w-5" />
@@ -345,16 +343,16 @@ export function WidgetGridControls({ isEditMode, onToggleEditMode, onOpenSetting
 }
 
 // --- Main Widget Grid ---
-export function WidgetGrid({ 
-    widgets, 
-    onWidgetsChange, 
-    renderWidget, 
-    isEditMode, 
-    onEditModeChange 
+export function WidgetGrid({
+    widgets,
+    onWidgetsChange,
+    renderWidget,
+    isEditMode,
+    onEditModeChange
 }: WidgetGridProps) {
     const [showSettings, setShowSettings] = useState(false);
     const { toggleWidget, updateWidgetSize, resetToDefaults } = useWidgetLayout();
-    
+
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -365,26 +363,26 @@ export function WidgetGrid({
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
-    
+
     // Sort widgets by order
-    const sortedWidgets = useMemo(() => 
+    const sortedWidgets = useMemo(() =>
         [...widgets].sort((a, b) => a.order - b.order),
         [widgets]
     );
-    
+
     const handleDragEnd = useCallback((event: DragEndEvent) => {
         const { active, over } = event;
-        
+
         if (over && active.id !== over.id) {
             const oldIndex = sortedWidgets.findIndex(w => w.id === active.id);
             const newIndex = sortedWidgets.findIndex(w => w.id === over.id);
-            
+
             const reordered = arrayMove(sortedWidgets, oldIndex, newIndex);
             const updated = reordered.map((w, i) => ({ ...w, order: i }));
             onWidgetsChange(updated);
         }
     }, [sortedWidgets, onWidgetsChange]);
-    
+
     return (
         <>
             {isEditMode && (
@@ -400,7 +398,7 @@ export function WidgetGrid({
                     </button>
                 </div>
             )}
-            
+
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -425,7 +423,7 @@ export function WidgetGrid({
                     </div>
                 </SortableContext>
             </DndContext>
-            
+
             {showSettings && (
                 <WidgetSettingsPanel
                     widgets={sortedWidgets}

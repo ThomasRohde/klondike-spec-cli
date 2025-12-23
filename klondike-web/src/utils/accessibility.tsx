@@ -38,13 +38,13 @@ export function announce(message: string, priority: 'polite' | 'assertive' = 'po
  */
 export function useFocusOnMount<T extends HTMLElement>() {
     const ref = useRef<T>(null);
-    
+
     useEffect(() => {
         if (ref.current) {
             ref.current.focus();
         }
     }, []);
-    
+
     return ref;
 }
 
@@ -53,23 +53,23 @@ export function useFocusOnMount<T extends HTMLElement>() {
  */
 export function useFocusTrap<T extends HTMLElement>(isActive: boolean) {
     const containerRef = useRef<T>(null);
-    
+
     useEffect(() => {
         if (!isActive || !containerRef.current) return;
-        
+
         const container = containerRef.current;
         const focusableElements = container.querySelectorAll<HTMLElement>(
             'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
-        
+
         if (focusableElements.length === 0) return;
-        
+
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
-        
+
         function handleKeyDown(e: KeyboardEvent) {
             if (e.key !== 'Tab') return;
-            
+
             if (e.shiftKey) {
                 if (document.activeElement === firstElement) {
                     e.preventDefault();
@@ -82,15 +82,15 @@ export function useFocusTrap<T extends HTMLElement>(isActive: boolean) {
                 }
             }
         }
-        
+
         container.addEventListener('keydown', handleKeyDown);
         firstElement.focus();
-        
+
         return () => {
             container.removeEventListener('keydown', handleKeyDown);
         };
     }, [isActive]);
-    
+
     return containerRef;
 }
 

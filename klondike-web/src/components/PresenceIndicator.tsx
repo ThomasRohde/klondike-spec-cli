@@ -53,7 +53,7 @@ function generateUserId(): string {
 // Generate random avatar color
 function generateUserColor(): string {
     const colors = [
-        '#ef4444', '#f97316', '#f59e0b', '#84cc16', 
+        '#ef4444', '#f97316', '#f59e0b', '#84cc16',
         '#22c55e', '#14b8a6', '#06b6d4', '#3b82f6',
         '#6366f1', '#8b5cf6', '#a855f7', '#ec4899',
     ];
@@ -75,20 +75,20 @@ function getUserName(): string {
 // Connect to presence WebSocket
 export function initializePresence() {
     if (store.ws) return;
-    
+
     try {
         const wsUrl = getWebSocketUrl('/ws/presence');
         store.ws = new WebSocket(wsUrl);
-        
+
         store.ws.onopen = () => {
             console.log('Presence WebSocket connected');
             sendPresence(window.location.pathname);
         };
-        
+
         store.ws.onmessage = (event) => {
             try {
                 const message = JSON.parse(event.data);
-                
+
                 if (message.type === 'presence') {
                     // Single user update
                     const user: UserPresence = message.user;
@@ -114,14 +114,14 @@ export function initializePresence() {
                 console.error('Failed to parse presence message:', error);
             }
         };
-        
+
         store.ws.onclose = () => {
             console.log('Presence WebSocket closed');
             store.ws = null;
             // Reconnect after delay
             setTimeout(initializePresence, 5000);
         };
-        
+
         store.ws.onerror = () => {
             console.log('Presence WebSocket error - connection unavailable');
             // Don't retry too aggressively on error
@@ -134,7 +134,7 @@ export function initializePresence() {
 // Send presence update
 export function sendPresence(view: string) {
     if (!store.ws || store.ws.readyState !== WebSocket.OPEN) return;
-    
+
     const presence: UserPresence = {
         id: store.userId,
         name: getUserName(),
@@ -142,10 +142,10 @@ export function sendPresence(view: string) {
         currentView: view,
         lastSeen: Date.now(),
     };
-    
+
     // Store color for consistency
     localStorage.setItem('klondike-user-color', presence.color);
-    
+
     store.ws.send(JSON.stringify({
         type: 'presence',
         user: presence,
@@ -161,11 +161,11 @@ export function usePresence() {
 // Hook to track and broadcast current view
 export function usePresenceTracking() {
     const location = useLocation();
-    
+
     useEffect(() => {
         initializePresence();
     }, []);
-    
+
     useEffect(() => {
         sendPresence(location.pathname);
     }, [location.pathname]);
@@ -184,14 +184,14 @@ export function UserAvatar({ user, size = 'md', showStatus = true }: UserAvatarP
         md: 'w-8 h-8 text-sm',
         lg: 'w-10 h-10 text-base',
     };
-    
+
     const initials = user.name
         .split(' ')
         .map(n => n[0])
         .join('')
         .toUpperCase()
         .substring(0, 2);
-    
+
     return (
         <div className="relative" title={`${user.name} - ${getViewLabel(user.currentView)}`}>
             {user.avatar ? (
@@ -209,7 +209,7 @@ export function UserAvatar({ user, size = 'md', showStatus = true }: UserAvatarP
                 </div>
             )}
             {showStatus && (
-                <span 
+                <span
                     className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full ring-2 ring-white dark:ring-gray-800"
                     title="Online"
                 />
@@ -240,16 +240,16 @@ interface UserStackProps {
 export function UserStack({ maxVisible = 3, showViews = false }: UserStackProps) {
     const users = usePresence();
     const [showTooltip, setShowTooltip] = useState(false);
-    
+
     if (users.length === 0) {
         return null;
     }
-    
+
     const visibleUsers = users.slice(0, maxVisible);
     const hiddenCount = users.length - maxVisible;
-    
+
     return (
-        <div 
+        <div
             className="relative"
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
@@ -264,7 +264,7 @@ export function UserStack({ maxVisible = 3, showViews = false }: UserStackProps)
                     </div>
                 )}
             </div>
-            
+
             {/* Tooltip with full user list */}
             {showTooltip && (
                 <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 px-3 z-50 min-w-48">
@@ -298,10 +298,10 @@ export function UserStack({ maxVisible = 3, showViews = false }: UserStackProps)
 // Presence indicator for header/layout
 export function PresenceIndicator() {
     const users = usePresence();
-    
+
     // Initialize presence tracking
     usePresenceTracking();
-    
+
     return (
         <div className="flex items-center gap-2">
             <UserStack maxVisible={3} showViews />
@@ -319,14 +319,14 @@ export function PresenceIndicator() {
 export function PresenceSettings() {
     const [name, setName] = useState(getUserName());
     const [saved, setSaved] = useState(false);
-    
+
     const handleSave = () => {
         localStorage.setItem('klondike-user-name', name);
         setSaved(true);
         sendPresence(window.location.pathname);
         setTimeout(() => setSaved(false), 2000);
     };
-    
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
             <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">

@@ -50,8 +50,15 @@ textarea:focus-visible,
 
 /* Status change animation */
 @keyframes status-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 .status-changing {
@@ -60,6 +67,7 @@ textarea:focus-visible,
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
+
     .btn-press,
     .btn-lift,
     .card-hover,
@@ -77,6 +85,7 @@ textarea:focus-visible,
     from {
         transform: translateY(100%);
     }
+
     to {
         transform: translateY(0);
     }
@@ -93,6 +102,7 @@ textarea:focus-visible,
 
 /* Ensure minimum touch targets on mobile */
 @media (pointer: coarse) {
+
     button,
     [role="button"],
     a,
@@ -102,7 +112,7 @@ textarea:focus-visible,
         min-height: 44px;
         min-width: 44px;
     }
-    
+
     /* Exception for inline elements */
     button.inline,
     a.inline {
@@ -137,7 +147,7 @@ textarea:focus-visible,
     .safe-area-bottom {
         padding-bottom: max(1rem, env(safe-area-inset-bottom));
     }
-    
+
     .safe-area-top {
         padding-top: max(1rem, env(safe-area-inset-top));
     }

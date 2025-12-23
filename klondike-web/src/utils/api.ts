@@ -102,7 +102,7 @@ export async function apiCall<T>(
             if (!options?.errorMessage) {
                 toast.error(error.message);
                 // Announce errors assertively to screen readers
-                announce(error.message, 'assertive');
+                announce(error.message, "assertive");
             }
             throw error;
         }
@@ -110,7 +110,7 @@ export async function apiCall<T>(
         const message = options?.errorMessage || "An unexpected error occurred";
         toast.error(message);
         // Announce errors assertively to screen readers
-        announce(message, 'assertive');
+        announce(message, "assertive");
         throw new Error(message);
     }
 }

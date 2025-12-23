@@ -108,11 +108,11 @@ export function StatusChart({
                         strokeDashoffset={segment.offset}
                         className="transition-all duration-300 cursor-pointer"
                         style={{
-                            filter: hoveredSegment === segment.status 
-                                ? 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))' 
+                            filter: hoveredSegment === segment.status
+                                ? 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))'
                                 : 'none',
-                            transform: hoveredSegment === segment.status 
-                                ? 'scale(1.02)' 
+                            transform: hoveredSegment === segment.status
+                                ? 'scale(1.02)'
                                 : 'scale(1)',
                             transformOrigin: 'center',
                         }}
@@ -134,7 +134,7 @@ export function StatusChart({
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 {hoveredData ? (
                     <>
-                        <span 
+                        <span
                             className="text-2xl font-bold transition-all duration-200"
                             style={{ color: hoveredData.color }}
                         >
@@ -168,7 +168,7 @@ export function StatusChart({
                         onMouseEnter={() => setHoveredSegment(segment.status)}
                         onMouseLeave={() => setHoveredSegment(null)}
                     >
-                        <div 
+                        <div
                             className="w-2.5 h-2.5 rounded-full"
                             style={{ backgroundColor: segment.color }}
                         />

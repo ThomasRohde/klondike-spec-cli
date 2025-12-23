@@ -25,9 +25,9 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     // Fetch features when palette opens (only once)
     useEffect(() => {
         if (!isOpen || hasFetched.current) return;
-        
+
         hasFetched.current = true;
-        
+
         fetch(`${getApiBaseUrl()}/api/features`)
             .then(res => res.json())
             .then(data => {
@@ -69,11 +69,11 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     return (
         <div className="fixed inset-0 z-50">
             {/* Backdrop */}
-            <div 
+            <div
                 className="absolute inset-0 bg-black/50 backdrop-blur-sm"
                 onClick={onClose}
             />
-            
+
             {/* Command palette */}
             <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-full max-w-xl">
                 <Command
@@ -84,12 +84,12 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                         }
                     }}
                 >
-                    <Command.Input 
+                    <Command.Input
                         placeholder="Search features, navigate, or run commands..."
                         className="w-full px-4 py-3 text-lg border-b border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none"
                         autoFocus
                     />
-                    
+
                     <Command.List className="max-h-80 overflow-y-auto p-2">
                         <Command.Empty className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                             No results found.
@@ -97,7 +97,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
                         {/* Navigation */}
                         <Command.Group heading="Navigation" className="mb-2">
-                            <Command.Item 
+                            <Command.Item
                                 value="nav:/dashboard"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -105,7 +105,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span className="text-lg">🏠</span>
                                 <span>Dashboard</span>
                             </Command.Item>
-                            <Command.Item 
+                            <Command.Item
                                 value="nav:/specs"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -113,7 +113,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span className="text-lg">📋</span>
                                 <span>Spec Explorer</span>
                             </Command.Item>
-                            <Command.Item 
+                            <Command.Item
                                 value="nav:/kanban"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -121,7 +121,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span className="text-lg">📊</span>
                                 <span>Kanban Board</span>
                             </Command.Item>
-                            <Command.Item 
+                            <Command.Item
                                 value="nav:/activity"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -129,7 +129,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span className="text-lg">📅</span>
                                 <span>Activity Log</span>
                             </Command.Item>
-                            <Command.Item 
+                            <Command.Item
                                 value="nav:/config"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -141,7 +141,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
                         {/* Quick Filters */}
                         <Command.Group heading="Filter by Status" className="mb-2">
-                            <Command.Item 
+                            <Command.Item
                                 value="nav:/features?status=in-progress"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -149,7 +149,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span className="w-2 h-2 rounded-full bg-yellow-500" />
                                 <span>In Progress Features</span>
                             </Command.Item>
-                            <Command.Item 
+                            <Command.Item
                                 value="nav:/features?status=blocked"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -157,7 +157,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span className="w-2 h-2 rounded-full bg-red-500" />
                                 <span>Blocked Features</span>
                             </Command.Item>
-                            <Command.Item 
+                            <Command.Item
                                 value="nav:/features?status=not-started"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -169,7 +169,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
                         {/* Actions */}
                         <Command.Group heading="Actions" className="mb-2">
-                            <Command.Item 
+                            <Command.Item
                                 value="action:refresh"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -177,7 +177,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span className="text-lg">🔄</span>
                                 <span>Refresh Page</span>
                             </Command.Item>
-                            <Command.Item 
+                            <Command.Item
                                 value="action:toggle-dark"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
@@ -191,18 +191,17 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                         {features.length > 0 && (
                             <Command.Group heading="Features" className="mb-2">
                                 {features.slice(0, 10).map(feature => (
-                                    <Command.Item 
+                                    <Command.Item
                                         key={feature.id}
                                         value={`feature:${feature.id} ${feature.description}`}
                                         onSelect={() => handleSelect(`feature:${feature.id}`)}
                                         className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                                     >
-                                        <span className={`w-2 h-2 rounded-full ${
-                                            feature.status === 'verified' ? 'bg-green-500' :
-                                            feature.status === 'in-progress' ? 'bg-yellow-500' :
-                                            feature.status === 'blocked' ? 'bg-red-500' :
-                                            'bg-gray-400'
-                                        }`} />
+                                        <span className={`w-2 h-2 rounded-full ${feature.status === 'verified' ? 'bg-green-500' :
+                                                feature.status === 'in-progress' ? 'bg-yellow-500' :
+                                                    feature.status === 'blocked' ? 'bg-red-500' :
+                                                        'bg-gray-400'
+                                            }`} />
                                         <span className="font-mono text-xs text-gray-500 dark:text-gray-400">
                                             {feature.id}
                                         </span>

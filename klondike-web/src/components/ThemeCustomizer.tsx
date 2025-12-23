@@ -47,7 +47,7 @@ function getDefaultTheme(): ThemeSettings {
 
 function loadTheme(): ThemeSettings {
     if (themeCache) return themeCache;
-    
+
     try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
@@ -57,7 +57,7 @@ function loadTheme(): ThemeSettings {
     } catch (e) {
         console.warn('Failed to load theme:', e);
     }
-    
+
     themeCache = getDefaultTheme();
     return themeCache;
 }
@@ -85,17 +85,17 @@ function getThemeSnapshot(): ThemeSettings {
 // Apply theme to document
 function applyTheme(settings: ThemeSettings): void {
     const root = document.documentElement;
-    
+
     // Apply dark mode
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = settings.mode === 'dark' || (settings.mode === 'system' && prefersDark);
-    
+
     if (isDark) {
         root.classList.add('dark');
     } else {
         root.classList.remove('dark');
     }
-    
+
     // Apply accent color CSS variables
     const accentConfig = ACCENT_COLORS.find(c => c.id === settings.accentColor);
     if (accentConfig) {
@@ -114,7 +114,7 @@ function applyTheme(settings: ThemeSettings): void {
 export function initializeTheme(): void {
     const settings = loadTheme();
     applyTheme(settings);
-    
+
     // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
         if (loadTheme().mode === 'system') {
@@ -126,26 +126,26 @@ export function initializeTheme(): void {
 // Hook for theme management
 export function useTheme() {
     const settings = useSyncExternalStore(subscribeTheme, getThemeSnapshot, getThemeSnapshot);
-    
+
     const setMode = useCallback((mode: ThemeMode) => {
         saveTheme({ ...loadTheme(), mode });
     }, []);
-    
+
     const setAccentColor = useCallback((accentColor: AccentColorId) => {
         saveTheme({ ...loadTheme(), accentColor, customAccent: undefined });
     }, []);
-    
+
     const setCustomAccent = useCallback((color: string) => {
         saveTheme({ ...loadTheme(), customAccent: color });
     }, []);
-    
+
     const resetToDefaults = useCallback(() => {
         saveTheme(getDefaultTheme());
     }, []);
-    
-    const isDark = settings.mode === 'dark' || 
+
+    const isDark = settings.mode === 'dark' ||
         (settings.mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    
+
     return {
         settings,
         isDark,
@@ -163,7 +163,7 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ className = '' }: ThemeToggleProps) {
     const { isDark, setMode, settings } = useTheme();
-    
+
     const toggleTheme = () => {
         if (settings.mode === 'system') {
             setMode(isDark ? 'light' : 'dark');
@@ -173,7 +173,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
             setMode('dark');
         }
     };
-    
+
     return (
         <button
             onClick={toggleTheme}
@@ -197,7 +197,7 @@ interface ThemeCustomizerProps {
 export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
     const { settings, setMode, setAccentColor, setCustomAccent, resetToDefaults } = useTheme();
     const [customColor, setCustomColor] = useState(settings.customAccent || '#6366f1');
-    
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
@@ -216,7 +216,7 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                         <XMarkIcon className="h-5 w-5 text-gray-500" />
                     </button>
                 </div>
-                
+
                 <div className="p-4 space-y-6">
                     {/* Color Mode */}
                     <div>
@@ -228,11 +228,10 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                                 <button
                                     key={mode}
                                     onClick={() => setMode(mode)}
-                                    className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                                        settings.mode === mode
+                                    className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg border transition-colors ${settings.mode === mode
                                             ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
                                             : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                                    }`}
+                                        }`}
                                 >
                                     {mode === 'light' && <SunIcon className="h-4 w-4" />}
                                     {mode === 'dark' && <MoonIcon className="h-4 w-4" />}
@@ -241,7 +240,7 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                             ))}
                         </div>
                     </div>
-                    
+
                     {/* Accent Color */}
                     <div>
                         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -252,11 +251,10 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                                 <button
                                     key={color.id}
                                     onClick={() => setAccentColor(color.id)}
-                                    className={`relative w-10 h-10 rounded-lg transition-transform hover:scale-110 ${
-                                        settings.accentColor === color.id && !settings.customAccent
+                                    className={`relative w-10 h-10 rounded-lg transition-transform hover:scale-110 ${settings.accentColor === color.id && !settings.customAccent
                                             ? 'ring-2 ring-offset-2 ring-gray-400 dark:ring-gray-500'
                                             : ''
-                                    }`}
+                                        }`}
                                     style={{ backgroundColor: color.primary }}
                                     title={color.name}
                                 >
@@ -267,7 +265,7 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                             ))}
                         </div>
                     </div>
-                    
+
                     {/* Custom Color Picker */}
                     <div>
                         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -300,7 +298,7 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                             </p>
                         )}
                     </div>
-                    
+
                     {/* Preview */}
                     <div>
                         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -308,15 +306,15 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                         </h4>
                         <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg space-y-3">
                             <div className="flex gap-2">
-                                <button 
+                                <button
                                     className="px-4 py-2 rounded-lg text-white text-sm"
                                     style={{ backgroundColor: 'var(--accent-primary, #6366f1)' }}
                                 >
                                     Primary Button
                                 </button>
-                                <button 
+                                <button
                                     className="px-4 py-2 rounded-lg border text-sm"
-                                    style={{ 
+                                    style={{
                                         borderColor: 'var(--accent-primary, #6366f1)',
                                         color: 'var(--accent-primary, #6366f1)'
                                     }}
@@ -324,14 +322,14 @@ export function ThemeCustomizer({ onClose }: ThemeCustomizerProps) {
                                     Secondary
                                 </button>
                             </div>
-                            <div 
+                            <div
                                 className="h-2 rounded-full"
                                 style={{ backgroundColor: 'var(--accent-primary, #6366f1)' }}
                             />
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Footer */}
                 <div className="flex items-center justify-between p-4 border-t border-gray-200 dark:border-gray-700">
                     <button
@@ -359,7 +357,7 @@ interface ThemeCustomizerButtonProps {
 
 export function ThemeCustomizerButton({ className = '' }: ThemeCustomizerButtonProps) {
     const [isOpen, setIsOpen] = useState(false);
-    
+
     return (
         <>
             <button
@@ -369,7 +367,7 @@ export function ThemeCustomizerButton({ className = '' }: ThemeCustomizerButtonP
             >
                 <SwatchIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
             </button>
-            
+
             {isOpen && <ThemeCustomizer onClose={() => setIsOpen(false)} />}
         </>
     );

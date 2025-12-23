@@ -62,7 +62,7 @@ export function PrintView({ onClose }: PrintViewProps) {
         window.print();
     };
 
-    const filteredFeatures = features.filter(f => 
+    const filteredFeatures = features.filter(f =>
         statusFilter === 'all' || f.status === statusFilter
     );
 
@@ -132,7 +132,7 @@ export function PrintView({ onClose }: PrintViewProps) {
                             Print Preview
                         </h2>
                     </div>
-                    
+
                     <div className="flex items-center gap-4">
                         {/* Filter */}
                         <select
@@ -236,7 +236,7 @@ export function PrintView({ onClose }: PrintViewProps) {
                         </div>
                     </div>
                     <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
+                        <div
                             className="h-full bg-green-500 transition-all"
                             style={{ width: `${status?.completion_percentage || 0}%` }}
                         />
@@ -268,7 +268,7 @@ export function PrintView({ onClose }: PrintViewProps) {
                                         <span className="text-xs text-gray-500">P{feature.priority}</span>
                                     </div>
                                     <p className="text-gray-800 mb-2">{feature.description}</p>
-                                    
+
                                     {includeCriteria && feature.acceptance_criteria && feature.acceptance_criteria.length > 0 && (
                                         <div className="mt-2">
                                             <p className="text-xs font-semibold text-gray-600 uppercase">Acceptance Criteria:</p>
@@ -279,7 +279,7 @@ export function PrintView({ onClose }: PrintViewProps) {
                                             </ul>
                                         </div>
                                     )}
-                                    
+
                                     {includeEvidence && feature.evidence && feature.evidence.length > 0 && (
                                         <div className="mt-2">
                                             <p className="text-xs font-semibold text-gray-600 uppercase">Evidence:</p>
@@ -290,7 +290,7 @@ export function PrintView({ onClose }: PrintViewProps) {
                                             </ul>
                                         </div>
                                     )}
-                                    
+
                                     {includeNotes && feature.notes && (
                                         <div className="mt-2">
                                             <p className="text-xs font-semibold text-gray-600 uppercase">Notes:</p>
@@ -330,7 +330,7 @@ export function PrintButton({ className = '' }: PrintButtonProps) {
                 <PrinterIcon className="h-5 w-5" />
                 <span className="hidden sm:inline">Print</span>
             </button>
-            
+
             {showPrintView && <PrintView onClose={() => setShowPrintView(false)} />}
         </>
     );

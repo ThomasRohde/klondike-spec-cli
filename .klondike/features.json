@@ -1426,13 +1426,13 @@
         "All tests pass with full coverage maintained"
       ],
       "estimatedEffort": null,
-      "status": "blocked",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": "Pausing work - blocked by user request",
-      "lastWorkedOn": "2025-12-22T07:03:31.072021",
+      "lastWorkedOn": "2025-12-23T05:17:54.129978",
       "notes": "Implementation: After all command extractions are complete, cli.py should contain only: imports, Pith app definition, @app.command decorated functions that delegate to command modules, and main() entry point. Remove any orphaned helper functions. Run ruff to clean imports. Dependencies: F044-F053. This is the final cleanup step. Verify line count reduction from 3000+ to under 500."
     },
     {
@@ -2838,11 +2838,16 @@
         "Clear offline data option in settings"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T17:47:26.644169",
+      "verifiedBy": "MCP Agent",
+      "evidenceLinks": [
+        "sw.js service worker with network-first API",
+        "cache-first static assets; OfflineSupport.tsx with OfflineIndicator",
+        "banner",
+        "update notifications; service worker registration in main.tsx; offline indicators in Layout mobile and desktop headers; build succeeds; 181 tests pass; commit 6d6967e"
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T17:13:34.587384",
       "notes": "Implementation: Use Vite PWA plugin or workbox. Cache API responses in IndexedDB. Edge cases: Handle stale data conflicts on reconnect. Dependencies: F065 (WebSocket - needs reconnection logic). Context: Reliability for users with spotty connections. Gotchas: Service worker updates can be tricky - implement update notification."
@@ -2850,8 +2855,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-07T00:00:00Z",
-    "lastUpdated": "2025-12-22T17:13:08.601239",
+    "lastUpdated": "2025-12-23T05:17:54.129981",
     "totalFeatures": 104,
-    "passingFeatures": 90
+    "passingFeatures": 91
   }
 }

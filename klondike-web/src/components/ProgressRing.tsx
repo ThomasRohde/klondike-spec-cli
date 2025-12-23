@@ -52,7 +52,7 @@ export function ProgressRing({
     const getColor = (pct: number): string => {
         if (pct <= 0) return '#ef4444'; // red-500
         if (pct >= 100) return '#22c55e'; // green-500
-        
+
         if (pct <= 50) {
             // Red to yellow (0-50%)
             const ratio = pct / 50;

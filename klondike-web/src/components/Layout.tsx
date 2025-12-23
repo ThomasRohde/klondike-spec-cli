@@ -288,7 +288,7 @@ export function Layout() {
                     <OfflineIndicator />
                     <PresenceIndicator />
                 </div>
-                
+
                 {/* Active session banner */}
                 {activeSession && (
                     <SessionBanner
@@ -301,7 +301,7 @@ export function Layout() {
                     <Outlet />
                 </main>
             </div>
-            
+
             {/* Theme Customizer Modal */}
             {showThemeCustomizer && (
                 <ThemeCustomizer onClose={() => setShowThemeCustomizer(false)} />

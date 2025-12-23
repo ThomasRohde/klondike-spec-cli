@@ -23,7 +23,7 @@ interface ShortcutRowProps {
 
 function ShortcutRow({ shortcut }: ShortcutRowProps) {
     const formatted = formatShortcut(shortcut.key, shortcut.modifiers);
-    
+
     return (
         <div className="flex items-center justify-between py-2">
             <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -56,9 +56,9 @@ function ShortcutCategory({ category, shortcuts }: ShortcutCategoryProps) {
 
 export function ShortcutsHelpOverlay() {
     const { shortcuts, helpVisible, hideHelp } = useKeyboardShortcuts();
-    
+
     if (!helpVisible) return null;
-    
+
     // Group shortcuts by category
     const categories = shortcuts.reduce<Record<string, ShortcutAction[]>>((acc, shortcut) => {
         if (!acc[shortcut.category]) {
@@ -67,7 +67,7 @@ export function ShortcutsHelpOverlay() {
         acc[shortcut.category].push(shortcut);
         return acc;
     }, {});
-    
+
     const categoryOrder = ['Navigation', 'Actions', 'Help'];
     const sortedCategories = Object.keys(categories).sort((a, b) => {
         const aIndex = categoryOrder.indexOf(a);
@@ -77,16 +77,16 @@ export function ShortcutsHelpOverlay() {
         if (bIndex === -1) return -1;
         return aIndex - bIndex;
     });
-    
+
     return (
-        <div 
+        <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
             onClick={hideHelp}
             role="dialog"
             aria-modal="true"
             aria-labelledby="shortcuts-title"
         >
-            <div 
+            <div
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden"
                 onClick={e => e.stopPropagation()}
             >
@@ -105,18 +105,18 @@ export function ShortcutsHelpOverlay() {
                         </svg>
                     </button>
                 </div>
-                
+
                 {/* Content */}
                 <div className="px-6 py-4 overflow-y-auto max-h-[calc(80vh-120px)]">
                     {sortedCategories.map(category => (
-                        <ShortcutCategory 
-                            key={category} 
-                            category={category} 
-                            shortcuts={categories[category]} 
+                        <ShortcutCategory
+                            key={category}
+                            category={category}
+                            shortcuts={categories[category]}
                         />
                     ))}
                 </div>
-                
+
                 {/* Footer */}
                 <div className="px-6 py-3 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700">
                     <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
@@ -131,7 +131,7 @@ export function ShortcutsHelpOverlay() {
 // Floating help button
 export function ShortcutsHelpButton() {
     const { toggleHelp } = useKeyboardShortcuts();
-    
+
     return (
         <button
             onClick={toggleHelp}

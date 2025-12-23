@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-    PlayIcon, 
-    CheckCircleIcon, 
-    StopIcon, 
-    PlusIcon, 
+import {
+    PlayIcon,
+    CheckCircleIcon,
+    StopIcon,
+    PlusIcon,
     PencilIcon,
     ArrowPathIcon,
     CodeBracketIcon,
@@ -70,10 +70,10 @@ function formatRelativeTime(timestamp: string): string {
  * Recent activity feed with live updates.
  * Shows feature changes, session events, and commits.
  */
-export function RecentActivityFeed({ 
-    maxItems = 10, 
+export function RecentActivityFeed({
+    maxItems = 10,
     showHeader = true,
-    compact = false 
+    compact = false
 }: RecentActivityFeedProps) {
     const navigate = useNavigate();
     const [activities, setActivities] = useState<Activity[]>([]);
@@ -140,7 +140,7 @@ export function RecentActivityFeed({
         return (
             <div className="text-center py-4 text-gray-500 dark:text-gray-400">
                 <p className="text-sm">{error}</p>
-                <button 
+                <button
                     onClick={fetchActivities}
                     className="mt-2 text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
                 >
@@ -173,13 +173,13 @@ export function RecentActivityFeed({
                     </button>
                 </div>
             )}
-            
+
             <div className="space-y-3">
                 {activities.map((activity) => {
                     const iconConfig = activityIcons[activity.type] || activityIcons.feature_updated;
                     const Icon = iconConfig.icon;
                     const isClickable = !!activity.featureId || activity.type.startsWith('session_');
-                    
+
                     return (
                         <div
                             key={activity.id}
@@ -201,7 +201,7 @@ export function RecentActivityFeed({
                             `}>
                                 <Icon className={compact ? 'w-3 h-3' : 'w-4 h-4'} />
                             </div>
-                            
+
                             {/* Content */}
                             <div className="flex-1 min-w-0">
                                 <p className={`
@@ -234,7 +234,7 @@ export function RecentActivityFeed({
 export function ActivityIndicator() {
     const [count, setCount] = useState(0);
     const { lastMessage } = useWebSocket(getWebSocketUrl('/api/updates'));
-    
+
     useEffect(() => {
         if (lastMessage) {
             setCount(prev => prev + 1);

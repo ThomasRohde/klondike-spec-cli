@@ -2751,6 +2751,7 @@ def serve(
         # Cancel pending asyncio tasks
         try:
             import asyncio
+
             loop = asyncio.get_event_loop()
             if loop and loop.is_running():
                 # Get all tasks
@@ -2796,6 +2797,7 @@ def serve(
         # Cancel any remaining asyncio tasks
         try:
             import asyncio
+
             loop = asyncio.get_event_loop()
             if loop:
                 tasks = [t for t in asyncio.all_tasks(loop) if not t.done()]
@@ -2803,7 +2805,9 @@ def serve(
                     task.cancel()
                 # Give tasks a moment to cancel
                 if tasks:
-                    loop.run_until_complete(asyncio.gather(*tasks, return_exceptions=True))
+                    loop.run_until_complete(
+                        asyncio.gather(*tasks, return_exceptions=True)
+                    )
         except Exception:
             pass  # Ignore errors during cleanup
 

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { 
-    ChevronDownIcon, 
+import {
+    ChevronDownIcon,
     ChevronUpIcon,
     PlayIcon,
     StopIcon,
@@ -97,11 +97,11 @@ export function ExpandableFeatureCard({
         }
     }, [onVerify, checkedCriteria]);
 
-    const allCriteriaChecked = feature.acceptanceCriteria.length > 0 && 
+    const allCriteriaChecked = feature.acceptanceCriteria.length > 0 &&
         checkedCriteria.size === feature.acceptanceCriteria.length;
 
     return (
-        <div 
+        <div
             className={`
                 border-l-4 rounded-lg shadow-sm overflow-hidden transition-all duration-200
                 ${statusColors[feature.status]}
@@ -109,7 +109,7 @@ export function ExpandableFeatureCard({
             `}
         >
             {/* Header - always visible */}
-            <div 
+            <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleExpanded}
                 onKeyDown={(e) => {
@@ -146,7 +146,7 @@ export function ExpandableFeatureCard({
             </div>
 
             {/* Expanded content */}
-            <div 
+            <div
                 className={`
                     transition-all duration-200 ease-in-out overflow-hidden
                     ${isExpanded ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}
@@ -178,13 +178,12 @@ export function ExpandableFeatureCard({
                                             disabled={feature.status === 'verified'}
                                             className="mt-1 w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 disabled:opacity-60"
                                         />
-                                        <label 
+                                        <label
                                             htmlFor={`${feature.id}-criterion-${index}`}
-                                            className={`text-sm cursor-pointer ${
-                                                checkedCriteria.has(index)
+                                            className={`text-sm cursor-pointer ${checkedCriteria.has(index)
                                                     ? 'text-gray-500 dark:text-gray-400 line-through'
                                                     : 'text-gray-700 dark:text-gray-300'
-                                            }`}
+                                                }`}
                                         >
                                             {criterion}
                                         </label>

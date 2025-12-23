@@ -85,7 +85,7 @@ interface DragOverlayItemProps {
 
 export function DragOverlayItem({ feature }: DragOverlayItemProps) {
     if (!feature) return null;
-    
+
     return (
         <div className="bg-white dark:bg-gray-800 border-2 border-indigo-500 shadow-xl rounded-lg p-3 opacity-95">
             <div className="flex items-center gap-2">
@@ -111,7 +111,7 @@ interface FeatureDndContextProps {
 
 export function FeatureDndContext({ features, onReorder, children, disabled = false }: FeatureDndContextProps) {
     const [activeFeature, setActiveFeature] = useState<DraggableFeature | null>(null);
-    
+
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -122,9 +122,9 @@ export function FeatureDndContext({ features, onReorder, children, disabled = fa
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
-    
+
     const featureIds = useMemo(() => features.map(f => f.id), [features]);
-    
+
     function handleDragStart(event: DragStartEvent) {
         const feature = features.find(f => f.id === event.active.id);
         setActiveFeature(feature || null);
@@ -132,35 +132,35 @@ export function FeatureDndContext({ features, onReorder, children, disabled = fa
             announce(`Picked up ${feature.id}`);
         }
     }
-    
+
     function handleDragEnd(event: DragEndEvent) {
         setActiveFeature(null);
-        
+
         const { active, over } = event;
-        
+
         if (!over || active.id === over.id) {
             announce('Drop cancelled');
             return;
         }
-        
+
         const oldIndex = featureIds.indexOf(active.id as string);
         const newIndex = featureIds.indexOf(over.id as string);
-        
+
         if (oldIndex === -1 || newIndex === -1) return;
-        
+
         // Create new order
         const newFeatures = [...features];
         const [movedFeature] = newFeatures.splice(oldIndex, 1);
         newFeatures.splice(newIndex, 0, movedFeature);
-        
+
         onReorder(newFeatures);
         announce(`Dropped ${active.id} at position ${newIndex + 1}`);
     }
-    
+
     if (disabled) {
         return <>{children}</>;
     }
-    
+
     return (
         <DndContext
             sensors={sensors}
@@ -184,20 +184,20 @@ interface UseFeatureOrderingOptions {
 }
 
 export function useFeatureOrdering(
-    features: DraggableFeature[], 
+    features: DraggableFeature[],
     options: UseFeatureOrderingOptions
 ) {
     const [localOrder, setLocalOrder] = useState<DraggableFeature[] | null>(null);
     const [isSaving, setIsSaving] = useState(false);
-    
+
     // Compute ordered features
     const orderedFeatures = localOrder ?? features;
-    
+
     async function handleReorder(newFeatures: DraggableFeature[]) {
         // Optimistic update
         setLocalOrder(newFeatures);
         setIsSaving(true);
-        
+
         try {
             // Assign new priorities based on position (P1-P5 distribution)
             const totalFeatures = newFeatures.length;
@@ -209,18 +209,18 @@ export function useFeatureOrdering(
                     priority,
                 };
             });
-            
+
             // Send updates to API
             const response = await fetch(`${getApiBaseUrl()}/api/features/reorder`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ order: updates }),
             });
-            
+
             if (!response.ok) {
                 throw new Error('Failed to save order');
             }
-            
+
             toast.success('Order saved');
             options.onRefresh();
         } catch {
@@ -232,7 +232,7 @@ export function useFeatureOrdering(
             setLocalOrder(null);
         }
     }
-    
+
     return {
         orderedFeatures,
         isSaving,
@@ -248,7 +248,7 @@ interface SaveStatusProps {
 
 export function SaveStatus({ isSaving }: SaveStatusProps) {
     if (!isSaving) return null;
-    
+
     return (
         <div className="fixed bottom-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-bottom z-50">
             <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">

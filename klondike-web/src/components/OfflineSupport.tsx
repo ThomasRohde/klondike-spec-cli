@@ -51,7 +51,7 @@ export async function registerServiceWorker(): Promise<void> {
         const registration = await navigator.serviceWorker.register('/sw.js', {
             scope: '/',
         });
-        
+
         swRegistration = registration;
         updateOfflineState({ isServiceWorkerReady: true });
         console.log('[Offline] Service worker registered');
@@ -108,17 +108,17 @@ if (typeof window !== 'undefined') {
 // --- Hook for Offline State ---
 export function useOfflineState() {
     const state = useSyncExternalStore(subscribeOffline, getOfflineSnapshot, getOfflineSnapshot);
-    
+
     const clearCache = useCallback(() => {
         clearServiceWorkerCache();
     }, []);
-    
+
     const applyUpdate = useCallback(() => {
         applyServiceWorkerUpdate();
         // Reload to activate new service worker
         window.location.reload();
     }, []);
-    
+
     return {
         ...state,
         clearCache,
@@ -148,7 +148,7 @@ export function OfflineIndicator({ className = '' }: OfflineIndicatorProps) {
 
     // Status dot for header
     const StatusDot = () => (
-        <div 
+        <div
             className={`flex items-center gap-1.5 ${className}`}
             title={isOnline ? 'Online' : 'Offline - Using cached data'}
         >
@@ -169,7 +169,7 @@ export function OfflineIndicator({ className = '' }: OfflineIndicatorProps) {
     return (
         <>
             <StatusDot />
-            
+
             {/* Offline Banner */}
             {showBanner && !isOnline && (
                 <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 z-50">
@@ -239,7 +239,7 @@ export function OfflineSettings() {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Offline Support
             </h3>
-            
+
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Network Status</span>
@@ -247,14 +247,14 @@ export function OfflineSettings() {
                         {isOnline ? 'Online' : 'Offline'}
                     </span>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Service Worker</span>
                     <span className={`text-sm font-medium ${isServiceWorkerReady ? 'text-green-600' : 'text-gray-600'}`}>
                         {isServiceWorkerReady ? 'Active' : 'Not Registered'}
                     </span>
                 </div>
-                
+
                 {lastSyncTime && (
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Last Sync</span>
@@ -263,7 +263,7 @@ export function OfflineSettings() {
                         </span>
                     </div>
                 )}
-                
+
                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                         onClick={handleClearCache}

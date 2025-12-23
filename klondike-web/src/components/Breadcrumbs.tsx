@@ -23,14 +23,14 @@ const routeLabels: Record<string, string> = {
 export function Breadcrumbs() {
     const location = useLocation();
     const params = useParams();
-    
+
     const breadcrumbs: BreadcrumbItem[] = [
         { label: 'Home', href: '/dashboard', icon: HomeIcon },
     ];
-    
+
     // Build breadcrumbs based on current path
     const pathname = location.pathname;
-    
+
     // Handle /task/:featureId route
     if (pathname.startsWith('/task/') && params.featureId) {
         breadcrumbs.push({
@@ -40,7 +40,7 @@ export function Breadcrumbs() {
         breadcrumbs.push({
             label: params.featureId,
         });
-    } 
+    }
     // Handle other routes
     else if (pathname !== '/dashboard' && pathname !== '/') {
         const label = routeLabels[pathname] || pathname.slice(1);
@@ -48,30 +48,30 @@ export function Breadcrumbs() {
             label: label.charAt(0).toUpperCase() + label.slice(1),
         });
     }
-    
+
     // Don't show breadcrumbs on home page
     if (breadcrumbs.length <= 1) {
         return null;
     }
-    
+
     return (
         <nav className="mb-4" aria-label="Breadcrumb">
             <ol className="flex items-center space-x-2 text-sm">
                 {breadcrumbs.map((crumb, index) => {
                     const isLast = index === breadcrumbs.length - 1;
                     const Icon = crumb.icon;
-                    
+
                     return (
                         <li key={index} className="flex items-center">
                             {index > 0 && (
-                                <ChevronRightIcon 
-                                    className="w-4 h-4 mx-2 text-gray-400 flex-shrink-0" 
+                                <ChevronRightIcon
+                                    className="w-4 h-4 mx-2 text-gray-400 flex-shrink-0"
                                     aria-hidden="true"
                                 />
                             )}
-                            
+
                             {isLast || !crumb.href ? (
-                                <span 
+                                <span
                                     className="text-gray-500 dark:text-gray-400 flex items-center gap-1"
                                     aria-current={isLast ? 'page' : undefined}
                                 >
@@ -103,14 +103,14 @@ export function Breadcrumbs() {
 export function CompactBreadcrumbs() {
     const location = useLocation();
     const params = useParams();
-    
+
     // Determine parent page
     let parentHref = '/dashboard';
     let parentLabel = 'Dashboard';
     let currentLabel = 'Home';
-    
+
     const pathname = location.pathname;
-    
+
     if (pathname.startsWith('/task/') && params.featureId) {
         parentHref = '/specs';
         parentLabel = 'Specs';
@@ -124,12 +124,12 @@ export function CompactBreadcrumbs() {
     } else if (pathname === '/config') {
         currentLabel = 'Configuration';
     }
-    
+
     // Don't show on home
     if (pathname === '/dashboard' || pathname === '/') {
         return null;
     }
-    
+
     return (
         <div className="flex items-center gap-2 mb-4 md:hidden">
             <Link

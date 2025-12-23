@@ -53,27 +53,27 @@ interface CommitData {
 // Group events by date
 function groupEventsByDate(events: TimelineEvent[]): Map<string, TimelineEvent[]> {
     const groups = new Map<string, TimelineEvent[]>();
-    
+
     for (const event of events) {
         const date = new Date(event.timestamp).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
         });
-        
+
         if (!groups.has(date)) {
             groups.set(date, []);
         }
         groups.get(date)!.push(event);
     }
-    
+
     return groups;
 }
 
 // Event icon component
 function EventIcon({ type }: { type: TimelineEvent['type'] }) {
     const iconClass = 'w-4 h-4';
-    
+
     switch (type) {
         case 'feature-verified':
             return <CheckCircleIcon className={`${iconClass} text-green-500`} />;
@@ -122,7 +122,7 @@ function TimelineEventCard({ event, isExpanded, onToggle }: TimelineEventCardPro
         hour: '2-digit',
         minute: '2-digit',
     });
-    
+
     return (
         <div className={`relative flex gap-4 pb-6 last:pb-0`}>
             {/* Timeline connector */}
@@ -132,10 +132,10 @@ function TimelineEventCard({ event, isExpanded, onToggle }: TimelineEventCardPro
                 </div>
                 <div className="flex-1 w-px bg-gray-200 dark:bg-gray-700 mt-2" />
             </div>
-            
+
             {/* Event content */}
             <div className="flex-1 min-w-0">
-                <div 
+                <div
                     className={`rounded-lg border p-3 cursor-pointer transition-colors hover:shadow-sm ${getEventBgColor(event.type)}`}
                     onClick={onToggle}
                 >
@@ -165,7 +165,7 @@ function TimelineEventCard({ event, isExpanded, onToggle }: TimelineEventCardPro
                             </button>
                         )}
                     </div>
-                    
+
                     {/* Expanded details */}
                     {isExpanded && (
                         <div className="mt-3 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
@@ -238,7 +238,7 @@ function DateRangeFilter({
         'session-end': 'Session End',
         'commit': 'Commits',
     };
-    
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
             <div className="flex flex-wrap items-center gap-4">
@@ -246,7 +246,7 @@ function DateRangeFilter({
                     <FunnelIcon className="w-4 h-4 text-gray-400" />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filters</span>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                     <label className="text-sm text-gray-600 dark:text-gray-400">From:</label>
                     <input
@@ -256,7 +256,7 @@ function DateRangeFilter({
                         className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     />
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                     <label className="text-sm text-gray-600 dark:text-gray-400">To:</label>
                     <input
@@ -266,19 +266,18 @@ function DateRangeFilter({
                         className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     />
                 </div>
-                
+
                 <div className="h-6 w-px bg-gray-200 dark:bg-gray-700" />
-                
+
                 <div className="flex flex-wrap gap-2">
                     {eventTypes.map((type) => (
                         <button
                             key={type}
                             onClick={() => onTypeToggle(type)}
-                            className={`px-2 py-1 text-xs rounded-full transition-colors ${
-                                selectedTypes.includes(type)
+                            className={`px-2 py-1 text-xs rounded-full transition-colors ${selectedTypes.includes(type)
                                     ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700'
                                     : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border border-transparent'
-                            }`}
+                                }`}
                         >
                             {typeLabels[type]}
                         </button>
@@ -303,7 +302,7 @@ export function FeatureTimeline() {
         'session-start',
         'session-end',
     ]);
-    
+
     const allEventTypes: TimelineEvent['type'][] = [
         'feature-verified',
         'feature-started',
@@ -312,20 +311,20 @@ export function FeatureTimeline() {
         'session-end',
         'commit',
     ];
-    
+
     useEffect(() => {
         fetchTimelineData();
     }, []);
-    
+
     async function fetchTimelineData() {
         setLoading(true);
         const timelineEvents: TimelineEvent[] = [];
-        
+
         try {
             // Fetch features for verified/started/blocked events
             const featuresRes = await fetch(`${getApiBaseUrl()}/api/features`);
             const featuresData = await featuresRes.json();
-            
+
             for (const feature of featuresData.features as FeatureData[]) {
                 if (feature.verifiedAt) {
                     timelineEvents.push({
@@ -337,7 +336,7 @@ export function FeatureTimeline() {
                         metadata: { feature_id: feature.id },
                     });
                 }
-                
+
                 if (feature.lastWorkedOn && feature.status === 'in-progress') {
                     timelineEvents.push({
                         id: `started-${feature.id}`,
@@ -348,7 +347,7 @@ export function FeatureTimeline() {
                         metadata: { feature_id: feature.id },
                     });
                 }
-                
+
                 if (feature.status === 'blocked' && feature.lastWorkedOn) {
                     timelineEvents.push({
                         id: `blocked-${feature.id}`,
@@ -360,11 +359,11 @@ export function FeatureTimeline() {
                     });
                 }
             }
-            
+
             // Fetch sessions
             const progressRes = await fetch(`${getApiBaseUrl()}/api/progress`);
             const progressData = await progressRes.json();
-            
+
             for (const session of progressData.sessions as SessionData[]) {
                 timelineEvents.push({
                     id: `session-start-${session.sessionNumber}`,
@@ -374,7 +373,7 @@ export function FeatureTimeline() {
                     description: session.focus,
                     metadata: { session: String(session.sessionNumber) },
                 });
-                
+
                 if (session.endedAt) {
                     timelineEvents.push({
                         id: `session-end-${session.sessionNumber}`,
@@ -386,11 +385,11 @@ export function FeatureTimeline() {
                     });
                 }
             }
-            
+
             // Fetch commits
             const commitsRes = await fetch(`${getApiBaseUrl()}/api/commits?count=50`);
             const commitsData = await commitsRes.json();
-            
+
             for (const commit of commitsData as CommitData[]) {
                 timelineEvents.push({
                     id: `commit-${commit.hash}`,
@@ -401,12 +400,12 @@ export function FeatureTimeline() {
                     metadata: { hash: commit.hash.substring(0, 7), author: commit.author },
                 });
             }
-            
+
             // Sort by timestamp descending (most recent first)
-            timelineEvents.sort((a, b) => 
+            timelineEvents.sort((a, b) =>
                 new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
             );
-            
+
             setEvents(timelineEvents);
         } catch (error) {
             console.error('Failed to fetch timeline data:', error);
@@ -414,28 +413,28 @@ export function FeatureTimeline() {
             setLoading(false);
         }
     }
-    
+
     // Filter events
     const filteredEvents = useMemo(() => {
         return events.filter((event) => {
             // Type filter
             if (!selectedTypes.includes(event.type)) return false;
-            
+
             // Date range filter
             const eventDate = new Date(event.timestamp);
             if (startDate && eventDate < new Date(startDate)) return false;
             if (endDate && eventDate > new Date(endDate + 'T23:59:59')) return false;
-            
+
             return true;
         });
     }, [events, selectedTypes, startDate, endDate]);
-    
+
     // Group by date
-    const groupedEvents = useMemo(() => 
-        groupEventsByDate(filteredEvents), 
+    const groupedEvents = useMemo(() =>
+        groupEventsByDate(filteredEvents),
         [filteredEvents]
     );
-    
+
     function toggleEvent(id: string) {
         setExpandedEvents((prev) => {
             const next = new Set(prev);
@@ -447,7 +446,7 @@ export function FeatureTimeline() {
             return next;
         });
     }
-    
+
     function toggleType(type: TimelineEvent['type']) {
         setSelectedTypes((prev) => {
             if (prev.includes(type)) {
@@ -456,7 +455,7 @@ export function FeatureTimeline() {
             return [...prev, type];
         });
     }
-    
+
     if (loading) {
         return (
             <div className="space-y-6">
@@ -475,7 +474,7 @@ export function FeatureTimeline() {
             </div>
         );
     }
-    
+
     return (
         <div>
             <div className="flex items-center justify-between mb-6">
@@ -486,7 +485,7 @@ export function FeatureTimeline() {
                     {filteredEvents.length} events
                 </div>
             </div>
-            
+
             <DateRangeFilter
                 startDate={startDate}
                 endDate={endDate}
@@ -496,7 +495,7 @@ export function FeatureTimeline() {
                 selectedTypes={selectedTypes}
                 onTypeToggle={toggleType}
             />
-            
+
             {filteredEvents.length === 0 ? (
                 <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                     <CalendarIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />

@@ -57,11 +57,11 @@ export function SpecExplorer() {
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
     const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
     const [reorderMode, setReorderMode] = useState(false)
-    
+
     // Track selection
     const selectedIds = useSelection()
     const filteredIds = filteredFeatures.map(f => f.id)
-    
+
     // Drag and drop ordering
     const { orderedFeatures, isSaving, handleReorder } = useFeatureOrdering(
         filteredFeatures.map(f => ({
@@ -210,12 +210,12 @@ export function SpecExplorer() {
     async function handleCardVerify(featureId: string, checkedCriteria: number[]) {
         const feature = features.find(f => f.id === featureId)
         if (!feature) return
-        
+
         // Build evidence from checked criteria
-        const evidence = checkedCriteria.map(i => 
+        const evidence = checkedCriteria.map(i =>
             `✓ ${feature.acceptanceCriteria[i]}`
         ).join('\n')
-        
+
         try {
             await apiCall(
                 fetch(`${getApiBaseUrl()}/api/features/${featureId}/verify`, {
@@ -258,14 +258,14 @@ export function SpecExplorer() {
                     <Skeleton height={32} className="w-48" />
                     <Skeleton width={140} height={40} rounded="lg" />
                 </div>
-                
+
                 {/* Filter bar skeleton */}
                 <div className="flex gap-4">
                     <Skeleton className="flex-1" height={40} />
                     <Skeleton width={120} height={40} />
                     <Skeleton width={120} height={40} />
                 </div>
-                
+
                 {/* Feature list skeleton */}
                 <FeatureListSkeleton count={5} />
             </div>
@@ -280,42 +280,42 @@ export function SpecExplorer() {
                     {/* Reorder toggle */}
                     <button
                         onClick={() => setReorderMode(!reorderMode)}
-                        className={`p-2 rounded-md border transition-colors ${reorderMode 
-                            ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700' 
+                        className={`p-2 rounded-md border transition-colors ${reorderMode
+                            ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700'
                             : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-                        }`}
+                            }`}
                         title={reorderMode ? 'Exit reorder mode' : 'Enable drag to reorder'}
                     >
                         <ArrowsUpDownIcon className="w-5 h-5" />
                     </button>
-                    
+
                     {/* View toggle */}
                     <div className="flex rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden">
                         <button
                             onClick={() => setViewMode('table')}
-                            className={`p-2 ${viewMode === 'table' 
-                                ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300' 
+                            className={`p-2 ${viewMode === 'table'
+                                ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
                                 : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-                            }`}
+                                }`}
                             title="Table view"
                         >
                             <TableCellsIcon className="w-5 h-5" />
                         </button>
                         <button
                             onClick={() => setViewMode('cards')}
-                            className={`p-2 ${viewMode === 'cards' 
-                                ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300' 
+                            className={`p-2 ${viewMode === 'cards'
+                                ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
                                 : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-                            }`}
+                                }`}
                             title="Card view"
                         >
                             <Squares2X2Icon className="w-5 h-5" />
                         </button>
                     </div>
-                    
+
                     {/* Print button */}
                     <PrintButton />
-                    
+
                     <button
                         onClick={() => setIsAddFormOpen(true)}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -400,115 +400,115 @@ export function SpecExplorer() {
 
             {/* Features - Table View */}
             {viewMode === 'table' && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead className="bg-gray-50 dark:bg-gray-900">
-                            <tr>
-                                <th className="px-4 py-3 text-left">
-                                    <SelectAllCheckbox allIds={filteredIds} />
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    ID
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Description
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Category
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Priority
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Status
-                                </th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            {filteredFeatures.map((feature) => (
-                                <tr
-                                    key={feature.id}
-                                    onClick={() => navigate(`/task/${feature.id}`)}
-                                    className="group hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
-                                >
-                                    <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
-                                        <SelectionCheckbox id={feature.id} />
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                                        {feature.id}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">
-                                        <div className="max-w-md truncate" title={feature.description}>
-                                            {feature.description}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                        {feature.category}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                        <PriorityBadge priority={feature.priority} />
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                        <StatusBadge status={feature.status} />
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
-                                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            {/* Show Start button for not-started features */}
-                                            {feature.status === 'not-started' && (
-                                                <button
-                                                    onClick={(e) => handleQuickStart(e, feature.id)}
-                                                    className="p-1.5 rounded-md bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors btn-press"
-                                                    title="Start feature"
-                                                >
-                                                    <PlayIcon className="w-4 h-4" />
-                                                </button>
-                                            )}
-                                            {/* Show Verify button for in-progress features */}
-                                            {feature.status === 'in-progress' && (
-                                                <button
-                                                    onClick={(e) => handleQuickVerify(e, feature.id)}
-                                                    className="p-1.5 rounded-md bg-green-50 dark:bg-green-900/50 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900 transition-colors btn-press"
-                                                    title="Verify feature"
-                                                >
-                                                    <CheckCircleIcon className="w-4 h-4" />
-                                                </button>
-                                            )}
-                                            {/* Show Block button for not-started and in-progress features */}
-                                            {(feature.status === 'not-started' || feature.status === 'in-progress') && (
-                                                <button
-                                                    onClick={(e) => handleQuickBlock(e, feature.id)}
-                                                    className="p-1.5 rounded-md bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition-colors btn-press"
-                                                    title="Block feature"
-                                                >
-                                                    <NoSymbolIcon className="w-4 h-4" />
-                                                </button>
-                                            )}
-                                        </div>
-                                    </td>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead className="bg-gray-50 dark:bg-gray-900">
+                                <tr>
+                                    <th className="px-4 py-3 text-left">
+                                        <SelectAllCheckbox allIds={filteredIds} />
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        ID
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        Description
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        Category
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        Priority
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        Status
+                                    </th>
+                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        Actions
+                                    </th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                {filteredFeatures.map((feature) => (
+                                    <tr
+                                        key={feature.id}
+                                        onClick={() => navigate(`/task/${feature.id}`)}
+                                        className="group hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                                    >
+                                        <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
+                                            <SelectionCheckbox id={feature.id} />
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                            {feature.id}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">
+                                            <div className="max-w-md truncate" title={feature.description}>
+                                                {feature.description}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                            {feature.category}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                            <PriorityBadge priority={feature.priority} />
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                            <StatusBadge status={feature.status} />
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
+                                            <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {/* Show Start button for not-started features */}
+                                                {feature.status === 'not-started' && (
+                                                    <button
+                                                        onClick={(e) => handleQuickStart(e, feature.id)}
+                                                        className="p-1.5 rounded-md bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors btn-press"
+                                                        title="Start feature"
+                                                    >
+                                                        <PlayIcon className="w-4 h-4" />
+                                                    </button>
+                                                )}
+                                                {/* Show Verify button for in-progress features */}
+                                                {feature.status === 'in-progress' && (
+                                                    <button
+                                                        onClick={(e) => handleQuickVerify(e, feature.id)}
+                                                        className="p-1.5 rounded-md bg-green-50 dark:bg-green-900/50 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900 transition-colors btn-press"
+                                                        title="Verify feature"
+                                                    >
+                                                        <CheckCircleIcon className="w-4 h-4" />
+                                                    </button>
+                                                )}
+                                                {/* Show Block button for not-started and in-progress features */}
+                                                {(feature.status === 'not-started' || feature.status === 'in-progress') && (
+                                                    <button
+                                                        onClick={(e) => handleQuickBlock(e, feature.id)}
+                                                        className="p-1.5 rounded-md bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition-colors btn-press"
+                                                        title="Block feature"
+                                                    >
+                                                        <NoSymbolIcon className="w-4 h-4" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
 
-                {filteredFeatures.length === 0 && features.length === 0 && (
-                    <EmptyFeaturesState onAdd={() => setIsAddFormOpen(true)} />
-                )}
-                
-                {filteredFeatures.length === 0 && features.length > 0 && (
-                    <EmptySearchState query={searchText || statusFilter || categoryFilter || 'filters'} />
-                )}
-            </div>
+                    {filteredFeatures.length === 0 && features.length === 0 && (
+                        <EmptyFeaturesState onAdd={() => setIsAddFormOpen(true)} />
+                    )}
+
+                    {filteredFeatures.length === 0 && features.length > 0 && (
+                        <EmptySearchState query={searchText || statusFilter || categoryFilter || 'filters'} />
+                    )}
+                </div>
             )}
 
             {/* Features - Card View */}
             {viewMode === 'cards' && (
-                <FeatureDndContext 
-                    features={orderedFeatures} 
+                <FeatureDndContext
+                    features={orderedFeatures}
                     onReorder={handleReorder}
                     disabled={!reorderMode}
                 >
@@ -531,14 +531,14 @@ export function SpecExplorer() {
                         {filteredFeatures.length === 0 && features.length === 0 && (
                             <EmptyFeaturesState onAdd={() => setIsAddFormOpen(true)} />
                         )}
-                        
+
                         {filteredFeatures.length === 0 && features.length > 0 && (
                             <EmptySearchState query={searchText || statusFilter || categoryFilter || 'filters'} />
                         )}
                     </div>
                 </FeatureDndContext>
             )}
-            
+
             {/* Save status indicator */}
             <SaveStatus isSaving={isSaving} />
 
