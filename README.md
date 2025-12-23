@@ -349,6 +349,31 @@ Recent commits:
 | `klondike serve --host 0.0.0.0` | Allow external connections |
 | `klondike serve --open` | Auto-launch browser |
 
+### Push Notifications
+
+Klondike supports push notifications via [ntfy.sh](https://ntfy.sh) to alert you when important events occur during agent sessions.
+
+```bash
+# Configure in .klondike/config.yaml
+ntfy:
+  channel: my-project-alerts    # Your unique topic/channel
+  server: https://ntfy.sh       # Optional: custom ntfy server
+  token: tk_your_token          # Optional: auth token for private topics
+  events:
+    session_start: true         # Notify on session start
+    session_end: true           # Notify on session end
+    feature_verified: true      # Notify when features verified
+    feature_blocked: true       # Notify when features blocked
+    errors: true                # Notify on errors
+```
+
+**Subscribe to receive notifications:**
+1. Install the [ntfy mobile app](https://ntfy.sh) or visit `https://ntfy.sh/my-project-alerts` in a browser
+2. Subscribe to your chosen channel name
+3. Run `klondike session start` to test — you'll get a notification! 🔔
+
+See [docs/ntfy-config-example.md](docs/ntfy-config-example.md) for detailed setup instructions.
+
 ### Import/Export
 
 | Command | Description |

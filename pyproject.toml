@@ -64,26 +64,16 @@ version-file = "src/klondike_spec_cli/_version.py"
 
 [tool.hatch.build.targets.sdist]
 # Include static web assets in source distribution
-include = [
-    "/src",
-    "/tests",
-    "/pyproject.toml",
-    "/README.md",
-    "/LICENSE",
-]
+include = ["/src", "/tests", "/pyproject.toml", "/README.md", "/LICENSE"]
 # Treat static assets as artifacts so they're included despite not being .py files
-artifacts = [
-    "*.html",
-    "*.css", 
-    "*.js",
-]
+artifacts = ["*.html", "*.css", "*.js"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/klondike_spec_cli"]
 # Treat static assets as artifacts so they're included despite not being .py files
 artifacts = [
     "*.html",
-    "*.css", 
+    "*.css",
     "*.js",
     "*.svg",
     "*.json",
@@ -135,7 +125,14 @@ warn_unused_ignores = true
 module = "klondike_spec_cli.cli"
 # Pith/Typer use Argument/Option as defaults which mypy can't understand
 # Also has FastAPI endpoint functions with complex types
-disable_error_code = ["assignment", "no-untyped-def", "type-arg", "attr-defined", "no-untyped-call", "var-annotated"]
+disable_error_code = [
+    "assignment",
+    "no-untyped-def",
+    "type-arg",
+    "attr-defined",
+    "no-untyped-call",
+    "var-annotated",
+]
 
 [[tool.mypy.overrides]]
 module = "klondike_spec_cli.commands.*"
