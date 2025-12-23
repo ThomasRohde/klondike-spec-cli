@@ -255,6 +255,35 @@ try {
         Write-Host "Would push to origin"
     }
     else {
+        # Check if tag already exists locally
+        $localTagExists = git tag -l $tagName
+        if ($localTagExists) {
+            Write-Warning "Tag $tagName already exists locally"
+            $confirm = Read-Host "Delete and recreate tag? (y/N)"
+            if ($confirm -eq 'y') {
+                git tag -d $tagName
+                Write-Host "Deleted local tag $tagName"
+            }
+            else {
+                throw "Tag $tagName already exists. Delete it manually with: git tag -d $tagName"
+            }
+        }
+        
+        # Check if tag exists remotely
+        git fetch --tags 2>$null
+        $remoteTagExists = git ls-remote --tags origin $tagName
+        if ($remoteTagExists) {
+            Write-Warning "Tag $tagName already exists on remote"
+            $confirm = Read-Host "Delete remote tag and recreate? (y/N)"
+            if ($confirm -eq 'y') {
+                git push origin :refs/tags/$tagName
+                Write-Host "Deleted remote tag $tagName"
+            }
+            else {
+                throw "Tag $tagName already exists on remote. Delete it manually with: git push origin :refs/tags/$tagName"
+            }
+        }
+        
         # Push commits first
         Write-Host "Pushing commits..."
         git push origin HEAD
