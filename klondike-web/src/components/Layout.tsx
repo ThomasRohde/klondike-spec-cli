@@ -20,7 +20,6 @@ import { useWebSocket } from '../hooks/useWebSocket'
 import { getApiBaseUrl, getWebSocketUrl } from '../utils/api'
 import { SessionBanner } from './SessionBanner'
 import { SkipLink } from '../utils/accessibility'
-import { SessionTimerWidget, useSessionTimer } from './SessionTimer'
 import { ThemeCustomizer, useTheme } from './ThemeCustomizer'
 
 interface ActiveSession {
@@ -68,13 +67,6 @@ export function Layout() {
     useEffect(() => {
         localStorage.setItem('klondike-sidebar-collapsed', String(sidebarCollapsed))
     }, [sidebarCollapsed])
-
-    // Initialize session timer from active session data
-    useSessionTimer(activeSession ? {
-        session_number: activeSession.id,
-        focus: activeSession.focus,
-        started_at: activeSession.started_at,
-    } : null)
 
     // WebSocket for live updates
     const { lastMessage } = useWebSocket(getWebSocketUrl('/api/updates'))
@@ -195,13 +187,6 @@ export function Layout() {
                         )
                     })}
                 </nav>
-
-                {/* Session timer widget - only show when not collapsed */}
-                {!sidebarCollapsed && (
-                    <div className="px-3 mt-4">
-                        <SessionTimerWidget variant="compact" />
-                    </div>
-                )}
 
                 {/* Dark mode toggle and theme customizer */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">

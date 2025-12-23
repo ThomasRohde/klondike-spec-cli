@@ -601,6 +601,22 @@
       "blockers": [],
       "nextSteps": [],
       "technicalNotes": []
+    },
+    {
+      "sessionNumber": 37,
+      "date": "2025-12-23",
+      "agent": "Coding Agent",
+      "duration": "~session",
+      "focus": "Dark mode review/fix for feature details page",
+      "completed": [],
+      "inProgress": [],
+      "blockers": [],
+      "nextSteps": [
+        "Continue F039: Local CI check command that detects and runs project CI checks",
+        "Continue F042: Integration test",
+        "Continue F043: E2E test"
+      ],
+      "technicalNotes": []
     }
   ],
   "quickReference": {
@@ -611,6 +627,22 @@
       ".klondike/agent-progress.json",
       "agent-progress.md"
     ],
-    "priorityFeatures": []
+    "priorityFeatures": [
+      {
+        "id": "F039",
+        "description": "Local CI check command that detects and runs project CI checks",
+        "status": "not-started"
+      },
+      {
+        "id": "F042",
+        "description": "Integration test",
+        "status": "not-started"
+      },
+      {
+        "id": "F043",
+        "description": "E2E test",
+        "status": "not-started"
+      }
+    ]
   }
 }

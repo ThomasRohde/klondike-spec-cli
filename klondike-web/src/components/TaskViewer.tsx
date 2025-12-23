@@ -33,18 +33,42 @@ interface Feature {
 }
 
 const statusConfig = {
-    'verified': { icon: CheckCircleIcon, color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200', label: 'Verified' },
-    'in-progress': { icon: ArrowPathIcon, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200', label: 'In Progress' },
-    'blocked': { icon: XCircleIcon, color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200', label: 'Blocked' },
-    'not-started': { icon: ClockIcon, color: 'text-gray-600', bg: 'bg-gray-50', border: 'border-gray-200', label: 'Not Started' }
+    'verified': {
+        icon: CheckCircleIcon,
+        color: 'text-green-600 dark:text-green-400',
+        bg: 'bg-green-50 dark:bg-green-900/40',
+        border: 'border-green-200 dark:border-green-800',
+        label: 'Verified'
+    },
+    'in-progress': {
+        icon: ArrowPathIcon,
+        color: 'text-blue-600 dark:text-blue-400',
+        bg: 'bg-blue-50 dark:bg-blue-900/40',
+        border: 'border-blue-200 dark:border-blue-800',
+        label: 'In Progress'
+    },
+    'blocked': {
+        icon: XCircleIcon,
+        color: 'text-red-600 dark:text-red-400',
+        bg: 'bg-red-50 dark:bg-red-900/40',
+        border: 'border-red-200 dark:border-red-800',
+        label: 'Blocked'
+    },
+    'not-started': {
+        icon: ClockIcon,
+        color: 'text-gray-600 dark:text-gray-300',
+        bg: 'bg-gray-50 dark:bg-gray-800',
+        border: 'border-gray-200 dark:border-gray-700',
+        label: 'Not Started'
+    }
 }
 
 const priorityColors = {
-    1: 'text-red-700 bg-red-50 border-red-200',
-    2: 'text-orange-700 bg-orange-50 border-orange-200',
-    3: 'text-yellow-700 bg-yellow-50 border-yellow-200',
-    4: 'text-blue-700 bg-blue-50 border-blue-200',
-    5: 'text-gray-700 bg-gray-50 border-gray-200'
+    1: 'text-red-700 bg-red-50 border-red-200 dark:text-red-300 dark:bg-red-900/40 dark:border-red-800',
+    2: 'text-orange-700 bg-orange-50 border-orange-200 dark:text-orange-300 dark:bg-orange-900/40 dark:border-orange-800',
+    3: 'text-yellow-700 bg-yellow-50 border-yellow-200 dark:text-yellow-300 dark:bg-yellow-900/30 dark:border-yellow-800',
+    4: 'text-blue-700 bg-blue-50 border-blue-200 dark:text-blue-300 dark:bg-blue-900/30 dark:border-blue-800',
+    5: 'text-gray-700 bg-gray-50 border-gray-200 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-700'
 }
 
 export function TaskViewer() {
@@ -216,7 +240,7 @@ export function TaskViewer() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
             </div>
         )
     }
@@ -224,8 +248,8 @@ export function TaskViewer() {
     if (error || !feature) {
         return (
             <div className="max-w-4xl mx-auto px-4 py-8">
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <p className="text-red-800">{error || 'Feature not found'}</p>
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                    <p className="text-red-800 dark:text-red-300">{error || 'Feature not found'}</p>
                     <button
                         onClick={() => navigate('/specs')}
                         className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
@@ -248,7 +272,7 @@ export function TaskViewer() {
             <div className="mb-6 flex items-start justify-between">
                 <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                        <h1 className="text-3xl font-bold text-gray-900">{feature.id}</h1>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{feature.id}</h1>
                         <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium border ${statusConfig[feature.status].bg} ${statusConfig[feature.status].color} ${statusConfig[feature.status].border}`}>
                             <StatusIcon className="w-4 h-4" />
                             {statusConfig[feature.status].label}
@@ -259,17 +283,17 @@ export function TaskViewer() {
                             type="text"
                             value={editDescription}
                             onChange={(e) => setEditDescription(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                     ) : (
-                        <p className="text-lg text-gray-700">{feature.description}</p>
+                        <p className="text-lg text-gray-700 dark:text-gray-300">{feature.description}</p>
                     )}
                 </div>
                 <div className="flex gap-2 ml-4">
                     {!isEditing ? (
                         <button
                             onClick={() => setIsEditing(true)}
-                            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                            className="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
                             title="Edit feature"
                         >
                             <PencilIcon className="w-5 h-5" />
@@ -279,7 +303,7 @@ export function TaskViewer() {
                             <button
                                 onClick={handleSaveEdit}
                                 disabled={actionLoading}
-                                className="p-2 text-green-600 hover:text-green-900 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
+                                className="p-2 text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-md transition-colors disabled:opacity-50"
                                 title="Save changes"
                             >
                                 <CheckIcon className="w-5 h-5" />
@@ -287,7 +311,7 @@ export function TaskViewer() {
                             <button
                                 onClick={() => setIsEditing(false)}
                                 disabled={actionLoading}
-                                className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-md transition-colors disabled:opacity-50"
+                                className="p-2 text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors disabled:opacity-50"
                                 title="Cancel editing"
                             >
                                 <XMarkIcon className="w-5 h-5" />
@@ -298,29 +322,29 @@ export function TaskViewer() {
             </div>
 
             {/* Metadata */}
-            <div className="bg-white rounded-lg shadow p-6 mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Details</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Details</h2>
                 <div className="grid grid-cols-3 gap-6">
                     <div>
-                        <label className="text-sm font-medium text-gray-500">Category</label>
+                        <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Category</label>
                         {isEditing ? (
                             <input
                                 type="text"
                                 value={editCategory}
                                 onChange={(e) => setEditCategory(e.target.value)}
-                                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         ) : (
-                            <div className="mt-1 text-gray-900">{feature.category}</div>
+                            <div className="mt-1 text-gray-900 dark:text-gray-100">{feature.category}</div>
                         )}
                     </div>
                     <div>
-                        <label className="text-sm font-medium text-gray-500">Priority</label>
+                        <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Priority</label>
                         {isEditing ? (
                             <select
                                 value={editPriority}
                                 onChange={(e) => setEditPriority(parseInt(e.target.value))}
-                                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value={1}>P1 (Critical)</option>
                                 <option value={2}>P2 (High)</option>
@@ -337,9 +361,14 @@ export function TaskViewer() {
                         )}
                     </div>
                     <div>
-                        <label className="text-sm font-medium text-gray-500">Passes Tests</label>
+                        <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Passes Tests</label>
                         <div className="mt-1">
-                            <span className={`inline-block px-2 py-1 rounded text-sm font-medium ${feature.passes ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                            <span
+                                className={`inline-block px-2 py-1 rounded text-sm font-medium ${feature.passes
+                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300'
+                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                                }`}
+                            >
                                 {feature.passes ? 'Yes' : 'No'}
                             </span>
                         </div>
@@ -349,8 +378,8 @@ export function TaskViewer() {
 
             {/* Acceptance Criteria */}
             {feature.acceptanceCriteria.length > 0 && (
-                <div className="bg-white rounded-lg shadow p-6 mb-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Acceptance Criteria</h2>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Acceptance Criteria</h2>
                     <ul className="space-y-2">
                         {feature.acceptanceCriteria.map((criteria, idx) => (
                             <li key={idx} className="flex items-start gap-3">
@@ -358,9 +387,9 @@ export function TaskViewer() {
                                     type="checkbox"
                                     checked={feature.passes}
                                     readOnly
-                                    className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    className="mt-1 w-4 h-4 text-blue-600 dark:text-blue-400 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
                                 />
-                                <span className="text-gray-700">{criteria}</span>
+                                <span className="text-gray-700 dark:text-gray-300">{criteria}</span>
                             </li>
                         ))}
                     </ul>
@@ -369,8 +398,8 @@ export function TaskViewer() {
 
             {/* Notes */}
             {(feature.notes || isEditing) && (
-                <div className="bg-white rounded-lg shadow p-6 mb-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Notes</h2>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Notes</h2>
                     {isEditing ? (
                         <MarkdownEditor
                             value={editNotes}
@@ -391,7 +420,7 @@ export function TaskViewer() {
                         <XCircleIcon className={`w-6 h-6 ${statusConfig.blocked.color} flex-shrink-0`} />
                         <div>
                             <h2 className={`text-lg font-semibold mb-2 ${statusConfig.blocked.color}`}>Blocked</h2>
-                            <p className="text-gray-700">{feature.blockedBy}</p>
+                            <p className="text-gray-700 dark:text-gray-200">{feature.blockedBy}</p>
                         </div>
                     </div>
                 </div>
@@ -407,16 +436,16 @@ export function TaskViewer() {
                                 Verified by {feature.verifiedBy}
                             </h2>
                             {feature.verifiedAt && (
-                                <p className="text-sm text-gray-600 mb-2">
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                                     {new Date(feature.verifiedAt).toLocaleString()}
                                 </p>
                             )}
                             {feature.evidenceLinks.length > 0 && (
                                 <div>
-                                    <p className="text-sm font-medium text-gray-700 mb-1">Evidence:</p>
+                                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Evidence:</p>
                                     <ul className="list-disc list-inside space-y-1">
                                         {feature.evidenceLinks.map((evidence, idx) => (
-                                            <li key={idx} className="text-sm text-gray-700">{evidence}</li>
+                                            <li key={idx} className="text-sm text-gray-700 dark:text-gray-300">{evidence}</li>
                                         ))}
                                     </ul>
                                 </div>
@@ -465,16 +494,16 @@ export function TaskViewer() {
             {/* Block Modal */}
             {showBlockModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg max-w-md w-full p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Block Feature</h3>
-                        <p className="text-sm text-gray-600 mb-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Block Feature</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                             Provide a reason for blocking this feature. This will help track why progress was stopped.
                         </p>
                         <textarea
                             value={blockReason}
                             onChange={(e) => setBlockReason(e.target.value)}
                             rows={3}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent mb-4"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent mb-4"
                             placeholder="e.g., Waiting for API endpoint, blocked by upstream dependency..."
                         />
                         <div className="flex gap-3 justify-end">
@@ -484,7 +513,7 @@ export function TaskViewer() {
                                     setBlockReason('')
                                 }}
                                 disabled={actionLoading}
-                                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-50"
+                                className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
                             >
                                 Cancel
                             </button>
@@ -503,16 +532,16 @@ export function TaskViewer() {
             {/* Verify Modal */}
             {showVerifyModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg max-w-md w-full p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Verify Feature</h3>
-                        <p className="text-sm text-gray-600 mb-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Verify Feature</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                             Provide evidence of completion. This can include test results, screenshots, or descriptions of verification steps.
                         </p>
                         <textarea
                             value={evidence}
                             onChange={(e) => setEvidence(e.target.value)}
                             rows={3}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent mb-4"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent mb-4"
                             placeholder="e.g., Manual testing completed, All unit tests passing, Screenshot: /docs/feature-demo.png"
                         />
                         <div className="flex gap-3 justify-end">
@@ -522,7 +551,7 @@ export function TaskViewer() {
                                     setEvidence('')
                                 }}
                                 disabled={actionLoading}
-                                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-50"
+                                className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
                             >
                                 Cancel
                             </button>
@@ -541,7 +570,7 @@ export function TaskViewer() {
             {/* Back Button */}
             <button
                 onClick={() => navigate('/specs')}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
                 ← Back to Specs
             </button>

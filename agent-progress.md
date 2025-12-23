@@ -23,6 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
+| F039 | Local CI check command that detects and runs project CI checks | ⏳ Not started |
+| F042 | Integration test | ⏳ Not started |
+| F043 | E2E test | ⏳ Not started |
 
 ---
 
@@ -887,6 +890,30 @@ klondike feature list  # List all features
 
 #### Recommended Next Steps
 1. Continue implementation
+
+#### Technical Notes
+- None
+
+---
+
+### Session 37 - 2025-12-23
+**Agent**: Coding Agent
+**Duration**: ~session
+**Focus**: Dark mode review/fix for feature details page
+
+#### Completed
+- None
+
+#### In Progress
+- None
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue F039: Local CI check command that detects and runs project CI checks
+2. Continue F042: Integration test
+3. Continue F043: E2E test
 
 #### Technical Notes
 - None
