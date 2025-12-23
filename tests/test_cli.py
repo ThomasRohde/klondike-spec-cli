@@ -1147,9 +1147,11 @@ class TestReleaseCommand:
             original_cwd = os.getcwd()
             try:
                 os.chdir(tmpdir)
-                # Create a pyproject.toml
-                pyproject = Path(tmpdir) / "pyproject.toml"
-                pyproject.write_text('[project]\nname = "test"\nversion = "1.2.3"\n')
+                # Create directory structure and _version.py (hatch-vcs style)
+                version_dir = Path(tmpdir) / "src" / "klondike_spec_cli"
+                version_dir.mkdir(parents=True)
+                version_file = version_dir / "_version.py"
+                version_file.write_text("__version__ = version = '1.2.3'\n")
 
                 result = runner.invoke(app, ["release"])
 
@@ -1165,8 +1167,11 @@ class TestReleaseCommand:
             original_cwd = os.getcwd()
             try:
                 os.chdir(tmpdir)
-                pyproject = Path(tmpdir) / "pyproject.toml"
-                pyproject.write_text('[project]\nname = "test"\nversion = "1.0.0"\n')
+                # Create directory structure and _version.py
+                version_dir = Path(tmpdir) / "src" / "klondike_spec_cli"
+                version_dir.mkdir(parents=True)
+                version_file = version_dir / "_version.py"
+                version_file.write_text("__version__ = version = '1.0.0'\n")
 
                 result = runner.invoke(app, ["release", "1.1.0", "--dry-run", "--skip-tests"])
 
@@ -1176,8 +1181,8 @@ class TestReleaseCommand:
                 assert "Tag:             v1.1.0" in result.output
 
                 # Verify file wasn't changed
-                content = pyproject.read_text()
-                assert 'version = "1.0.0"' in content
+                content = version_file.read_text()
+                assert "1.0.0" in content
             finally:
                 os.chdir(original_cwd)
 
@@ -1188,8 +1193,11 @@ class TestReleaseCommand:
             original_cwd = os.getcwd()
             try:
                 os.chdir(tmpdir)
-                pyproject = Path(tmpdir) / "pyproject.toml"
-                pyproject.write_text('[project]\nname = "test"\nversion = "1.2.3"\n')
+                # Create directory structure and _version.py
+                version_dir = Path(tmpdir) / "src" / "klondike_spec_cli"
+                version_dir.mkdir(parents=True)
+                version_file = version_dir / "_version.py"
+                version_file.write_text("__version__ = version = '1.2.3'\n")
 
                 result = runner.invoke(
                     app, ["release", "--bump", "patch", "--dry-run", "--skip-tests"]
@@ -1207,8 +1215,11 @@ class TestReleaseCommand:
             original_cwd = os.getcwd()
             try:
                 os.chdir(tmpdir)
-                pyproject = Path(tmpdir) / "pyproject.toml"
-                pyproject.write_text('[project]\nname = "test"\nversion = "1.2.3"\n')
+                # Create directory structure and _version.py
+                version_dir = Path(tmpdir) / "src" / "klondike_spec_cli"
+                version_dir.mkdir(parents=True)
+                version_file = version_dir / "_version.py"
+                version_file.write_text("__version__ = version = '1.2.3'\n")
 
                 result = runner.invoke(
                     app, ["release", "--bump", "minor", "--dry-run", "--skip-tests"]
@@ -1226,8 +1237,11 @@ class TestReleaseCommand:
             original_cwd = os.getcwd()
             try:
                 os.chdir(tmpdir)
-                pyproject = Path(tmpdir) / "pyproject.toml"
-                pyproject.write_text('[project]\nname = "test"\nversion = "1.2.3"\n')
+                # Create directory structure and _version.py
+                version_dir = Path(tmpdir) / "src" / "klondike_spec_cli"
+                version_dir.mkdir(parents=True)
+                version_file = version_dir / "_version.py"
+                version_file.write_text("__version__ = version = '1.2.3'\n")
 
                 result = runner.invoke(
                     app, ["release", "--bump", "major", "--dry-run", "--skip-tests"]
@@ -1238,8 +1252,8 @@ class TestReleaseCommand:
             finally:
                 os.chdir(original_cwd)
 
-    def test_release_no_pyproject(self) -> None:
-        """Test release fails without pyproject.toml."""
+    def test_release_no_version_file(self) -> None:
+        """Test release fails without _version.py or git tags."""
         runner = CliRunner()
         with TemporaryDirectory() as tmpdir:
             original_cwd = os.getcwd()
@@ -1249,7 +1263,7 @@ class TestReleaseCommand:
                 result = runner.invoke(app, ["release", "1.0.0"])
 
                 assert result.exit_code != 0
-                assert "pyproject.toml not found" in result.output
+                assert "Could not determine version" in result.output
             finally:
                 os.chdir(original_cwd)
 
@@ -1260,8 +1274,11 @@ class TestReleaseCommand:
             original_cwd = os.getcwd()
             try:
                 os.chdir(tmpdir)
-                pyproject = Path(tmpdir) / "pyproject.toml"
-                pyproject.write_text('[project]\nname = "test"\nversion = "1.0.0"\n')
+                # Create directory structure and _version.py
+                version_dir = Path(tmpdir) / "src" / "klondike_spec_cli"
+                version_dir.mkdir(parents=True)
+                version_file = version_dir / "_version.py"
+                version_file.write_text("__version__ = version = '1.0.0'\n")
 
                 result = runner.invoke(app, ["release", "invalid"])
 
@@ -1277,8 +1294,11 @@ class TestReleaseCommand:
             original_cwd = os.getcwd()
             try:
                 os.chdir(tmpdir)
-                pyproject = Path(tmpdir) / "pyproject.toml"
-                pyproject.write_text('[project]\nname = "test"\nversion = "1.0.0"\n')
+                # Create directory structure and _version.py
+                version_dir = Path(tmpdir) / "src" / "klondike_spec_cli"
+                version_dir.mkdir(parents=True)
+                version_file = version_dir / "_version.py"
+                version_file.write_text("__version__ = version = '1.0.0'\n")
 
                 result = runner.invoke(
                     app, ["release", "--bump", "invalid", "--dry-run", "--skip-tests"]
