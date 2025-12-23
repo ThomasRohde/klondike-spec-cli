@@ -292,7 +292,7 @@ def status(
     # Priority features
     priority = registry.get_priority_features(3)
     if priority:
-        console.print("[bold]🎯 Next Priority Features:[/bold]")
+        console.print("[bold]♠️  Next Priority Features:[/bold]")
         for f in priority:
             status_text = formatting.colored_status(f.status)
             console.print("   ", status_text, f" [cyan]{f.id}[/cyan]: {f.description}")

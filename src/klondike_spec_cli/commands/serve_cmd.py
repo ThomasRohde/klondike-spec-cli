@@ -1574,7 +1574,7 @@ def serve_command(
 
     # Print startup message
     echo("")
-    echo("🚀 Starting Klondike Spec Web UI")
+    echo("♠️  Starting Klondike Spec Web UI")
     echo("=" * 50)
     echo(f"   Project: {root.name}")
     echo(f"   URL:     http://{host}:{port}")
@@ -1603,7 +1603,7 @@ def serve_command(
     def handle_shutdown(signum, frame):
         nonlocal shutdown_event
         shutdown_event = True
-        echo("\n👋 Server stopped")
+        echo("\n♠️  Server stopped")
         observer.stop()
         # Cancel pending asyncio tasks
         try:
@@ -1645,7 +1645,7 @@ def serve_command(
             ) from err
         raise
     except KeyboardInterrupt:
-        echo("\n👋 Server stopped")
+        echo("\n♠️  Server stopped")
     finally:
         # Cleanup file watcher
         try:

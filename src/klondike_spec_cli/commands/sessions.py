@@ -94,7 +94,7 @@ def session_start(focus: str | None) -> None:
     priority = registry.get_priority_features(3)
     if priority:
         echo("")
-        echo("🎯 Priority Features:")
+        echo("♠️  Priority Features:")
         for f in priority:
             echo(f"   • {f.id}: {f.description}")
 
