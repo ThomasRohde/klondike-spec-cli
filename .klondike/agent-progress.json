@@ -629,11 +629,6 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F039",
-        "description": "Local CI check command that detects and runs project CI checks",
-        "status": "not-started"
-      },
-      {
         "id": "F042",
         "description": "Integration test",
         "status": "not-started"
@@ -641,6 +636,11 @@
       {
         "id": "F043",
         "description": "E2E test",
+        "status": "not-started"
+      },
+      {
+        "id": "F052",
+        "description": "Extract release command from cli.py into release.py module",
         "status": "not-started"
       }
     ]

@@ -23,9 +23,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F039 | Local CI check command that detects and runs project CI checks | ⏳ Not started |
 | F042 | Integration test | ⏳ Not started |
 | F043 | E2E test | ⏳ Not started |
+| F052 | Extract release command from cli.py into release.py module | ⏳ Not started |
 
 ---
 
