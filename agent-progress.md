@@ -2,7 +2,7 @@
 
 ## Project: klondike-spec-cli
 ## Started: 2025-12-07
-## Current Status: Session Ended
+## Current Status: In Progress
 
 ---
 
@@ -962,6 +962,28 @@ klondike feature list  # List all features
 1. Continue F042: Integration test
 2. Continue F043: E2E test
 3. Continue F052: Extract release command from cli.py into release.py module
+
+#### Technical Notes
+- None
+
+---
+
+### Session 40 - 2025-12-23
+**Agent**: Coding Agent
+**Duration**: (in progress)
+**Focus**: F059 - Add klondike-agent-workflow skill templates
+
+#### Completed
+- None
+
+#### In Progress
+- Session started
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
 
 #### Technical Notes
 - None

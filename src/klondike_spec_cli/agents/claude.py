@@ -89,6 +89,10 @@ class ClaudeAdapter(AgentAdapter):
                 # commands/ directory goes to .claude/commands/
                 dest_path = claude_dir / "commands"
                 extracted.extend(self._copy_traversable(item, dest_path, overwrite))
+            elif item.name == "skills":
+                # skills/ directory goes to .claude/skills/
+                dest_path = claude_dir / "skills"
+                extracted.extend(self._copy_traversable(item, dest_path, overwrite))
             else:
                 # Other files go to .claude/
                 dest_path = claude_dir / item.name
