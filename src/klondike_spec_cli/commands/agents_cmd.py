@@ -16,9 +16,7 @@ def agents_generate_command() -> None:
     root = Path.cwd()
     klondike_dir = get_klondike_dir(root)
     if not klondike_dir:
-        raise PithException(
-            "Not in a Klondike project. Run 'klondike init' first."
-        )
+        raise PithException("Not in a Klondike project. Run 'klondike init' first.")
 
     registry = load_features(root)
     progress = load_progress(root)

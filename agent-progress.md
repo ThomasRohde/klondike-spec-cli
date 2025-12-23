@@ -23,7 +23,6 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F054 | Final cli.py cleanup - remove dead code and optimize imports | 🔄 In progress |
 
 ---
 

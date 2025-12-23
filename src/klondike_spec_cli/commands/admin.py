@@ -4,7 +4,7 @@ import re
 import sys
 from pathlib import Path
 
-from pith import Argument, Option, PithException, echo
+from pith import PithException, echo
 
 from ..data import (
     CONFIG_FILE,
@@ -12,7 +12,6 @@ from ..data import (
     load_config,
     load_features,
     load_progress,
-    regenerate_progress_md,
 )
 from ..models import FeatureStatus
 
@@ -110,9 +109,7 @@ def config_command(
     root = Path.cwd()
     klondike_dir = get_klondike_dir(root)
     if not klondike_dir:
-        raise PithException(
-            "Not in a Klondike project. Run 'klondike init' first."
-        )
+        raise PithException("Not in a Klondike project. Run 'klondike init' first.")
 
     config_path = klondike_dir / CONFIG_FILE
 
@@ -156,7 +153,7 @@ def config_command(
 
     # Set config value
     cfg = load_config(root)
-    
+
     # Handle special case for null/None
     if value.lower() in ("null", "none", ""):
         value = None
@@ -164,7 +161,7 @@ def config_command(
         try:
             value = int(value)
         except ValueError:
-            raise PithException(f"Invalid value for {key}: must be an integer")
+            raise PithException(f"Invalid value for {key}: must be an integer") from None
     elif key == "auto_regenerate_progress":
         if value.lower() in ("true", "1", "yes"):
             value = True
@@ -172,42 +169,44 @@ def config_command(
             value = False
         else:
             raise PithException(f"Invalid value for {key}: must be true or false")
-    
+
     if not hasattr(cfg, key):
         raise PithException(f"Unknown config key: {key}")
-    
+
     setattr(cfg, key, value)
-    
+
     klondike_dir = get_klondike_dir(root)
     cfg.save(klondike_dir / CONFIG_FILE)
-    
+
     echo(f"✅ Set {key} = {value}")
 
 
 def completion_command(shell: str = "bash") -> None:
     """Generate shell completion scripts.
-    
+
     Outputs completion script for the specified shell.
     Source this in your shell config file.
     """
     if shell not in ("bash", "zsh", "powershell"):
         raise PithException(f"Unsupported shell: {shell}. Use: bash, zsh, powershell")
-    
+
     echo(f"# Klondike completion for {shell}")
     echo("# Add this to your shell config file")
     echo("")
-    
+
     if shell == "bash":
         echo("_klondike_completion() {")
         echo('    local cur="${COMP_WORDS[COMP_CWORD]}"')
-        echo('    local commands="init upgrade status feature session validate config completion progress report import-features export-features copilot mcp version agents serve release"')
+        echo(
+            '    local commands="init upgrade status feature session validate config completion progress report import-features export-features copilot mcp version agents serve release"'
+        )
         echo('    COMPREPLY=($(compgen -W "$commands" -- "$cur"))')
         echo("}")
         echo("complete -F _klondike_completion klondike")
     elif shell == "zsh":
         echo("#compdef klondike")
         echo("_klondike() {")
-        echo('    local commands=(')
+        echo("    local commands=(")
         echo('        "init:Initialize a new Klondike project"')
         echo('        "upgrade:Upgrade templates"')
         echo('        "status:Show project status"')
@@ -226,21 +225,21 @@ def completion_command(shell: str = "bash") -> None:
         echo('        "agents:Generate AGENTS.md"')
         echo('        "serve:Start web UI"')
         echo('        "release:Automate release"')
-        echo('    )')
+        echo("    )")
         echo('    _describe "command" commands')
         echo("}")
         echo("compdef _klondike klondike")
     elif shell == "powershell":
         echo("Register-ArgumentCompleter -CommandName klondike -ScriptBlock {")
         echo("    param($commandName, $wordToComplete, $commandAst, $fakeBoundParameters)")
-        echo('    $commands = @(')
+        echo("    $commands = @(")
         echo('        "init", "upgrade", "status", "feature", "session",')
         echo('        "validate", "config", "completion", "progress", "report",')
         echo('        "import-features", "export-features", "copilot", "mcp",')
         echo('        "version", "agents", "serve", "release"')
-        echo('    )')
+        echo("    )")
         echo('    $commands | Where-Object { $_ -like "$wordToComplete*" } |')
-        echo('        ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }')
+        echo("        ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }")
         echo("}")
 
 
@@ -249,15 +248,13 @@ def progress_command(
     force: bool = False,
 ) -> None:
     """Regenerate agent-progress.md from JSON.
-    
+
     Rebuilds the human-readable progress file from agent-progress.json.
     """
     root = Path.cwd()
     klondike_dir = get_klondike_dir(root)
     if not klondike_dir:
-        raise PithException(
-            "Not in a Klondike project. Run 'klondike init' first."
-        )
+        raise PithException("Not in a Klondike project. Run 'klondike init' first.")
 
     try:
         progress = load_progress()
@@ -278,7 +275,7 @@ def progress_command(
     # Generate markdown content using Progress model's to_markdown() method
     content = progress.to_markdown(prd_source=cfg.prd_source)
     output_path.write_text(content, encoding="utf-8")
-    
+
     echo(f"✅ Regenerated {output_path.name}")
     echo(f"   Sessions: {len(progress.sessions)}")
     echo(f"   Features: {len(registry.features)}")
@@ -287,7 +284,7 @@ def progress_command(
 def version_command(verbose: bool = False) -> None:
     """Show klondike version information."""
     echo(f"klondike {__version__}")
-    
+
     if verbose:
         echo("")
         echo(f"Python: {sys.version.split()[0]}")

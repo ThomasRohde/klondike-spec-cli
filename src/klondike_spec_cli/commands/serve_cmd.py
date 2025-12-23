@@ -12,7 +12,7 @@ import webbrowser
 from datetime import datetime
 from pathlib import Path
 
-from pith import Option, PithException, echo
+from pith import PithException, echo
 
 from .._version import __version__
 from ..data import get_klondike_dir
@@ -250,9 +250,7 @@ def serve_command(
         )
 
     # Mount static files
-    app_instance.mount(
-        "/assets", StaticFiles(directory=str(static_dir / "assets")), name="assets"
-    )
+    app_instance.mount("/assets", StaticFiles(directory=str(static_dir / "assets")), name="assets")
 
     @app_instance.get("/health")
     async def health():
@@ -375,9 +373,7 @@ def serve_command(
             }
             for feature in registry.features:
                 status_key = (
-                    feature.status.value
-                    if hasattr(feature.status, "value")
-                    else feature.status
+                    feature.status.value if hasattr(feature.status, "value") else feature.status
                 )
                 if status_key in by_status:
                     by_status[status_key] += 1
@@ -429,8 +425,7 @@ def serve_command(
 
             # Check if a session is currently active
             is_session_active = (
-                progress_log.current_status == "In Progress"
-                and current_session is not None
+                progress_log.current_status == "In Progress" and current_session is not None
             )
 
             return {
@@ -507,9 +502,7 @@ def serve_command(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
             return feature.to_dict()
@@ -637,9 +630,7 @@ def serve_command(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
 
@@ -649,9 +640,7 @@ def serve_command(
             elif "description" in update_data and not update_data["description"]:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=400, detail="Description cannot be empty"
-                )
+                raise HTTPException(status_code=400, detail="Description cannot be empty")
 
             if "category" in update_data:
                 feature.category = update_data["category"]
@@ -743,16 +732,12 @@ def serve_command(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
 
             # Check for other in-progress features
-            in_progress = [
-                f for f in registry.features if f.status == FeatureStatus.IN_PROGRESS
-            ]
+            in_progress = [f for f in registry.features if f.status == FeatureStatus.IN_PROGRESS]
             warning = None
             if in_progress and feature_id not in [f.id for f in in_progress]:
                 warning = f"Other features are in-progress: {', '.join(f.id for f in in_progress)}"
@@ -832,9 +817,7 @@ def serve_command(
             if not evidence:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=400, detail="Evidence is required for verification"
-                )
+                raise HTTPException(status_code=400, detail="Evidence is required for verification")
 
             # Sanitize evidence
             evidence = sanitize_string(evidence)
@@ -849,18 +832,14 @@ def serve_command(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
             config = load_config(root)
 
             # Parse evidence paths
             evidence_paths = [
-                sanitize_string(p.strip()) or ""
-                for p in evidence.split(",")
-                if p.strip()
+                sanitize_string(p.strip()) or "" for p in evidence.split(",") if p.strip()
             ]
 
             # Update feature status
@@ -936,9 +915,7 @@ def serve_command(
             if not reason:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=400, detail="Reason is required for blocking"
-                )
+                raise HTTPException(status_code=400, detail="Reason is required for blocking")
 
             # Sanitize reason
             reason = sanitize_string(reason)
@@ -953,9 +930,7 @@ def serve_command(
             if feature_id not in registry._feature_index:
                 from fastapi import HTTPException
 
-                raise HTTPException(
-                    status_code=404, detail=f"Feature not found: {feature_id}"
-                )
+                raise HTTPException(status_code=404, detail=f"Feature not found: {feature_id}")
 
             feature = registry._feature_index[feature_id]
 
@@ -1228,9 +1203,7 @@ def serve_command(
 
             if "configured_agents" in config_data:
                 agents = config_data["configured_agents"]
-                if not isinstance(agents, list) or not all(
-                    isinstance(a, str) for a in agents
-                ):
+                if not isinstance(agents, list) or not all(isinstance(a, str) for a in agents):
                     from fastapi import HTTPException
 
                     raise HTTPException(
@@ -1454,9 +1427,7 @@ def serve_command(
             else:
                 # Auto-generate next steps from priority features
                 priority = registry.get_priority_features(3)
-                current.next_steps = [
-                    f"Continue {f.id}: {f.description}" for f in priority
-                ]
+                current.next_steps = [f"Continue {f.id}: {f.description}" for f in priority]
 
             progress.current_status = "Session Ended"
 
@@ -1611,8 +1582,6 @@ def serve_command(
                     task.cancel()
                 # Give tasks a moment to cancel
                 if tasks:
-                    loop.run_until_complete(
-                        asyncio.gather(*tasks, return_exceptions=True)
-                    )
+                    loop.run_until_complete(asyncio.gather(*tasks, return_exceptions=True))
         except Exception:
             pass  # Ignore errors during cleanup

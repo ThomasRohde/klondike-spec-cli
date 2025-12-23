@@ -598,12 +598,6 @@
       ".klondike/agent-progress.json",
       "agent-progress.md"
     ],
-    "priorityFeatures": [
-      {
-        "id": "F054",
-        "description": "Final cli.py cleanup - remove dead code and optimize imports",
-        "status": "in-progress"
-      }
-    ]
+    "priorityFeatures": []
   }
 }
