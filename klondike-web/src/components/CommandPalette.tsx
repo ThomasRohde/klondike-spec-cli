@@ -198,9 +198,9 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                         className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                                     >
                                         <span className={`w-2 h-2 rounded-full ${feature.status === 'verified' ? 'bg-green-500' :
-                                                feature.status === 'in-progress' ? 'bg-yellow-500' :
-                                                    feature.status === 'blocked' ? 'bg-red-500' :
-                                                        'bg-gray-400'
+                                            feature.status === 'in-progress' ? 'bg-yellow-500' :
+                                                feature.status === 'blocked' ? 'bg-red-500' :
+                                                    'bg-gray-400'
                                             }`} />
                                         <span className="font-mono text-xs text-gray-500 dark:text-gray-400">
                                             {feature.id}
