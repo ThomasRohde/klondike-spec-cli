@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowPathIcon, PlusIcon, PlayIcon, NoSymbolIcon, TableCellsIcon, Squares2X2Icon, ArrowsUpDownIcon } from '@heroicons/react/24/outline'
 import { AddFeatureForm } from './AddFeatureForm'
 import { ExpandableFeatureCard } from './ExpandableFeatureCard'
@@ -47,11 +47,12 @@ const priorityColors = {
 
 export function SpecExplorer() {
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
     const [features, setFeatures] = useState<Feature[]>([])
     const [filteredFeatures, setFilteredFeatures] = useState<Feature[]>([])
     const [loading, setLoading] = useState(true)
     const [searchText, setSearchText] = useState('')
-    const [statusFilter, setStatusFilter] = useState<string>('all')
+    const [statusFilter, setStatusFilter] = useState<string>(searchParams.get('status') || 'all')
     const [categoryFilter, setCategoryFilter] = useState<string>('all')
     const [isAddFormOpen, setIsAddFormOpen] = useState(false)
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
