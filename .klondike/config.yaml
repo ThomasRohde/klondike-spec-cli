@@ -20,3 +20,14 @@ klondike_version: 0.2.14
 
 # AI coding agents configured for this project (copilot, claude)
 configured_agents: [copilot]
+
+ntfy:
+  channel: klondike-alerts
+  server: https://ntfy.sh
+  # token: tk_optional_token  # Uncomment and replace with your actual token from ntfy.sh/account
+  events:
+    session_start: true
+    session_end: true
+    feature_verified: true
+    feature_blocked: true
+    errors: true

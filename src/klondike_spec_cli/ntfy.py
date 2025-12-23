@@ -151,7 +151,8 @@ class NtfyClient:
         headers = {"Content-Type": "text/plain; charset=utf-8"}
 
         if title:
-            headers["X-Title"] = title
+            # Encode title as UTF-8 for proper emoji/unicode support
+            headers["X-Title"] = title.encode("utf-8").decode("latin1")
 
         if priority != 3:  # Only set if non-default
             headers["X-Priority"] = str(priority)
