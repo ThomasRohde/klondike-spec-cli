@@ -21,9 +21,7 @@ import { getApiBaseUrl, getWebSocketUrl } from '../utils/api'
 import { SessionBanner } from './SessionBanner'
 import { SkipLink } from '../utils/accessibility'
 import { SessionTimerWidget, useSessionTimer } from './SessionTimer'
-import { PresenceIndicator } from './PresenceIndicator'
 import { ThemeCustomizer, useTheme } from './ThemeCustomizer'
-import { OfflineIndicator } from './OfflineSupport'
 
 interface ActiveSession {
     id: number;
@@ -257,20 +255,10 @@ export function Layout() {
                     </button>
                     <h1 className="ml-3 text-lg font-bold text-indigo-600 dark:text-indigo-400">♠️ Klondike</h1>
                 </div>
-                <div className="flex items-center gap-2">
-                    <OfflineIndicator />
-                    <PresenceIndicator />
-                </div>
             </div>
 
             {/* Main content */}
             <div className={`pt-16 md:pt-0 transition-all duration-200 ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-64'}`}>
-                {/* Desktop presence and offline indicators */}
-                <div className="hidden md:flex justify-end items-center gap-4 px-4 md:px-8 pt-4">
-                    <OfflineIndicator />
-                    <PresenceIndicator />
-                </div>
-
                 {/* Active session banner */}
                 {activeSession && (
                     <SessionBanner

@@ -145,7 +145,8 @@ try {
     $currentVersion = Get-CurrentVersion
     if ($Version) {
         $newVersion = $Version -replace '^v', ''
-    } else {
+    }
+    else {
         $newVersion = Get-BumpedVersion $currentVersion $Bump
     }
     
@@ -181,7 +182,8 @@ try {
                 throw "Aborted: Please commit or stash changes first"
             }
         }
-    } else {
+    }
+    else {
         Write-Success "Working directory is clean"
     }
     
@@ -190,7 +192,8 @@ try {
         Write-Step "2/6" "Running tests"
         if ($DryRun) {
             Write-Host "Would run: uv run pytest -v"
-        } else {
+        }
+        else {
             $env:CI = "true"
             uv run pytest -v
             if ($LASTEXITCODE -ne 0) {
@@ -198,7 +201,8 @@ try {
             }
             Write-Success "All tests passed"
         }
-    } else {
+    }
+    else {
         Write-Step "2/6" "Skipping tests (--SkipTests)"
         Write-Warning "Tests skipped - not recommended for production!"
     }
@@ -208,7 +212,8 @@ try {
         Write-Step "3/6" "Building web frontend"
         if ($DryRun) {
             Write-Host "Would run: npm run build (in klondike-web)"
-        } else {
+        }
+        else {
             Push-Location (Join-Path $ProjectRoot "klondike-web")
             try {
                 npm run build
@@ -216,11 +221,13 @@ try {
                     throw "Web build failed!"
                 }
                 Write-Success "Web frontend built successfully"
-            } finally {
+            }
+            finally {
                 Pop-Location
             }
         }
-    } else {
+    }
+    else {
         Write-Step "3/6" "Skipping web build (--SkipWebBuild)"
     }
     
@@ -230,12 +237,14 @@ try {
     if ($gitStatus) {
         if ($DryRun) {
             Write-Host "Would commit changes with message: 'chore: prepare release $newVersion'"
-        } else {
+        }
+        else {
             git add -A
             git commit -m "chore: prepare release $newVersion"
             Write-Success "Changes committed"
         }
-    } else {
+    }
+    else {
         Write-Success "No changes to commit"
     }
     
@@ -244,7 +253,8 @@ try {
     if ($DryRun) {
         Write-Host "Would create tag: $tagName"
         Write-Host "Would push to origin"
-    } else {
+    }
+    else {
         # Push commits first
         Write-Host "Pushing commits..."
         git push origin HEAD
@@ -276,7 +286,8 @@ try {
         Write-Warning "DRY RUN completed - no changes were made"
         Write-Host ""
         Write-Host "To perform the actual release, run without -DryRun"
-    } else {
+    }
+    else {
         Write-Host ""
         Write-Host "🎉 " -NoNewline
         Write-Host "Released $tagName!" -ForegroundColor Green
@@ -294,10 +305,12 @@ try {
         Write-Host "  uv tool upgrade klondike-spec-cli"
     }
     
-} catch {
+}
+catch {
     Write-Host ""
     Write-Error $_.Exception.Message
     exit 1
-} finally {
+}
+finally {
     Pop-Location
 }
