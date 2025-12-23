@@ -388,7 +388,7 @@ export function DependencyGraph() {
 
     return (
         <div className={isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-gray-900' : ''}>
-            <div className="flex items-center justify-between mb-6 px-4 pt-4">
+            <div className="flex items-center justify-between mb-6">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
                     Dependency Graph
                 </h2>
@@ -410,7 +410,7 @@ export function DependencyGraph() {
                 </div>
             </div>
 
-            <div className={`relative ${isFullscreen ? 'h-[calc(100vh-80px)]' : 'h-[600px]'} bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden`}>
+            <div className={`relative ${isFullscreen ? 'h-[calc(100vh-80px)]' : 'h-[calc(100vh-12rem)]'} bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden`}>
                 <GraphFilters
                     showOnlyWithDeps={showOnlyWithDeps}
                     onToggleDeps={() => setShowOnlyWithDeps(!showOnlyWithDeps)}
