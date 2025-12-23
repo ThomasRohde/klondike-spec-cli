@@ -21,7 +21,7 @@ import {
     XMarkIcon,
     EyeIcon,
     EyeSlashIcon,
-    ArrowsPointingOutIcon,
+    PencilSquareIcon,
     Bars3Icon,
 } from '@heroicons/react/24/outline';
 
@@ -331,7 +331,7 @@ export function WidgetGridControls({ isEditMode, onToggleEditMode, onOpenSetting
                     }`}
                 title={isEditMode ? 'Exit edit mode' : 'Edit layout'}
             >
-                <ArrowsPointingOutIcon className="h-5 w-5" />
+                <PencilSquareIcon className="h-5 w-5" />
             </button>
             <button
                 onClick={onOpenSettings}
