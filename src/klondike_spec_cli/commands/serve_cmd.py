@@ -143,6 +143,9 @@ def serve_command(
 
     manager = ConnectionManager()
 
+    # Store reference to the main event loop for cross-thread broadcasting
+    main_loop: Any = None
+
     # File watcher for detecting external CLI changes
     class KlondikeFileHandler(FileSystemEventHandler):
         """Watches .klondike directory for changes."""
@@ -180,28 +183,35 @@ def serve_command(
             elif path.name == "config.yaml":
                 self._emit_config_changed()
 
+        def _schedule_broadcast(self, event_type: str, data: dict[str, Any]) -> None:
+            """Schedule a broadcast to run on the main asyncio event loop."""
+            import asyncio
+
+            nonlocal main_loop
+            if main_loop is None:
+                return
+
+            try:
+                # Use run_coroutine_threadsafe to schedule from watchdog thread
+                asyncio.run_coroutine_threadsafe(
+                    self.manager.broadcast(event_type, data),
+                    main_loop,
+                )
+            except Exception:
+                pass  # Silently ignore errors in file watcher
+
         def _emit_features_changed(self) -> None:
             """Emit featureUpdated event."""
             try:
                 from ..data import load_features
 
                 registry = load_features(self.root_path)
-                # Create task to run async broadcast
-                import asyncio
-
-                try:
-                    loop = asyncio.get_event_loop()
-                except RuntimeError:
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                loop.create_task(
-                    self.manager.broadcast(
-                        "featureUpdated",
-                        {
-                            "total": len(registry.features),
-                            "passing": sum(1 for f in registry.features if f.passes),
-                        },
-                    )
+                self._schedule_broadcast(
+                    "featureUpdated",
+                    {
+                        "total": len(registry.features),
+                        "passing": sum(1 for f in registry.features if f.passes),
+                    },
                 )
             except Exception:
                 pass  # Silently ignore errors in file watcher
@@ -212,35 +222,19 @@ def serve_command(
                 from ..data import load_progress
 
                 progress = load_progress(self.root_path)
-                import asyncio
-
-                try:
-                    loop = asyncio.get_event_loop()
-                except RuntimeError:
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                loop.create_task(
-                    self.manager.broadcast(
-                        "sessionUpdated",
-                        {
-                            "status": progress.current_status,
-                            "sessionCount": len(progress.sessions),
-                        },
-                    )
+                self._schedule_broadcast(
+                    "sessionUpdated",
+                    {
+                        "status": progress.current_status,
+                        "sessionCount": len(progress.sessions),
+                    },
                 )
             except Exception:
                 pass
 
         def _emit_config_changed(self) -> None:
             """Emit configChanged event."""
-            import asyncio
-
-            try:
-                loop = asyncio.get_event_loop()
-            except RuntimeError:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-            loop.create_task(self.manager.broadcast("configChanged", {}))
+            self._schedule_broadcast("configChanged", {})
 
     # Start file watcher
     event_handler = KlondikeFileHandler(manager, root)
@@ -258,6 +252,14 @@ def serve_command(
 
     # Mount static files
     app_instance.mount("/assets", StaticFiles(directory=str(static_dir / "assets")), name="assets")
+
+    @app_instance.on_event("startup")
+    async def on_startup() -> None:
+        """Capture the main event loop for cross-thread broadcasting."""
+        import asyncio
+
+        nonlocal main_loop
+        main_loop = asyncio.get_running_loop()
 
     @app_instance.get("/health")
     async def health() -> dict[str, str]:

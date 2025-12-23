@@ -275,8 +275,8 @@ function WidgetSettingsPanel({ widgets, onToggleWidget, onResetDefaults, onClose
                                 <button
                                     onClick={() => onToggleWidget(widget.id)}
                                     className={`p-1 rounded ${widget.visible
-                                            ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600'
-                                            : 'bg-gray-200 dark:bg-gray-600 text-gray-400'
+                                        ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600'
+                                        : 'bg-gray-200 dark:bg-gray-600 text-gray-400'
                                         }`}
                                 >
                                     {widget.visible ? (
@@ -326,8 +326,8 @@ export function WidgetGridControls({ isEditMode, onToggleEditMode, onOpenSetting
             <button
                 onClick={onToggleEditMode}
                 className={`p-2 rounded-lg transition-colors ${isEditMode
-                        ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500'
+                    ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500'
                     }`}
                 title={isEditMode ? 'Exit edit mode' : 'Edit layout'}
             >
