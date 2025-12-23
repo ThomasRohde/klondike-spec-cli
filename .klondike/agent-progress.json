@@ -1,7 +1,7 @@
 {
   "projectName": "klondike-spec-cli",
   "startedAt": "2025-12-07T00:00:00Z",
-  "currentStatus": "In Progress",
+  "currentStatus": "Session Ended",
   "sessions": [
     {
       "sessionNumber": 1,
@@ -579,14 +579,15 @@
       "sessionNumber": 35,
       "date": "2025-12-23",
       "agent": "Coding Agent",
-      "duration": "(in progress)",
-      "focus": "F054 - Final cli.py cleanup to reduce to under 500 lines",
+      "duration": "~session",
+      "focus": "Fixed release command to work with hatch-vcs dynamic versioning",
       "completed": [],
-      "inProgress": [
-        "Session started"
-      ],
+      "inProgress": [],
       "blockers": [],
-      "nextSteps": [],
+      "nextSteps": [
+        "Test release process",
+        "Update global klondike installation"
+      ],
       "technicalNotes": []
     }
   ],
