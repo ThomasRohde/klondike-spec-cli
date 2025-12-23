@@ -53,7 +53,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         // Parse the command value and navigate/execute
         if (value.startsWith('feature:')) {
             const featureId = value.replace('feature:', '');
-            window.location.href = `/features/${featureId}`;
+            window.location.href = `/task/${featureId}`;
         } else if (value.startsWith('nav:')) {
             const path = value.replace('nav:', '');
             window.location.href = path;
