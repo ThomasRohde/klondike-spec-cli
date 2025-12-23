@@ -38,8 +38,30 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: klondike-web/package-lock.json
+
+      - name: Build web frontend
+        working-directory: klondike-web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Copy web assets to static directory
+        run: |
+          rm -rf src/klondike_spec_cli/static
+          mkdir -p src/klondike_spec_cli/static
+          cp -r klondike-web/dist/* src/klondike_spec_cli/static/
+
+      - name: Install build dependencies
+        run: uv pip install --system build hatchling hatch-vcs
+
       - name: Build package
-        run: uv build
+        run: python -m build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

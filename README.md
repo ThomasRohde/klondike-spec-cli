@@ -1,4 +1,4 @@
-# 🎴 Klondike Spec CLI
+# ♠️ Klondike Spec CLI
 
 > **The CLI that built itself** — A tool for managing AI agent workflows, created through the very methodology it implements.
 
@@ -478,15 +478,60 @@ git clone https://github.com/ThomasRohde/klondike-spec-cli.git
 cd klondike-spec-cli
 uv sync
 
-# Run tests (142 tests)
+# Run tests (167 tests)
 uv run pytest -v
 
 # Lint and type check
 uv run ruff check .
 uv run mypy src
 
-# Build
-uv build
+# Build web frontend (required before building package)
+cd klondike-web
+npm install
+npm run build
+cd ..
+
+# Build Python package with hatchling
+uv run --with build python -m build
+
+# Test locally before publishing
+uv tool install --force dist/klondike_spec_cli-*.whl
+klondike serve --open
+```
+
+### Publishing to PyPI
+
+The project uses an automated release workflow:
+
+```bash
+# Publish a new version (runs tests, builds web UI, creates tag)
+.\scripts\publish.ps1 -Bump patch    # 1.0.0 -> 1.0.1
+.\scripts\publish.ps1 -Bump minor    # 1.0.0 -> 1.1.0
+.\scripts\publish.ps1 -Bump major    # 1.0.0 -> 2.0.0
+
+# Dry run to preview
+.\scripts\publish.ps1 -Bump patch -DryRun
+
+# Skip tests for hotfixes (not recommended)
+.\scripts\publish.ps1 -Bump patch -SkipTests
+```
+
+The script:
+1. ✅ Runs tests
+2. 🏗️ Builds web frontend (`klondike-web`)
+3. 📦 Commits changes
+4. 🏷️ Creates and pushes git tag
+5. 🚀 GitHub Actions builds package and publishes to PyPI
+
+Once the tag is pushed, GitHub Actions automatically:
+- Builds the web frontend
+- Creates the Python wheel with bundled assets
+- Publishes to PyPI using trusted publishing
+
+Users can then install/upgrade:
+```bash
+uv tool install klondike-spec-cli
+uv tool upgrade klondike-spec-cli
 ```
 
 ### Project Stats
