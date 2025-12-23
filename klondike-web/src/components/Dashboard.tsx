@@ -280,7 +280,7 @@ export function Dashboard() {
                     <WidgetGridControls
                         isEditMode={isEditMode}
                         onToggleEditMode={() => setIsEditMode(!isEditMode)}
-                        onOpenSettings={() => setShowSettings(!showSettings)}
+                        onOpenSettings={() => setShowSettings(true)}
                     />
                     <div className="flex items-center gap-2">
                         <div className={`h-3 w-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
@@ -298,6 +298,8 @@ export function Dashboard() {
                 renderWidget={renderWidget}
                 isEditMode={isEditMode}
                 onEditModeChange={setIsEditMode}
+                showSettings={showSettings}
+                onShowSettingsChange={setShowSettings}
             />
         </div>
     );

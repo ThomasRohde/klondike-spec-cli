@@ -50,6 +50,8 @@ interface WidgetGridProps {
     renderWidget: (config: WidgetConfig) => React.ReactNode;
     isEditMode: boolean;
     onEditModeChange: (editMode: boolean) => void;
+    showSettings?: boolean;
+    onShowSettingsChange?: (show: boolean) => void;
 }
 
 // --- Widget Layout Storage ---
@@ -348,10 +350,16 @@ export function WidgetGrid({
     onWidgetsChange,
     renderWidget,
     isEditMode,
-    onEditModeChange
+    onEditModeChange,
+    showSettings: externalShowSettings,
+    onShowSettingsChange: externalOnShowSettingsChange
 }: WidgetGridProps) {
-    const [showSettings, setShowSettings] = useState(false);
+    const [internalShowSettings, setInternalShowSettings] = useState(false);
     const { toggleWidget, updateWidgetSize, resetToDefaults } = useWidgetLayout();
+
+    // Use external state if provided, otherwise use internal state
+    const showSettings = externalShowSettings !== undefined ? externalShowSettings : internalShowSettings;
+    const setShowSettings = externalOnShowSettingsChange || setInternalShowSettings;
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
