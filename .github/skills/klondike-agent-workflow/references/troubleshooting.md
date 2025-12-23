@@ -15,6 +15,25 @@ Common issues and recovery patterns for klondike-managed projects.
 
 ## Common Errors
 
+### "klondike: command not found" or wrong syntax errors
+
+**Causes:**
+- Using `--help` flag (klondike doesn't support this)
+- Not in correct directory
+- klondike not installed
+
+**Fixes:**
+```bash
+# ✓ Correct usage
+klondike                    # Shows all commands
+klondike status             # Run command directly
+klondike feature list       # Commands show usage on error
+
+# ✗ Wrong
+klondike --help             # Not supported
+klondike feature --help     # Not supported
+```
+
 ### "No .klondike directory found"
 
 **Cause:** Not in a klondike project or wrong directory.

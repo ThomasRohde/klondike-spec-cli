@@ -2,6 +2,8 @@
 
 Detailed patterns for managing agent sessions across context windows.
 
+**Remember:** klondike does not use `--help` flags. Just run commands to see usage.
+
 ## Table of Contents
 
 - [Complete Session Flow](#complete-session-flow)

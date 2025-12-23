@@ -1,6 +1,18 @@
 # Klondike CLI Command Reference
 
-Complete reference for all klondike commands. Load only when needed for specific command details.
+Complete reference for all klondike commands.
+
+## CRITICAL: Command Syntax
+
+**Klondike does NOT use --help flags:**
+- ❌ `klondike --help` (wrong)
+- ❌ `klondike feature --help` (wrong)
+- ✅ `klondike` (shows all commands)
+- ✅ `klondike feature add ...` (just run commands, they show usage on error)
+
+**Feature IDs must be uppercase F-prefix:**
+- ❌ `f001`, `1`, `feature1` (wrong)
+- ✅ `F001` (correct)
 
 ## Table of Contents
 
@@ -110,23 +122,18 @@ All feature commands use: `klondike feature <action> [args] [options]`
 Add a new feature to the registry.
 
 ```bash
-klondike feature add "User authentication"
-klondike feature add "Login form" -c core -p 1
-klondike feature add -d "API endpoint" --category api --priority 2
-klondike feature add "Feature" --criteria "Criterion 1,Criterion 2"
-klondike feature add "Feature" --notes "Implementation notes for agents"
+klondike feature add "User authentication" --notes "Use bcrypt, validate email format"
+klondike feature add "Login form" --category core --priority 1 --notes "Bootstrap styling"
+klondike feature add "API endpoint" --criteria "Returns 200,Validates input" --notes "See api.md"
 ```
 
-**Options:**
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--description` | `-d` | Feature description (or use positional) |
-| `--category` | `-c` | Category (core, ui, api, etc.) |
-| `--priority` | `-p` | Priority 1-5 (1=critical) |
-| `--criteria` | | Acceptance criteria (comma-separated) |
-| `--notes` | | Implementation notes |
+**Key options:**
+- `--notes` - **ALWAYS use this** - helps future agents understand implementation approach
+- `--category` / `-c` - Feature category (defaults from config)
+- `--priority` / `-p` - Priority 1-5, 1=critical (defaults from config)
+- `--criteria` - Comma-separated acceptance criteria
 
-> **Always use `--notes`** to include implementation hints, edge cases, dependencies, and gotchas.
+**Notes should include:** implementation approach, edge cases, dependencies, gotchas.
 
 ### `klondike feature list`
 

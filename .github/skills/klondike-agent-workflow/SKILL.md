@@ -5,21 +5,37 @@ description: Manage multi-session AI agent workflows using klondike CLI. Use whe
 
 # Klondike Agent Workflow
 
-Klondike bridges context windows for long-running agent sessions. **Always use CLI commands—never read .klondike/*.json files directly.**
+Klondike bridges context windows for long-running agent sessions. **Critical: Always use CLI commands—never directly read/edit .klondike/*.json files or agent-progress.md.**
+
+## CRITICAL: Common Mistakes to Avoid
+
+**❌ NEVER do these:**
+- `klondike --help` (wrong syntax - use `klondike` alone or `klondike <command>` without --help)
+- `klondike feature --help` (wrong - just run the command, it will show usage)
+- Read `.klondike/features.json` directly (use `klondike feature list`)
+- Edit `agent-progress.md` manually (auto-generated, changes are lost)
+- `klondike feature start` without feature ID (must be `klondike feature start F001`)
+- Feature IDs like `f001` or `1` (must be uppercase: `F001`)
+
+**✓ DO these:**
+- `klondike` alone shows all commands
+- `klondike feature list` to see features
+- `klondike feature show F001` for details
+- `klondike status` to see project overview
 
 ## Quick Decision Tree
 
 ```
-Starting work?     → klondike status → klondike session start --focus "F00X"
-Working on feature → klondike feature start F00X
-Feature complete?  → Test E2E → klondike feature verify F00X --evidence "..."
-Blocked?           → klondike feature block F00X --reason "..."
+Starting work?     → klondike status → klondike session start --focus "F001 - desc"
+Working on feature → klondike feature start F001
+Feature complete?  → Test E2E → klondike feature verify F001 --evidence "..."
+Blocked?           → klondike feature block F001 --reason "..."
 Ending session?    → klondike session end --summary "..." --next "..."
 ```
 
 ## Session Lifecycle
 
-### 1. Session Start (Do First!)
+### 1. Session Start (Always Do First!)
 
 ```bash
 klondike status                                    # See project state
@@ -33,60 +49,58 @@ klondike feature start F001                        # Mark feature in-progress
 - **One feature at a time** (tracked by `feature start`)
 - Commit after each meaningful change
 - Test incrementally, not at end
-- If blocked: `klondike feature block F00X --reason "..."`
+- If blocked: `klondike feature block F001 --reason "..."`
 
 ### 3. Session End (Before Leaving!)
 
 ```bash
-klondike feature verify F00X --evidence "test-results/F00X.png"
+klondike feature verify F001 --evidence "test-results/F001.png"
 klondike session end --summary "Done" --next "Implement logout"
 ```
 
-## Feature Workflow
+## Core Commands
 
-| Action | Command |
-|--------|---------|
-| Add | `klondike feature add "desc" -c core -p 1 --criteria "..." --notes "..."` |
-| Start | `klondike feature start F001` |
-| Block | `klondike feature block F001 --reason "Needs API"` |
-| Verify | `klondike feature verify F001 --evidence "path/to/proof"` |
-| Show | `klondike feature show F001` |
-| List | `klondike feature list --status in-progress` |
+| Action | Command | Notes |
+|--------|---------|-------|
+| Status | `klondike status` | Always start here |
+| Add feature | `klondike feature add "desc" --notes "hints"` | **--notes is critical** |
+| Start feature | `klondike feature start F001` | One at a time |
+| List features | `klondike feature list` | Never read JSON directly |
+| Show details | `klondike feature show F001` | View single feature |
+| Verify | `klondike feature verify F001 --evidence "proof"` | E2E test first |
+| Block | `klondike feature block F001 --reason "why"` | When stuck |
+| Start session | `klondike session start --focus "F001 - desc"` | Begin work |
+| End session | `klondike session end --summary "..." --next "..."` | Before leaving |
 
-## Critical Rules
+## Essential Rules
 
-**DO:**
-- Use `klondike status` before any work
-- Use `klondike feature list` to see features (not file reads)
-- Include `--notes` when adding features (helps future agents)
-- Capture evidence before verifying
-- Run pre-commit checks before committing
+**Always:**
+- Start every session with `klondike status` to see project state
+- Use `--notes` when adding features (gives future agents critical context)
+- Capture evidence (screenshots, logs) before `feature verify`
+- Run pre-commit checks before every commit
+- End sessions with `session end --summary ... --next ...`
 
-**DON'T:**
-- Read `.klondike/*.json` files directly
-- Edit `agent-progress.md` manually
-- Mark features verified without E2E testing
-- Leave session without `session end`
-- Work on multiple features simultaneously
+**Never:**
+- Use `klondike --help` or `klondike feature --help` (wrong syntax - see Common Mistakes)
+- Read or edit `.klondike/*.json` files directly (use CLI commands)
+- Edit `agent-progress.md` manually (auto-generated, edits are lost)
+- Verify features without E2E testing (unit tests aren't enough)
+- Commit code with failing tests, lint errors, or build failures
 
-## Pre-Commit Verification
+## Pre-Commit Checks
 
-Before every commit:
+Detect project type and run checks. **Never commit if any fail.**
 
-```bash
-# Python (uv)
-uv run ruff check src tests
-uv run ruff format --check src tests
-uv run pytest
+**Python (uv):** `uv run ruff check src tests && uv run pytest`  
+**Node.js:** `npm run lint && npm run build && CI=true npm test`  
+**Rust:** `cargo clippy && cargo test`  
+**Go:** `golangci-lint run && go test ./...`
 
-# Node.js
-npm run lint && npm run build && CI=true npm test
-```
+## Reference Files (Load As Needed)
 
-Only commit if all pass. Never leave repo broken.
+Load these only when you need specific details:
 
-## Reference Files
-
-- **[commands.md](references/commands.md)**: Complete CLI reference with all options
-- **[workflows.md](references/workflows.md)**: Detailed session patterns and examples
-- **[troubleshooting.md](references/troubleshooting.md)**: Common issues and recovery
+- **[commands.md](references/commands.md)**: Full CLI reference with all options/flags
+- **[workflows.md](references/workflows.md)**: Multi-session patterns, worktrees, complex scenarios
+- **[troubleshooting.md](references/troubleshooting.md)**: Error recovery and corrupted state fixes
