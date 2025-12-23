@@ -144,10 +144,10 @@ export function Layout() {
                 {/* Header with project name and close/collapse buttons */}
                 <div className="flex h-16 items-center justify-between border-b border-gray-200 dark:border-gray-700 px-4">
                     {!sidebarCollapsed && (
-                        <h1 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">🎯 Klondike</h1>
+                        <h1 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">♠️ Klondike</h1>
                     )}
                     {sidebarCollapsed && (
-                        <span className="text-xl mx-auto">🎯</span>
+                        <span className="text-xl mx-auto">♠️</span>
                     )}
                     <button
                         onClick={() => setSidebarOpen(false)}
@@ -255,7 +255,7 @@ export function Layout() {
                     >
                         <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                     </button>
-                    <h1 className="ml-3 text-lg font-bold text-indigo-600 dark:text-indigo-400">🎯 Klondike</h1>
+                    <h1 className="ml-3 text-lg font-bold text-indigo-600 dark:text-indigo-400">♠️ Klondike</h1>
                 </div>
                 <div className="flex items-center gap-2">
                     <OfflineIndicator />
