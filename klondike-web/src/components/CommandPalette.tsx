@@ -142,7 +142,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                         {/* Quick Filters */}
                         <Command.Group heading="Filter by Status" className="mb-2">
                             <Command.Item
-                                value="nav:/features?status=in-progress"
+                                value="nav:/specs?status=in-progress"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
@@ -150,7 +150,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span>In Progress Features</span>
                             </Command.Item>
                             <Command.Item
-                                value="nav:/features?status=blocked"
+                                value="nav:/specs?status=blocked"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
@@ -158,7 +158,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 <span>Blocked Features</span>
                             </Command.Item>
                             <Command.Item
-                                value="nav:/features?status=not-started"
+                                value="nav:/specs?status=not-started"
                                 onSelect={handleSelect}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-700 dark:text-gray-200 aria-selected:bg-indigo-100 dark:aria-selected:bg-indigo-900/50"
                             >
