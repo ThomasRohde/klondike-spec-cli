@@ -167,7 +167,7 @@ def serve_command(
             if event.is_directory:
                 return
 
-            path = Path(event.src_path)
+            path = Path(str(event.src_path))
             if not self._should_process_event(str(path)):
                 return
 
