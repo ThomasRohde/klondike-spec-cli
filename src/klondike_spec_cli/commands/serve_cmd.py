@@ -11,6 +11,8 @@ import threading
 import webbrowser
 from datetime import datetime
 from pathlib import Path
+from types import FrameType
+from typing import Any, Awaitable, Callable
 
 from pith import PithException, echo
 
@@ -55,7 +57,7 @@ def serve_command(
         ) from err
 
     try:
-        from watchdog.events import FileSystemEventHandler
+        from watchdog.events import FileSystemEvent, FileSystemEventHandler
         from watchdog.observers import Observer
     except ImportError as err:
         raise PithException(
@@ -81,9 +83,13 @@ def serve_command(
 
     # Custom middleware to add CORS headers for local development
     from starlette.requests import Request
+    from starlette.responses import Response
 
     @app_instance.middleware("http")
-    async def add_cors_headers(request: Request, call_next):
+    async def add_cors_headers(
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]],
+    ) -> Response:
         """Add CORS headers to all responses for local development."""
         # Handle preflight OPTIONS requests
         if request.method == "OPTIONS":
@@ -105,18 +111,18 @@ def serve_command(
     class ConnectionManager:
         """Manages WebSocket connections and broadcasts events."""
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.active_connections: list[WebSocket] = []
 
-        async def connect(self, websocket: WebSocket):
+        async def connect(self, websocket: WebSocket) -> None:
             await websocket.accept()
             self.active_connections.append(websocket)
 
-        def disconnect(self, websocket: WebSocket):
+        def disconnect(self, websocket: WebSocket) -> None:
             if websocket in self.active_connections:
                 self.active_connections.remove(websocket)
 
-        async def broadcast(self, event_type: str, data: dict):
+        async def broadcast(self, event_type: str, data: dict[str, Any]) -> None:
             """Broadcast an event to all connected clients."""
             message = {
                 "type": event_type,
@@ -140,10 +146,10 @@ def serve_command(
     class KlondikeFileHandler(FileSystemEventHandler):
         """Watches .klondike directory for changes."""
 
-        def __init__(self, manager: ConnectionManager, root_path: Path):
+        def __init__(self, manager: ConnectionManager, root_path: Path) -> None:
             self.manager = manager
             self.root_path = root_path
-            self.last_event_time = {}
+            self.last_event_time: dict[str, float] = {}
             super().__init__()
 
         def _should_process_event(self, path: str) -> bool:
@@ -157,7 +163,7 @@ def serve_command(
             self.last_event_time[path] = now
             return True
 
-        def on_modified(self, event):
+        def on_modified(self, event: FileSystemEvent) -> None:
             if event.is_directory:
                 return
 
@@ -173,7 +179,7 @@ def serve_command(
             elif path.name == "config.yaml":
                 self._emit_config_changed()
 
-        def _emit_features_changed(self):
+        def _emit_features_changed(self) -> None:
             """Emit featureUpdated event."""
             try:
                 from ..data import load_features
@@ -199,7 +205,7 @@ def serve_command(
             except Exception:
                 pass  # Silently ignore errors in file watcher
 
-        def _emit_session_changed(self):
+        def _emit_session_changed(self) -> None:
             """Emit sessionUpdated event."""
             try:
                 from ..data import load_progress
@@ -224,7 +230,7 @@ def serve_command(
             except Exception:
                 pass
 
-        def _emit_config_changed(self):
+        def _emit_config_changed(self) -> None:
             """Emit configChanged event."""
             import asyncio
 
@@ -253,12 +259,12 @@ def serve_command(
     app_instance.mount("/assets", StaticFiles(directory=str(static_dir / "assets")), name="assets")
 
     @app_instance.get("/health")
-    async def health():
+    async def health() -> dict[str, str]:
         """Health check endpoint."""
         return {"status": "ok", "version": __version__}
 
     @app_instance.websocket("/api/updates")
-    async def websocket_endpoint(websocket: WebSocket):
+    async def websocket_endpoint(websocket: WebSocket) -> None:
         """WebSocket endpoint for real-time updates.
 
         Emits events:
@@ -307,7 +313,7 @@ def serve_command(
             manager.disconnect(websocket)
 
     @app_instance.websocket("/ws/presence")
-    async def presence_websocket(websocket: WebSocket):
+    async def presence_websocket(websocket: WebSocket) -> None:
         """WebSocket endpoint for presence/collaborative features.
 
         Used by PresenceIndicator component to show active users.
@@ -344,7 +350,7 @@ def serve_command(
             manager.disconnect(websocket)
 
     @app_instance.get("/api/status")
-    async def api_status():
+    async def api_status() -> dict[str, Any]:
         """Get project status overview.
 
         Returns project metadata, progress counts, feature status summary,
@@ -450,7 +456,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.get("/api/features")
-    async def api_features_list(status: str | None = None):
+    async def api_features_list(status: str | None = None) -> dict[str, Any]:
         """Get all features with optional status filter.
 
         Query Parameters:
@@ -484,7 +490,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.get("/api/features/{feature_id}")
-    async def api_feature_get(feature_id: str):
+    async def api_feature_get(feature_id: str) -> dict[str, Any]:
         """Get single feature by ID.
 
         Path Parameters:
@@ -512,7 +518,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.post("/api/features")
-    async def api_feature_create(feature_data: dict):
+    async def api_feature_create(feature_data: dict[str, Any]) -> dict[str, Any]:
         """Create a new feature.
 
         Request Body:
@@ -606,7 +612,10 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.put("/api/features/{feature_id}")
-    async def api_feature_update(feature_id: str, update_data: dict):
+    async def api_feature_update(
+        feature_id: str,
+        update_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Update an existing feature.
 
         Path Parameters:
@@ -710,7 +719,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.post("/api/features/{feature_id}/start")
-    async def api_feature_start(feature_id: str):
+    async def api_feature_start(feature_id: str) -> dict[str, Any]:
         """Mark feature as in-progress.
 
         Path Parameters:
@@ -761,7 +770,7 @@ def serve_command(
 
             # Update progress
             try:
-                from .features import regenerate_progress_md, update_quick_reference
+                from ..data import regenerate_progress_md, update_quick_reference
 
                 progress = load_progress(root)
                 update_quick_reference(progress, registry)
@@ -785,7 +794,10 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.post("/api/features/{feature_id}/verify")
-    async def api_feature_verify(feature_id: str, verify_data: dict):
+    async def api_feature_verify(
+        feature_id: str,
+        verify_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Mark feature as verified with evidence.
 
         Path Parameters:
@@ -868,7 +880,7 @@ def serve_command(
 
             # Update progress
             try:
-                from .features import regenerate_progress_md, update_quick_reference
+                from ..data import regenerate_progress_md, update_quick_reference
 
                 progress = load_progress(root)
                 update_quick_reference(progress, registry)
@@ -889,7 +901,10 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.post("/api/features/{feature_id}/block")
-    async def api_feature_block(feature_id: str, block_data: dict):
+    async def api_feature_block(
+        feature_id: str,
+        block_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Mark feature as blocked with reason.
 
         Path Parameters:
@@ -955,7 +970,7 @@ def serve_command(
 
             # Update progress
             try:
-                from .features import regenerate_progress_md, update_quick_reference
+                from ..data import regenerate_progress_md, update_quick_reference
 
                 progress = load_progress(root)
                 update_quick_reference(progress, registry)
@@ -976,7 +991,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.post("/api/features/reorder")
-    async def api_features_reorder(reorder_data: dict):
+    async def api_features_reorder(reorder_data: dict[str, Any]) -> dict[str, Any]:
         """Reorder features by updating their priorities.
 
         Request Body:
@@ -1044,7 +1059,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.get("/api/progress")
-    async def api_progress():
+    async def api_progress() -> dict[str, Any]:
         """Get all session history.
 
         Returns:
@@ -1063,7 +1078,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.get("/api/commits")
-    async def api_commits(count: int = 10):
+    async def api_commits(count: int = 10) -> list[dict[str, Any]]:
         """Get recent git commits.
 
         Args:
@@ -1091,7 +1106,7 @@ def serve_command(
             return []
 
     @app_instance.get("/api/activity")
-    async def api_activity(limit: int = 10):
+    async def api_activity(limit: int = 10) -> dict[str, Any]:
         """Get recent activity feed.
 
         Args:
@@ -1104,7 +1119,7 @@ def serve_command(
         from ..git import get_recent_commits
 
         try:
-            activities = []
+            activities: list[dict[str, Any]] = []
 
             # Get recent feature updates
             registry = load_features(root)
@@ -1173,7 +1188,7 @@ def serve_command(
             return {"activities": [], "error": str(e)}
 
     @app_instance.get("/api/config")
-    async def api_config_get():
+    async def api_config_get() -> dict[str, Any]:
         """Get current configuration.
 
         Returns:
@@ -1196,7 +1211,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.put("/api/config")
-    async def api_config_update(config_data: dict):
+    async def api_config_update(config_data: dict[str, Any]) -> dict[str, Any]:
         """Update configuration.
 
         Request Body:
@@ -1319,7 +1334,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.post("/api/session/start")
-    async def api_session_start(session_data: dict):
+    async def api_session_start(session_data: dict[str, Any]) -> dict[str, Any]:
         """Start a new session.
 
         Request Body:
@@ -1408,7 +1423,7 @@ def serve_command(
             progress.current_status = "In Progress"
 
             # Save changes
-            from .features import update_quick_reference
+            from ..data import update_quick_reference
 
             update_quick_reference(progress, registry)
             save_features(registry, root)
@@ -1457,7 +1472,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.post("/api/session/end")
-    async def api_session_end(end_data: dict):
+    async def api_session_end(end_data: dict[str, Any]) -> dict[str, Any]:
         """End the current session.
 
         Request Body:
@@ -1514,7 +1529,7 @@ def serve_command(
             progress.current_status = "Session Ended"
 
             # Save changes
-            from .features import update_quick_reference
+            from ..data import update_quick_reference
 
             update_quick_reference(progress, registry)
             save_progress(progress, root)
@@ -1540,7 +1555,7 @@ def serve_command(
             return {"error": str(e)}
 
     @app_instance.get("/{full_path:path}", response_class=HTMLResponse)
-    async def serve_spa(full_path: str):
+    async def serve_spa(full_path: str) -> Response:
         """Serve index.html for all routes (React Router support)."""
         # Serve static files directly if they exist
         static_file = static_dir / full_path
@@ -1560,7 +1575,7 @@ def serve_command(
     class WindowsConnectionFilter(logging.Filter):
         """Filter to suppress Windows ConnectionResetError in asyncio."""
 
-        def filter(self, record):
+        def filter(self, record: logging.LogRecord) -> bool:
             # Suppress the Windows-specific connection reset errors
             if "ConnectionResetError" in record.getMessage():
                 return False
@@ -1586,7 +1601,7 @@ def serve_command(
     # Open browser after a short delay to ensure server is ready
     if open_browser:
 
-        def open_browser_delayed():
+        def open_browser_delayed() -> None:
             import time
 
             time.sleep(1.5)  # Wait for server to be ready
@@ -1600,7 +1615,7 @@ def serve_command(
     # Handle Ctrl+C gracefully on Windows
     shutdown_event = False
 
-    def handle_shutdown(signum, frame):
+    def handle_shutdown(signum: int, frame: FrameType | None) -> None:
         nonlocal shutdown_event
         shutdown_event = True
         echo("\n♠️  Server stopped")
