@@ -78,6 +78,16 @@ function Write-Error {
 }
 
 function Get-CurrentVersion {
+    # Always use the latest git tag from remote as source of truth
+    git fetch --tags --quiet 2>$null
+    
+    $tags = git tag -l --sort=-v:refname "v*.*.*" 2>$null
+    if ($tags) {
+        $latestTag = $tags | Select-Object -First 1
+        return $latestTag -replace '^v', ''
+    }
+    
+    # Fallback to version file if no tags exist
     $versionFile = Join-Path $ProjectRoot "src\klondike_spec_cli\_version.py"
     if (Test-Path $versionFile) {
         $content = Get-Content $versionFile -Raw
@@ -86,12 +96,6 @@ function Get-CurrentVersion {
             # Strip dev/post suffixes
             return $version -replace '\.(dev|post)\d+.*$', ''
         }
-    }
-    
-    # Fallback to git tags
-    $tag = git describe --tags --abbrev=0 2>$null
-    if ($tag) {
-        return $tag -replace '^v', ''
     }
     
     throw "Could not determine current version"
@@ -255,33 +259,22 @@ try {
         Write-Host "Would push to origin"
     }
     else {
-        # Check if tag already exists locally
-        $localTagExists = git tag -l $tagName
-        if ($localTagExists) {
-            Write-Warning "Tag $tagName already exists locally"
-            $confirm = Read-Host "Delete and recreate tag? (y/N)"
-            if ($confirm -eq 'y') {
-                git tag -d $tagName
-                Write-Host "Deleted local tag $tagName"
-            }
-            else {
-                throw "Tag $tagName already exists. Delete it manually with: git tag -d $tagName"
-            }
-        }
-        
-        # Check if tag exists remotely
-        git fetch --tags 2>$null
-        $remoteTagExists = git ls-remote --tags origin $tagName
-        if ($remoteTagExists) {
-            Write-Warning "Tag $tagName already exists on remote"
-            $confirm = Read-Host "Delete remote tag and recreate? (y/N)"
-            if ($confirm -eq 'y') {
-                git push origin :refs/tags/$tagName
-                Write-Host "Deleted remote tag $tagName"
-            }
-            else {
-                throw "Tag $tagName already exists on remote. Delete it manually with: git push origin :refs/tags/$tagName"
-            }
+        # Check if tag already exists (local or remote)
+        git fetch --tags --quiet 2>$null
+        $tagExists = git tag -l $tagName
+        if ($tagExists) {
+            Write-Error "Tag $tagName already exists!"
+            Write-Host ""
+            Write-Host "This means the version was already released." -ForegroundColor Yellow
+            Write-Host "The script detected version $currentVersion and tried to create $tagName," -ForegroundColor Yellow
+            Write-Host "but that tag already exists." -ForegroundColor Yellow
+            Write-Host ""
+            Write-Host "Solutions:" -ForegroundColor Cyan
+            Write-Host "  1. If you have new commits to release: run again (it will auto-bump to next version)" -ForegroundColor White
+            Write-Host "  2. If you need a specific version: use -Version flag" -ForegroundColor White
+            Write-Host ""
+            Write-Host "Example: .\scripts\publish.ps1 -Version 1.0.7" -ForegroundColor Gray
+            throw "Tag already exists. See solutions above."
         }
         
         # Push commits first
