@@ -98,8 +98,8 @@ export function MarkdownEditor({
                         title="Toggle Split View"
                         onClick={() => { setSplitView(!splitView); setShowPreview(false); }}
                         className={`px-2 py-1 text-sm rounded transition-colors ${splitView
-                                ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
-                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                            ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                             }`}
                     >
                         ⧉
@@ -109,8 +109,8 @@ export function MarkdownEditor({
                         title="Toggle Preview"
                         onClick={() => { setShowPreview(!showPreview); setSplitView(false); }}
                         className={`px-2 py-1 text-sm rounded transition-colors ${showPreview
-                                ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
-                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                            ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                             }`}
                     >
                         👁
