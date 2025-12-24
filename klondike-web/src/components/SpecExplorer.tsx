@@ -53,6 +53,14 @@ export function SpecExplorer() {
     const [loading, setLoading] = useState(true)
     const [searchText, setSearchText] = useState('')
     const [statusFilter, setStatusFilter] = useState<string>(searchParams.get('status') || 'all')
+
+    useEffect(() => {
+        // Update status filter when query params change
+        const status = searchParams.get('status')
+        if (status) {
+            setStatusFilter(status)
+        }
+    }, [searchParams])
     const [categoryFilter, setCategoryFilter] = useState<string>('all')
     const [isAddFormOpen, setIsAddFormOpen] = useState(false)
     const [successMessage, setSuccessMessage] = useState<string | null>(null)

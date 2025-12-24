@@ -199,7 +199,7 @@ export function Dashboard() {
                                 size={180}
                                 strokeWidth={35}
                                 onSegmentClick={(segmentStatus) => {
-                                    window.location.href = `/features?status=${segmentStatus}`;
+                                    window.location.href = `/specs?status=${segmentStatus}`;
                                 }}
                             />
                         </div>
