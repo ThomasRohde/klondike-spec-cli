@@ -99,9 +99,7 @@ class AgentAdapter(ABC):
         # Copy all files from the package
         for item in templates.iterdir():
             # Skip Python package artifacts
-            if item.name in ("__pycache__", "__init__.py") or item.name.endswith(
-                ".pyc"
-            ):
+            if item.name in ("__pycache__", "__init__.py") or item.name.endswith(".pyc"):
                 continue
             dest_path = target_dir / item.name
             extracted.extend(self._copy_traversable(item, dest_path, overwrite))
@@ -149,9 +147,7 @@ class AgentAdapter(ABC):
                     ) or child.name.endswith(".pyc"):
                         continue
                     child_dest = destination / child.name
-                    extracted.extend(
-                        self._copy_traversable(child, child_dest, overwrite)
-                    )
+                    extracted.extend(self._copy_traversable(child, child_dest, overwrite))
         except Exception:
             # If copying fails, return what we've extracted so far
             # to allow partial success and continue processing other files
