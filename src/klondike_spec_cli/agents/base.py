@@ -128,22 +128,27 @@ class AgentAdapter(ABC):
         """
         extracted: list[Path] = []
 
-        if source.is_file():
-            if destination.exists() and not overwrite:
-                return extracted
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            content = source.read_text(encoding="utf-8")
-            destination.write_text(content, encoding="utf-8")
-            extracted.append(destination)
-        else:
-            # It's a directory - recurse
-            destination.mkdir(parents=True, exist_ok=True)
-            for child in source.iterdir():
-                # Skip Python package artifacts
-                if child.name in ("__pycache__", "__init__.py") or child.name.endswith(".pyc"):
-                    continue
-                child_dest = destination / child.name
-                extracted.extend(self._copy_traversable(child, child_dest, overwrite))
+        try:
+            if source.is_file():
+                if destination.exists() and not overwrite:
+                    return extracted
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                content = source.read_text(encoding="utf-8")
+                destination.write_text(content, encoding="utf-8")
+                extracted.append(destination)
+            else:
+                # It's a directory - recurse
+                destination.mkdir(parents=True, exist_ok=True)
+                for child in source.iterdir():
+                    # Skip Python package artifacts
+                    if child.name in ("__pycache__", "__init__.py") or child.name.endswith(".pyc"):
+                        continue
+                    child_dest = destination / child.name
+                    extracted.extend(self._copy_traversable(child, child_dest, overwrite))
+        except Exception:
+            # If copying fails, return what we've extracted so far
+            # to allow partial success and continue processing other files
+            pass
 
         return extracted
 
@@ -153,6 +158,9 @@ class AgentAdapter(ABC):
         template_vars: dict[str, str],
     ) -> None:
         """Apply template variable substitution to extracted files.
+
+        Attempts to substitute variables in all text files. Silently skips
+        files that cannot be processed (e.g., encoding errors, permission issues).
 
         Args:
             files: List of file paths to process
@@ -168,6 +176,7 @@ class AgentAdapter(ABC):
                 for var, value in template_vars.items():
                     content = content.replace(var, value)
                 file_path.write_text(content, encoding="utf-8")
-            except Exception:
-                # Skip files that can't be processed
+            except (OSError, UnicodeDecodeError, UnicodeEncodeError):
+                # Skip files that can't be read/written or have encoding issues
+                # This allows partial success when processing template files
                 pass
