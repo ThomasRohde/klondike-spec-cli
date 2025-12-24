@@ -168,7 +168,7 @@ interface MarkdownPreviewProps {
  */
 export function MarkdownPreview({ content, className = '' }: MarkdownPreviewProps) {
     return (
-        <div className={`prose prose-sm dark:prose-invert max-w-none ${className}`}>
+        <div className={`prose prose-sm dark:prose-invert max-w-none text-gray-900 dark:text-gray-100 ${className}`}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight]}
