@@ -2,6 +2,7 @@
  * Real-time collaboration indicators showing active users
  */
 
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, useMemo, useSyncExternalStore } from 'react';
 import { useLocation } from 'react-router-dom';
 import { UserCircleIcon, EyeIcon } from '@heroicons/react/24/solid';

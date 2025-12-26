@@ -92,76 +92,87 @@ export function Layout() {
 
     // Fetch on mount
     useEffect(() => {
-        fetchSessionStatus()
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        void fetchSessionStatus()
     }, [])
 
     // Refetch on WebSocket updates
     useEffect(() => {
         if (lastMessage) {
-            fetchSessionStatus()
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            void fetchSessionStatus()
         }
     }, [lastMessage])
 
     // Close sidebar on route change (mobile)
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSidebarOpen(false)
     }, [location.pathname])
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="min-h-screen bg-[var(--parchment-100)] dark:bg-[var(--slate-900)]">
             {/* Skip link for keyboard navigation */}
             <SkipLink targetId="main-content" />
 
             {/* Mobile sidebar backdrop */}
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 z-40 bg-black/50 md:hidden"
+                    className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
 
             {/* Sidebar */}
-            <div
+            <aside
                 className={`
-                    fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-800 shadow-lg
-                    transform transition-all duration-200 ease-in-out
+                    sidebar fixed inset-y-0 left-0 z-50 shadow-xl
+                    transform transition-all duration-300 ease-out
                     ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
                     md:translate-x-0
-                    ${sidebarCollapsed ? 'md:w-16' : 'md:w-64'}
-                    w-64
+                    ${sidebarCollapsed ? 'md:w-20' : 'md:w-72'}
+                    w-72
                 `}
             >
+                {/* Decorative top border */}
+                <div className="absolute top-0 left-0 right-0 h-1 gold-gradient-bg" />
+
                 {/* Header with project name and close/collapse buttons */}
-                <div className="flex h-16 items-center justify-between border-b border-gray-200 dark:border-gray-700 px-4">
+                <div className="sidebar-header h-16">
                     {!sidebarCollapsed && (
-                        <h1 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">♠️ Klondike</h1>
+                        <div className="flex items-center gap-2">
+                            <span className="spade-logo">♠</span>
+                            <h1 className="text-xl font-display font-bold gold-gradient-text">
+                                Klondike
+                            </h1>
+                        </div>
                     )}
                     {sidebarCollapsed && (
-                        <span className="text-xl mx-auto">♠️</span>
+                        <span className="spade-logo mx-auto">♠</span>
                     )}
                     <button
                         onClick={() => setSidebarOpen(false)}
                         aria-label="Close sidebar"
-                        className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="md:hidden p-2 rounded-lg text-[var(--neutral-slate)] hover:bg-[var(--parchment-200)] dark:hover:bg-white/10 transition-colors"
                     >
                         <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                     </button>
                     <button
                         onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                         aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                        className="hidden md:block p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        className="hidden md:flex items-center justify-center w-8 h-8 rounded-lg text-[var(--neutral-slate)] hover:bg-[var(--parchment-200)] dark:hover:bg-white/10 transition-colors"
                     >
                         {sidebarCollapsed ? (
-                            <ChevronDoubleRightIcon className="h-5 w-5" aria-hidden="true" />
+                            <ChevronDoubleRightIcon className="h-4 w-4" aria-hidden="true" />
                         ) : (
-                            <ChevronDoubleLeftIcon className="h-5 w-5" aria-hidden="true" />
+                            <ChevronDoubleLeftIcon className="h-4 w-4" aria-hidden="true" />
                         )}
                     </button>
                 </div>
 
                 {/* Navigation */}
                 <nav className="mt-6 px-3 flex-1" aria-label="Main navigation">
-                    {navigation.map((item) => {
+                    {navigation.map((item, index) => {
                         const isActive = location.pathname === item.href ||
                             (item.href === '/specs' && location.pathname.startsWith('/task/'))
                         return (
@@ -171,13 +182,11 @@ export function Layout() {
                                 aria-current={isActive ? 'page' : undefined}
                                 title={sidebarCollapsed ? item.name : undefined}
                                 className={`
-                                    flex items-center gap-3 rounded-lg mb-2 transition-colors
-                                    ${sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'}
-                                    ${isActive
-                                        ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'
-                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                    }
+                                    nav-link mb-1
+                                    ${sidebarCollapsed ? 'justify-center px-3' : 'px-4'}
+                                    ${isActive ? 'active' : ''}
                                 `}
+                                style={{ animationDelay: `${index * 50}ms` }}
                             >
                                 <item.icon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
                                 {!sidebarCollapsed && (
@@ -188,62 +197,83 @@ export function Layout() {
                     })}
                 </nav>
 
-                {/* Dark mode toggle and theme customizer */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
-                    <button
-                        onClick={() => setShowThemeCustomizer(true)}
-                        aria-label="Customize theme"
-                        title={sidebarCollapsed ? 'Theme Settings' : undefined}
-                        className={`
-                            flex items-center gap-3 w-full rounded-lg text-gray-700 dark:text-gray-300 
-                            hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
-                            ${sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'}
-                        `}
-                    >
-                        <SwatchIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                        {!sidebarCollapsed && <span className="font-medium">Theme</span>}
-                    </button>
+                {/* Bottom section with decorative line */}
+                <div className="absolute bottom-0 left-0 right-0">
+                    <div className="deco-line mx-4 mb-4" />
+                    <div className="p-4 space-y-1">
+                        <button
+                            onClick={() => setShowThemeCustomizer(true)}
+                            aria-label="Customize theme"
+                            title={sidebarCollapsed ? 'Theme Settings' : undefined}
+                            className={`
+                                nav-link w-full
+                                ${sidebarCollapsed ? 'justify-center px-3' : 'px-4'}
+                            `}
+                        >
+                            <SwatchIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                            {!sidebarCollapsed && <span className="font-medium">Theme</span>}
+                        </button>
+                        <button
+                            onClick={toggleTheme}
+                            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                            title={sidebarCollapsed ? (isDark ? 'Light Mode' : 'Dark Mode') : undefined}
+                            className={`
+                                nav-link w-full
+                                ${sidebarCollapsed ? 'justify-center px-3' : 'px-4'}
+                            `}
+                        >
+                            {isDark ? (
+                                <>
+                                    <SunIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                                    {!sidebarCollapsed && <span className="font-medium">Light Mode</span>}
+                                </>
+                            ) : (
+                                <>
+                                    <MoonIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                                    {!sidebarCollapsed && <span className="font-medium">Dark Mode</span>}
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            {/* Mobile header with hamburger */}
+            <header className="fixed top-0 left-0 right-0 z-30 h-16 bg-white dark:bg-[var(--slate-850)] shadow-sm md:hidden">
+                <div className="flex items-center justify-between h-full px-4">
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setSidebarOpen(true)}
+                            aria-label="Open navigation menu"
+                            className="p-2 rounded-lg text-[var(--neutral-slate)] hover:bg-[var(--parchment-200)] dark:hover:bg-white/10 transition-colors"
+                        >
+                            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                        </button>
+                        <div className="flex items-center gap-2">
+                            <span className="spade-logo text-xl">♠</span>
+                            <h1 className="text-lg font-display font-bold gold-gradient-text">
+                                Klondike
+                            </h1>
+                        </div>
+                    </div>
                     <button
                         onClick={toggleTheme}
                         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-                        title={sidebarCollapsed ? (isDark ? 'Light Mode' : 'Dark Mode') : undefined}
-                        className={`
-                            flex items-center gap-3 w-full rounded-lg text-gray-700 dark:text-gray-300 
-                            hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
-                            ${sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'}
-                        `}
+                        className="p-2 rounded-lg text-[var(--neutral-slate)] hover:bg-[var(--parchment-200)] dark:hover:bg-white/10 transition-colors"
                     >
                         {isDark ? (
-                            <>
-                                <SunIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                                {!sidebarCollapsed && <span className="font-medium">Light Mode</span>}
-                            </>
+                            <SunIcon className="h-5 w-5" aria-hidden="true" />
                         ) : (
-                            <>
-                                <MoonIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                                {!sidebarCollapsed && <span className="font-medium">Dark Mode</span>}
-                            </>
+                            <MoonIcon className="h-5 w-5" aria-hidden="true" />
                         )}
                     </button>
                 </div>
-            </div>
-
-            {/* Mobile header with hamburger */}
-            <div className="fixed top-0 left-0 right-0 z-30 h-16 bg-white dark:bg-gray-800 shadow-sm md:hidden flex items-center justify-between px-4">
-                <div className="flex items-center">
-                    <button
-                        onClick={() => setSidebarOpen(true)}
-                        aria-label="Open navigation menu"
-                        className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-                    <h1 className="ml-3 text-lg font-bold text-indigo-600 dark:text-indigo-400">♠️ Klondike</h1>
-                </div>
-            </div>
+                {/* Bottom border gradient */}
+                <div className="absolute bottom-0 left-0 right-0 h-px gold-gradient-bg opacity-50" />
+            </header>
 
             {/* Main content */}
-            <div className={`pt-16 md:pt-0 transition-all duration-200 ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-64'}`}>
+            <div className={`pt-16 md:pt-0 transition-all duration-300 ${sidebarCollapsed ? 'md:pl-20' : 'md:pl-72'}`}>
                 {/* Active session banner */}
                 {activeSession && (
                     <SessionBanner
@@ -252,7 +282,12 @@ export function Layout() {
                         date={activeSession.date}
                     />
                 )}
-                <main id="main-content" className="p-4 md:p-8" role="main" tabIndex={-1}>
+                <main
+                    id="main-content"
+                    className="p-4 md:p-8 min-h-screen"
+                    role="main"
+                    tabIndex={-1}
+                >
                     <Outlet />
                 </main>
             </div>

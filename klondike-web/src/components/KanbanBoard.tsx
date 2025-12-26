@@ -15,25 +15,36 @@ interface Feature {
 interface Column {
     status: Feature['status'];
     title: string;
-    color: string;
-    bgColor: string;
-    borderColor: string;
+    accentColor: string;
+    statusClass: string;
 }
 
 const columns: Column[] = [
-    { status: 'not-started', title: 'Not Started', color: 'text-gray-600 dark:text-gray-400', bgColor: 'bg-gray-50 dark:bg-gray-800', borderColor: 'border-gray-300 dark:border-gray-600' },
-    { status: 'in-progress', title: 'In Progress', color: 'text-yellow-600 dark:text-yellow-400', bgColor: 'bg-yellow-50 dark:bg-yellow-900/20', borderColor: 'border-yellow-300 dark:border-yellow-700' },
-    { status: 'blocked', title: 'Blocked', color: 'text-red-600 dark:text-red-400', bgColor: 'bg-red-50 dark:bg-red-900/20', borderColor: 'border-red-300 dark:border-red-700' },
-    { status: 'verified', title: 'Verified', color: 'text-green-600 dark:text-green-400', bgColor: 'bg-green-50 dark:bg-green-900/20', borderColor: 'border-green-300 dark:border-green-700' },
+    {
+        status: 'not-started',
+        title: 'Not Started',
+        accentColor: 'var(--neutral-slate)',
+        statusClass: 'kanban-column-not-started',
+    },
+    {
+        status: 'in-progress',
+        title: 'In Progress',
+        accentColor: 'var(--gold-500)',
+        statusClass: 'kanban-column-in-progress',
+    },
+    {
+        status: 'blocked',
+        title: 'Blocked',
+        accentColor: 'var(--danger-rust)',
+        statusClass: 'kanban-column-blocked',
+    },
+    {
+        status: 'verified',
+        title: 'Verified',
+        accentColor: 'var(--success-green)',
+        statusClass: 'kanban-column-verified',
+    },
 ];
-
-const priorityColors: Record<number, string> = {
-    1: 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400',
-    2: 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-400',
-    3: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400',
-    4: 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400',
-    5: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-400',
-};
 
 export function KanbanBoard() {
     const navigate = useNavigate();
@@ -108,12 +119,12 @@ export function KanbanBoard() {
 
     if (loading) {
         return (
-            <div className="space-y-6">
-                <Skeleton height={32} className="w-48" />
+            <div className="space-y-6 animate-fade-up">
+                <Skeleton height={40} className="w-48" />
                 <div className="flex gap-4 overflow-x-auto pb-4">
                     {columns.map(col => (
-                        <div key={col.status} className="flex-shrink-0 w-72">
-                            <Skeleton height={40} className="mb-4" />
+                        <div key={col.status} className="flex-shrink-0 w-80">
+                            <Skeleton height={48} className="mb-4 rounded-t-xl" />
                             <FeatureListSkeleton count={3} />
                         </div>
                     ))}
@@ -124,93 +135,125 @@ export function KanbanBoard() {
 
     return (
         <div className="h-full">
-            <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Kanban Board</h1>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {features.length} total features
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6 animate-fade-up">
+                <div>
+                    <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white">
+                        Kanban Board
+                    </h1>
+                    <p className="text-sm text-[var(--neutral-slate)] mt-1">
+                        Drag features to update their status
+                    </p>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                    <span className="font-mono text-[var(--gold-600)] dark:text-[var(--gold-400)] font-bold">
+                        {features.length}
+                    </span>
+                    <span className="text-[var(--neutral-slate)]">total features</span>
                 </div>
             </div>
 
+            {/* Decorative line */}
+            <div className="deco-line mb-6" />
+
             {/* Kanban columns - horizontal scroll on mobile */}
-            <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4">
-                {columns.map(column => {
+            <div className="flex gap-5 overflow-x-auto pb-4 -mx-4 px-4 snap-x">
+                {columns.map((column, colIndex) => {
                     const columnFeatures = getFeaturesByStatus(column.status);
                     return (
                         <div
                             key={column.status}
-                            className={`flex-shrink-0 w-72 ${column.bgColor} rounded-lg border-2 ${column.borderColor}`}
+                            className={`kanban-column ${column.statusClass} flex-shrink-0 w-80 snap-start animate-fade-up`}
+                            style={{ animationDelay: `${colIndex * 100}ms` }}
                         >
-                            {/* Column header */}
-                            <div className={`px-4 py-3 border-b ${column.borderColor}`}>
-                                <div className="flex items-center justify-between">
-                                    <h2 className={`font-semibold ${column.color}`}>
+                            {/* Column header with accent */}
+                            <div
+                                className="kanban-column-header rounded-t-xl"
+                                style={{ borderBottomColor: column.accentColor }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <div
+                                        className="w-3 h-3 rounded-full"
+                                        style={{ backgroundColor: column.accentColor }}
+                                    />
+                                    <h2 className="font-display font-semibold text-slate-800 dark:text-slate-200">
                                         {column.title}
                                     </h2>
-                                    <span className={`text-sm font-medium ${column.color} bg-white dark:bg-gray-800 px-2 py-0.5 rounded-full`}>
-                                        {columnFeatures.length}
-                                    </span>
                                 </div>
+                                <span
+                                    className="text-sm font-mono font-bold px-2.5 py-1 rounded-full"
+                                    style={{
+                                        backgroundColor: `color-mix(in srgb, ${column.accentColor} 15%, transparent)`,
+                                        color: column.accentColor,
+                                    }}
+                                >
+                                    {columnFeatures.length}
+                                </span>
                             </div>
 
                             {/* Cards container with scroll */}
-                            <div className="p-2 space-y-2 max-h-[calc(100vh-280px)] overflow-y-auto">
+                            <div className="p-3 space-y-3 max-h-[calc(100vh-300px)] overflow-y-auto">
                                 {columnFeatures.length === 0 ? (
-                                    <div className="text-center py-8 text-sm text-gray-400 dark:text-gray-500">
-                                        No features
+                                    <div className="text-center py-12">
+                                        <div className="deco-diamond mx-auto mb-3 opacity-30" />
+                                        <p className="text-sm text-[var(--neutral-slate)]">
+                                            No features
+                                        </p>
                                     </div>
                                 ) : (
-                                    columnFeatures.map(feature => (
+                                    columnFeatures.map((feature, index) => (
                                         <div
                                             key={feature.id}
                                             onClick={() => navigate(`/task/${feature.id}`)}
-                                            className={`group bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 cursor-pointer hover:shadow-md transition-shadow ${actionLoading === feature.id ? 'opacity-50' : ''}`}
+                                            className={`feature-card group ${actionLoading === feature.id ? 'opacity-50 pointer-events-none' : ''}`}
+                                            style={{ animationDelay: `${(colIndex * 100) + (index * 50)}ms` }}
                                         >
                                             {/* Feature ID and priority */}
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="font-mono text-sm font-medium text-gray-900 dark:text-white">
+                                                <span className="font-mono text-sm font-bold text-[var(--gold-700)] dark:text-[var(--gold-400)]">
                                                     {feature.id}
                                                 </span>
-                                                <span className={`text-xs px-1.5 py-0.5 rounded ${priorityColors[feature.priority] || priorityColors[3]}`}>
-                                                    P{feature.priority}
+                                                <span className={`priority-badge priority-${feature.priority}`}>
+                                                    {feature.priority}
                                                 </span>
                                             </div>
 
                                             {/* Description */}
-                                            <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-2">
+                                            <p className="text-sm text-slate-700 dark:text-slate-300 line-clamp-2 mb-3">
                                                 {feature.description}
                                             </p>
 
-                                            {/* Category */}
-                                            <div className="text-xs text-gray-400 dark:text-gray-500 mb-2">
+                                            {/* Category tag */}
+                                            <div className="text-xs text-[var(--neutral-slate)] font-medium uppercase tracking-wider mb-3">
                                                 {feature.category}
                                             </div>
 
                                             {/* Quick actions - appear on hover */}
-                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity pt-2 border-t border-gray-100 dark:border-gray-700">
+                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity pt-3 border-t border-[var(--parchment-200)] dark:border-white/10">
                                                 {feature.status === 'not-started' && (
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); handleStatusChange(feature.id, 'in-progress'); }}
-                                                        className="flex-1 flex items-center justify-center gap-1 text-xs py-1 px-2 rounded bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors btn-press"
+                                                        className="flex-1 flex items-center justify-center gap-1.5 text-xs py-2 px-3 rounded-lg bg-[var(--gold-100)] dark:bg-[var(--gold-900)]/30 text-[var(--gold-700)] dark:text-[var(--gold-400)] hover:bg-[var(--gold-200)] dark:hover:bg-[var(--gold-900)]/50 transition-colors font-medium btn-press"
                                                     >
-                                                        <PlayIcon className="w-3 h-3" />
+                                                        <PlayIcon className="w-3.5 h-3.5" />
                                                         Start
                                                     </button>
                                                 )}
                                                 {feature.status === 'in-progress' && (
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); handleStatusChange(feature.id, 'verified'); }}
-                                                        className="flex-1 flex items-center justify-center gap-1 text-xs py-1 px-2 rounded bg-green-50 dark:bg-green-900/50 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900 transition-colors btn-press"
+                                                        className="flex-1 flex items-center justify-center gap-1.5 text-xs py-2 px-3 rounded-lg bg-[var(--success-light)] dark:bg-green-900/30 text-[var(--success-green)] hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors font-medium btn-press"
                                                     >
-                                                        <CheckCircleIcon className="w-3 h-3" />
+                                                        <CheckCircleIcon className="w-3.5 h-3.5" />
                                                         Verify
                                                     </button>
                                                 )}
                                                 {(feature.status === 'not-started' || feature.status === 'in-progress') && (
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); handleStatusChange(feature.id, 'blocked'); }}
-                                                        className="flex-1 flex items-center justify-center gap-1 text-xs py-1 px-2 rounded bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition-colors btn-press"
+                                                        className="flex-1 flex items-center justify-center gap-1.5 text-xs py-2 px-3 rounded-lg bg-[var(--danger-light)] dark:bg-red-900/30 text-[var(--danger-rust)] hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors font-medium btn-press"
                                                     >
-                                                        <NoSymbolIcon className="w-3 h-3" />
+                                                        <NoSymbolIcon className="w-3.5 h-3.5" />
                                                         Block
                                                     </button>
                                                 )}

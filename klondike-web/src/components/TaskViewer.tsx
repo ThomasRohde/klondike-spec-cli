@@ -142,8 +142,6 @@ export function TaskViewer() {
                 toast(result.warning, { icon: '⚠️' })
             }
             setFeature(result.feature)
-        } catch (err) {
-            // Error already toasted by apiCall
         } finally {
             setActionLoading(false)
         }
@@ -171,8 +169,6 @@ export function TaskViewer() {
             setFeature(result.feature)
             setShowBlockModal(false)
             setBlockReason('')
-        } catch (err) {
-            // Error already toasted by apiCall
         } finally {
             setActionLoading(false)
         }
@@ -200,8 +196,6 @@ export function TaskViewer() {
             setFeature(result.feature)
             setShowVerifyModal(false)
             setEvidence('')
-        } catch (err) {
-            // Error already toasted by apiCall
         } finally {
             setActionLoading(false)
         }
@@ -230,8 +224,6 @@ export function TaskViewer() {
             )
             setFeature(result.feature)
             setIsEditing(false)
-        } catch (err) {
-            // Error already toasted by apiCall
         } finally {
             setActionLoading(false)
         }
@@ -367,7 +359,7 @@ export function TaskViewer() {
                                 className={`inline-block px-2 py-1 rounded text-sm font-medium ${feature.passes
                                     ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300'
                                     : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-                                }`}
+                                    }`}
                             >
                                 {feature.passes ? 'Yes' : 'No'}
                             </span>

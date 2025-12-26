@@ -2,6 +2,7 @@
  * Advanced feature search with filters and saved queries
  */
 
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useSyncExternalStore } from 'react';
 import { MagnifyingGlassIcon, FunnelIcon, BookmarkIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
@@ -125,53 +126,53 @@ interface AdvancedSearchProps {
     className?: string;
 }
 
-export function AdvancedSearch({ 
-    filters, 
-    onFiltersChange, 
+export function AdvancedSearch({
+    filters,
+    onFiltersChange,
     categories,
-    className = '' 
+    className = ''
 }: AdvancedSearchProps) {
     const [showAdvanced, setShowAdvanced] = useState(false);
     const [saveDialogOpen, setSaveDialogOpen] = useState(false);
     const [queryName, setQueryName] = useState('');
     const savedQueriesStore = useSavedQueries();
-    
+
     const handleQueryChange = (query: string) => {
         onFiltersChange({ ...filters, query });
     };
-    
+
     const toggleStatus = (status: string) => {
         const newStatus = filters.status.includes(status)
             ? filters.status.filter(s => s !== status)
             : [...filters.status, status];
         onFiltersChange({ ...filters, status: newStatus });
     };
-    
+
     const toggleCategory = (category: string) => {
         const newCategory = filters.category.includes(category)
             ? filters.category.filter(c => c !== category)
             : [...filters.category, category];
         onFiltersChange({ ...filters, category: newCategory });
     };
-    
+
     const togglePriority = (priority: number) => {
         const newPriority = filters.priority.includes(priority)
             ? filters.priority.filter(p => p !== priority)
             : [...filters.priority, priority];
         onFiltersChange({ ...filters, priority: newPriority });
     };
-    
+
     const clearFilters = () => {
         onFiltersChange(DEFAULT_FILTERS);
     };
-    
-    const hasActiveFilters = 
-        filters.status.length > 0 || 
-        filters.category.length > 0 || 
+
+    const hasActiveFilters =
+        filters.status.length > 0 ||
+        filters.category.length > 0 ||
         filters.priority.length > 0 ||
         filters.hasNotes !== null ||
         filters.hasCriteria !== null;
-    
+
     const handleSaveQuery = () => {
         if (queryName.trim()) {
             addSavedQuery(queryName.trim(), filters);
@@ -179,18 +180,18 @@ export function AdvancedSearch({
             setSaveDialogOpen(false);
         }
     };
-    
+
     const handleLoadQuery = (saved: SavedQuery) => {
         onFiltersChange(saved.filters);
     };
-    
-    const activeFilterCount = 
-        filters.status.length + 
-        filters.category.length + 
+
+    const activeFilterCount =
+        filters.status.length +
+        filters.category.length +
         filters.priority.length +
         (filters.hasNotes !== null ? 1 : 0) +
         (filters.hasCriteria !== null ? 1 : 0);
-    
+
     return (
         <div className={`space-y-3 ${className}`}>
             {/* Search input with filter toggle */}
@@ -210,8 +211,8 @@ export function AdvancedSearch({
                     onClick={() => setShowAdvanced(!showAdvanced)}
                     className={`
                         px-3 py-2 border rounded-lg flex items-center gap-2 transition-colors
-                        ${showAdvanced 
-                            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400' 
+                        ${showAdvanced
+                            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'
                             : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}
                     `}
                     aria-expanded={showAdvanced}
@@ -224,7 +225,7 @@ export function AdvancedSearch({
                     )}
                 </button>
             </div>
-            
+
             {/* Active filter badges */}
             {hasActiveFilters && (
                 <div className="flex flex-wrap gap-2 items-center">
@@ -238,15 +239,15 @@ export function AdvancedSearch({
                         <FilterBadge key={p} label={`P${p}`} onRemove={() => togglePriority(p)} />
                     ))}
                     {filters.hasNotes !== null && (
-                        <FilterBadge 
-                            label={filters.hasNotes ? 'Has notes' : 'No notes'} 
-                            onRemove={() => onFiltersChange({ ...filters, hasNotes: null })} 
+                        <FilterBadge
+                            label={filters.hasNotes ? 'Has notes' : 'No notes'}
+                            onRemove={() => onFiltersChange({ ...filters, hasNotes: null })}
                         />
                     )}
                     {filters.hasCriteria !== null && (
-                        <FilterBadge 
-                            label={filters.hasCriteria ? 'Has criteria' : 'No criteria'} 
-                            onRemove={() => onFiltersChange({ ...filters, hasCriteria: null })} 
+                        <FilterBadge
+                            label={filters.hasCriteria ? 'Has criteria' : 'No criteria'}
+                            onRemove={() => onFiltersChange({ ...filters, hasCriteria: null })}
                         />
                     )}
                     <button
@@ -257,7 +258,7 @@ export function AdvancedSearch({
                     </button>
                 </div>
             )}
-            
+
             {/* Advanced filters panel */}
             {showAdvanced && (
                 <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 space-y-4">
@@ -283,7 +284,7 @@ export function AdvancedSearch({
                             ))}
                         </div>
                     </div>
-                    
+
                     {/* Category filters */}
                     <div>
                         <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
@@ -306,7 +307,7 @@ export function AdvancedSearch({
                             ))}
                         </div>
                     </div>
-                    
+
                     {/* Priority filters */}
                     <div>
                         <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
@@ -329,7 +330,7 @@ export function AdvancedSearch({
                             ))}
                         </div>
                     </div>
-                    
+
                     {/* Boolean filters */}
                     <div className="flex gap-4">
                         <div>
@@ -338,9 +339,9 @@ export function AdvancedSearch({
                             </label>
                             <select
                                 value={filters.hasNotes === null ? '' : filters.hasNotes.toString()}
-                                onChange={(e) => onFiltersChange({ 
-                                    ...filters, 
-                                    hasNotes: e.target.value === '' ? null : e.target.value === 'true' 
+                                onChange={(e) => onFiltersChange({
+                                    ...filters,
+                                    hasNotes: e.target.value === '' ? null : e.target.value === 'true'
                                 })}
                                 className="px-3 py-1 text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
                             >
@@ -355,9 +356,9 @@ export function AdvancedSearch({
                             </label>
                             <select
                                 value={filters.hasCriteria === null ? '' : filters.hasCriteria.toString()}
-                                onChange={(e) => onFiltersChange({ 
-                                    ...filters, 
-                                    hasCriteria: e.target.value === '' ? null : e.target.value === 'true' 
+                                onChange={(e) => onFiltersChange({
+                                    ...filters,
+                                    hasCriteria: e.target.value === '' ? null : e.target.value === 'true'
                                 })}
                                 className="px-3 py-1 text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
                             >
@@ -367,7 +368,7 @@ export function AdvancedSearch({
                             </select>
                         </div>
                     </div>
-                    
+
                     {/* Save query and saved queries */}
                     <div className="pt-3 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                         {saveDialogOpen ? (
@@ -404,7 +405,7 @@ export function AdvancedSearch({
                                 Save query
                             </button>
                         )}
-                        
+
                         {savedQueriesStore.queries.length > 0 && (
                             <div className="flex items-center gap-2">
                                 <span className="text-xs text-gray-400">Saved:</span>
@@ -415,7 +416,7 @@ export function AdvancedSearch({
                                         className="group flex items-center gap-1 px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
                                     >
                                         {saved.name}
-                                        <XMarkIcon 
+                                        <XMarkIcon
                                             className="w-3 h-3 opacity-0 group-hover:opacity-100"
                                             onClick={(e) => {
                                                 e.stopPropagation();

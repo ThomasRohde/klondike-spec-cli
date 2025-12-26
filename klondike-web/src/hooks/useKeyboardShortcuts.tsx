@@ -19,7 +19,7 @@ interface ShortcutStore {
     helpVisible: boolean;
 }
 
-let store: ShortcutStore = {
+const store: ShortcutStore = {
     shortcuts: new Map(),
     helpVisible: false,
 };

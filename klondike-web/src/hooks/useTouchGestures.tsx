@@ -1,4 +1,5 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { useState, useRef, useCallback } from 'react';
 
 interface SwipeState {
     startX: number;
@@ -33,7 +34,7 @@ interface UseSwipeReturn {
  */
 export function useSwipe(options: UseSwipeOptions = {}): UseSwipeReturn {
     const { threshold = 50, preventScroll = true, onSwipeLeft, onSwipeRight } = options;
-    
+
     const [offset, setOffset] = useState(0);
     const [isSwiping, setIsSwiping] = useState(false);
     const [direction, setDirection] = useState<'left' | 'right' | null>(null);
@@ -59,13 +60,13 @@ export function useSwipe(options: UseSwipeOptions = {}): UseSwipeReturn {
     const handleTouchMove = useCallback((e: React.TouchEvent) => {
         const touch = e.touches[0];
         const state = stateRef.current;
-        
+
         state.currentX = touch.clientX;
         state.currentY = touch.clientY;
-        
+
         const deltaX = state.currentX - state.startX;
         const deltaY = state.currentY - state.startY;
-        
+
         // Determine if this is a horizontal swipe
         if (!state.isSwiping) {
             if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
@@ -73,7 +74,7 @@ export function useSwipe(options: UseSwipeOptions = {}): UseSwipeReturn {
                 setIsSwiping(true);
             }
         }
-        
+
         if (state.isSwiping) {
             if (preventScroll) {
                 e.preventDefault();
@@ -86,7 +87,7 @@ export function useSwipe(options: UseSwipeOptions = {}): UseSwipeReturn {
     const handleTouchEnd = useCallback(() => {
         const state = stateRef.current;
         const deltaX = state.currentX - state.startX;
-        
+
         if (Math.abs(deltaX) > threshold) {
             if (deltaX > 0 && onSwipeRight) {
                 onSwipeRight();
@@ -94,7 +95,7 @@ export function useSwipe(options: UseSwipeOptions = {}): UseSwipeReturn {
                 onSwipeLeft();
             }
         }
-        
+
         // Reset
         setOffset(0);
         setIsSwiping(false);
@@ -136,7 +137,7 @@ interface UsePullToRefreshReturn {
  */
 export function usePullToRefresh(options: UsePullToRefreshOptions): UsePullToRefreshReturn {
     const { onRefresh, threshold = 100, disabled = false } = options;
-    
+
     const [pullDistance, setPullDistance] = useState(0);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isPulling, setIsPulling] = useState(false);
@@ -145,11 +146,11 @@ export function usePullToRefresh(options: UsePullToRefreshOptions): UsePullToRef
 
     const handleTouchStart = useCallback((e: React.TouchEvent) => {
         if (disabled || isRefreshing) return;
-        
+
         // Only enable if at top of scroll
         const target = e.target as HTMLElement;
         containerRef.current = target.closest('[data-pull-refresh]') || target;
-        
+
         if (containerRef.current.scrollTop === 0) {
             startY.current = e.touches[0].clientY;
             setIsPulling(true);
@@ -158,10 +159,10 @@ export function usePullToRefresh(options: UsePullToRefreshOptions): UsePullToRef
 
     const handleTouchMove = useCallback((e: React.TouchEvent) => {
         if (!isPulling || disabled || isRefreshing) return;
-        
+
         const currentY = e.touches[0].clientY;
         const distance = currentY - startY.current;
-        
+
         if (distance > 0) {
             // Apply resistance to pull
             const resistedDistance = Math.min(distance * 0.5, threshold * 1.5);
@@ -171,13 +172,13 @@ export function usePullToRefresh(options: UsePullToRefreshOptions): UsePullToRef
 
     const handleTouchEnd = useCallback(async () => {
         if (!isPulling || disabled) return;
-        
+
         setIsPulling(false);
-        
+
         if (pullDistance >= threshold) {
             setIsRefreshing(true);
             setPullDistance(threshold * 0.5); // Show spinner at half height
-            
+
             try {
                 await onRefresh();
             } finally {
@@ -210,26 +211,26 @@ interface PullToRefreshIndicatorProps {
 /**
  * Visual indicator for pull-to-refresh.
  */
-export function PullToRefreshIndicator({ 
-    pullDistance, 
+export function PullToRefreshIndicator({
+    pullDistance,
     isRefreshing,
-    threshold 
+    threshold
 }: PullToRefreshIndicatorProps) {
     if (pullDistance === 0 && !isRefreshing) return null;
-    
+
     const progress = Math.min(pullDistance / threshold, 1);
     const rotation = isRefreshing ? 'animate-spin' : '';
-    
+
     return (
-        <div 
+        <div
             className="flex items-center justify-center py-2 transition-all duration-200"
             style={{ height: pullDistance }}
         >
-            <div 
+            <div
                 className={`w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full ${rotation}`}
-                style={{ 
+                style={{
                     opacity: progress,
-                    transform: `scale(${0.5 + progress * 0.5})` 
+                    transform: `scale(${0.5 + progress * 0.5})`
                 }}
             />
         </div>
@@ -240,11 +241,6 @@ export function PullToRefreshIndicator({
  * Check if the device supports touch events.
  */
 export function useIsTouchDevice(): boolean {
-    const [isTouch, setIsTouch] = useState(false);
-    
-    useEffect(() => {
-        setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    }, []);
-    
+    const [isTouch] = useState(() => 'ontouchstart' in window || navigator.maxTouchPoints > 0);
     return isTouch;
 }

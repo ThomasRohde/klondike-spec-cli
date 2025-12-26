@@ -2,6 +2,7 @@
  * Bulk actions toolbar for multiple feature selection
  */
 
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useSyncExternalStore } from 'react';
 import {
     CheckIcon,

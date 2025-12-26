@@ -2,6 +2,7 @@
  * Quick add feature dialog - accessible from anywhere via Ctrl+Shift+N
  */
 
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import { getApiBaseUrl } from '../utils/api';
 import { announce } from '../utils/accessibility';

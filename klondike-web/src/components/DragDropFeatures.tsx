@@ -2,6 +2,7 @@
  * Drag and drop feature ordering component using dnd-kit
  */
 
+/* eslint-disable react-refresh/only-export-components */
 import { useMemo, useState } from 'react';
 import {
     DndContext,

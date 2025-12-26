@@ -86,8 +86,6 @@ export function ConfigEditor() {
                 setConfig(result.config)
                 setFormData(result.config)
             }
-        } catch (error) {
-            // Error already toasted by apiCall
         } finally {
             setSaving(false)
         }

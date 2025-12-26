@@ -2,6 +2,7 @@
  * Session timer widget showing elapsed time and activity
  */
 
+/* eslint-disable react-refresh/only-export-components */
 import { useEffect, useState, useSyncExternalStore } from 'react';
 
 interface SessionInfo {

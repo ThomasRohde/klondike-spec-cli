@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
 import {
     CloudIcon,
@@ -131,23 +132,17 @@ interface OfflineIndicatorProps {
     className?: string;
 }
 
-export function OfflineIndicator({ className = '' }: OfflineIndicatorProps) {
-    const { isOnline, isServiceWorkerReady, hasPendingUpdate, applyUpdate } = useOfflineState();
-    const [showBanner, setShowBanner] = useState(false);
-
-    // Show banner when going offline
-    useEffect(() => {
-        if (!isOnline) {
-            setShowBanner(true);
-        } else {
-            // Auto-hide after coming back online
-            const timer = setTimeout(() => setShowBanner(false), 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [isOnline]);
-
-    // Status dot for header
-    const StatusDot = () => (
+// Status dot component (extracted to avoid creating during render)
+function StatusDot({
+    isOnline,
+    isServiceWorkerReady,
+    className
+}: {
+    isOnline: boolean;
+    isServiceWorkerReady: boolean;
+    className: string
+}) {
+    return (
         <div
             className={`flex items-center gap-1.5 ${className}`}
             title={isOnline ? 'Online' : 'Offline - Using cached data'}
@@ -165,10 +160,27 @@ export function OfflineIndicator({ className = '' }: OfflineIndicatorProps) {
             )}
         </div>
     );
+}
+
+export function OfflineIndicator({ className = '' }: OfflineIndicatorProps) {
+    const { isOnline, isServiceWorkerReady, hasPendingUpdate, applyUpdate } = useOfflineState();
+    const [showBanner, setShowBanner] = useState(false);
+
+    // Show banner when going offline
+    useEffect(() => {
+        if (!isOnline) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setShowBanner(true);
+        } else {
+            // Auto-hide after coming back online
+            const timer = setTimeout(() => setShowBanner(false), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [isOnline]);
 
     return (
         <>
-            <StatusDot />
+            <StatusDot isOnline={isOnline} isServiceWorkerReady={isServiceWorkerReady} className={className} />
 
             {/* Offline Banner */}
             {showBanner && !isOnline && (

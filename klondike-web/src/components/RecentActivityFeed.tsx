@@ -237,6 +237,7 @@ export function ActivityIndicator() {
 
     useEffect(() => {
         if (lastMessage) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCount(prev => prev + 1);
             // Reset count after 10 seconds
             const timer = setTimeout(() => setCount(0), 10000);

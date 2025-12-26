@@ -23,8 +23,8 @@ function setMounted() {
 }
 
 /**
- * Animated SVG progress ring with percentage display.
- * Color transitions from red (0%) through yellow (50%) to green (100%).
+ * Animated SVG progress ring with gold gradient and percentage display.
+ * Uses the Klondike gold-rush color palette for a distinctive look.
  */
 export function ProgressRing({
     percentage,
@@ -48,74 +48,86 @@ export function ProgressRing({
     const circumference = 2 * Math.PI * radius;
     const offset = circumference - (displayPercentage / 100) * circumference;
 
-    // Calculate color based on percentage (red -> yellow -> green)
-    const getColor = (pct: number): string => {
-        if (pct <= 0) return '#ef4444'; // red-500
-        if (pct >= 100) return '#22c55e'; // green-500
-
-        if (pct <= 50) {
-            // Red to yellow (0-50%)
-            const ratio = pct / 50;
-            const r = 239; // Start with red
-            const g = Math.round(68 + (186 - 68) * ratio); // 68 -> 186
-            const b = 68 - Math.round(68 * ratio); // 68 -> 0
-            return `rgb(${r}, ${g}, ${b})`;
-        } else {
-            // Yellow to green (50-100%)
-            const ratio = (pct - 50) / 50;
-            const r = Math.round(239 - (239 - 34) * ratio); // 239 -> 34
-            const g = Math.round(186 + (197 - 186) * ratio); // 186 -> 197
-            const b = Math.round(0 + (94 - 0) * ratio); // 0 -> 94
-            return `rgb(${r}, ${g}, ${b})`;
-        }
-    };
-
-    const ringColor = getColor(displayPercentage);
     const center = size / 2;
 
+    // Generate unique gradient ID for this instance
+    const gradientId = `goldGradient-${size}-${strokeWidth}`;
+
     return (
-        <div className={`relative inline-flex items-center justify-center ${className}`}>
+        <div className={`progress-ring-container ${className}`}>
             <svg
                 width={size}
                 height={size}
                 className="transform -rotate-90"
             >
+                {/* Define the gold gradient */}
+                <defs>
+                    <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="var(--gold-400)" />
+                        <stop offset="50%" stopColor="var(--gold-500)" />
+                        <stop offset="100%" stopColor="var(--gold-600)" />
+                    </linearGradient>
+                    {/* Glow filter */}
+                    <filter id={`glow-${gradientId}`} x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
                 {/* Background ring */}
                 <circle
                     cx={center}
                     cy={center}
                     r={radius}
                     fill="none"
-                    stroke="currentColor"
                     strokeWidth={strokeWidth}
-                    className="text-gray-200 dark:text-gray-700"
+                    className="progress-ring-bg"
                 />
-                {/* Progress ring */}
+
+                {/* Animated progress ring with gold gradient */}
                 <circle
                     cx={center}
                     cy={center}
                     r={radius}
                     fill="none"
-                    stroke={ringColor}
+                    stroke={`url(#${gradientId})`}
                     strokeWidth={strokeWidth}
                     strokeLinecap="round"
                     strokeDasharray={circumference}
                     strokeDashoffset={offset}
+                    filter={`url(#glow-${gradientId})`}
                     className="transition-all duration-1000 ease-out"
                     style={{
-                        filter: 'drop-shadow(0 0 6px rgba(0, 0, 0, 0.1))',
+                        filter: 'drop-shadow(0 0 8px rgba(234, 179, 8, 0.4))',
                     }}
                 />
+
+                {/* Decorative end cap indicator */}
+                {displayPercentage > 0 && displayPercentage < 100 && (
+                    <circle
+                        cx={center + radius * Math.cos(((displayPercentage / 100) * 360 - 90) * Math.PI / 180)}
+                        cy={center + radius * Math.sin(((displayPercentage / 100) * 360 - 90) * Math.PI / 180)}
+                        r={strokeWidth / 3}
+                        fill="white"
+                        className="transition-all duration-1000 ease-out"
+                        style={{
+                            filter: 'drop-shadow(0 0 4px rgba(234, 179, 8, 0.6))',
+                        }}
+                    />
+                )}
             </svg>
+
             {/* Percentage text in center */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span
-                    className="text-3xl font-bold transition-colors duration-500"
-                    style={{ color: ringColor }}
+                    className="font-display text-4xl font-bold gold-gradient-text transition-all duration-500"
                 >
                     {displayPercentage.toFixed(1)}%
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <span className="text-xs font-medium text-[var(--neutral-slate)] mt-1 uppercase tracking-wider">
                     Complete
                 </span>
             </div>
